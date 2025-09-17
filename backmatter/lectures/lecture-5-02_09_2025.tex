@@ -1,0 +1,118 @@
+\section{Lecture 5}
+\textbf{Date:} 02.09.2025
+
+\section*{Projection Methods}
+\textbf{Problem:} Solve $A\mathbf{x} = \mathbf{b}$ where $A  \in  \mathbb{R}^{n \times n}$ is invertible, with solution $\mathbf{x}^\star$.
+\begin{enumerate}
+    \item Given $\mathbf{x}_0$, choose $\mathcal{K}, \mathcal{L} \subset \mathbb{R}^n$ with $\dim(\mathcal{K}) = \dim(\mathcal{L}) = m$.
+          \begin{itemize}
+              \item $\mathcal{K}$ is the \emph{search space} (or \emph{trial space})
+              \item $\mathcal{L}$ is the \emph{constraint space} (or \emph{test space})
+          \end{itemize}
+    \item Find $\widetilde{\mathbf{x}}  \in  \mathbf{x}_0 + \mathcal{K}$ s.t. $\widetilde{\mathbf{r}} = \mathbf{b} - A\widetilde{\mathbf{x}} \perp \mathcal{L}$.
+\end{enumerate}
+
+\textbf{Alternative:}
+\begin{enumerate}
+    \item Let $\delta = \widetilde{\mathbf{x}} - \mathbf{x}_0$, $\widetilde{\mathbf{r}} = \mathbf{b} - A\widetilde{\mathbf{x}} = \mathbf{b} - A(\mathbf{x}_0 + \delta) = \mathbf{r}_0 - A\delta$.
+    \item Find $\delta  \in  \mathcal{K}$ s.t. $\mathbf{r}_0 - A\delta \perp \mathcal{L}$.
+          \[
+              \widetilde{\mathbf{x}} = \mathbf{x}_0 + \delta, \quad \delta  \in  \mathcal{K}, \quad \mathbf{r}_0 - A\delta \perp \mathcal{L}
+          \]
+          In matrix form:
+          \begin{align*}
+              \mathcal{K} & = \operatorname{span}\{\mathbf{v}_1, \ldots, \mathbf{v}_m\} = \operatorname{span}(V) \\
+              \mathcal{L} & = \operatorname{span}\{\mathbf{w}_1, \ldots, \mathbf{w}_m\} = \operatorname{span}(W)
+          \end{align*}
+          Then:
+          \begin{align*}
+              \delta            & = V \mathbf{y}, \quad y  \in  \mathbb{R}^m, \quad \mathbf{r}_0 - A V \mathbf{y} \perp \operatorname{span}(W) \\
+              W^{\top} (\mathbf{r}_0 - A V \mathbf{y}) & = 0                                                                             \\
+              y                 & = (W^{\top} A V)^{-1} W^{\top} \mathbf{r}_0                                                        \\
+              \widetilde{\mathbf{x}}     & = \mathbf{x}_0 + V (W^{\top} A V)^{-1} W^{\top} \mathbf{r}_0
+          \end{align*}
+\end{enumerate}
+\textbf{Remarks:}
+Standard choices for $\mathcal{L}$ ($A$ is non-singular):
+\begin{itemize}
+    \item if $A$ is SPD, choose $\mathcal{L} = \mathcal{K}$ (Galerkin condition)
+    \item otherwise, choose $\mathcal{L} = A\mathcal{K}$ (Petrov-Galerkin condition)
+\end{itemize}
+\textbf{Questions?}
+\begin{enumerate}
+    \item Will the method converge?
+          \begin{align*}
+              \|\widetilde{\mathbf{x}} - \mathbf{x}^\star\| & \leq \|\mathbf{x}_0 - \mathbf{x}^\star\| \\
+              \|\widetilde{\mathbf{r}}\|           & \leq \|\mathbf{r}_0\|
+          \end{align*}
+    \item Is $W^{\top} A V$ invertible?
+          \begin{itemize}
+              \item if $A = A^{\top}$ is SPD and $\mathcal{L} = \mathcal{K}$, then:
+                    \begin{align*}
+                        A                   & \text{ SPD}                                                 \\
+                        A                   & = C^{\top} C                                                     \\
+                        W                   & = VG, \quad G \in  \mathbb{R}^{m \times m} \text{ invertible} \\
+                        W^{\top} A V             & = G^{\top} V^{\top} A V = G^{\top} (C^{\top} C)^{\top}(C^{\top} C)                        \\
+                        C^{\top} V               & \text{ has rank } m \text{ since } V \text{ has rank } m    \\
+                        \Rightarrow W^{\top} A V & \text{ is SPD } \Rightarrow \text{ invertible}
+                    \end{align*}
+              \item if $A$ invertible and $\mathcal{L} = A\mathcal{K}$, then:
+                    \begin{align*}
+                        W                   & = A V G, \quad G  \in  \mathbb{R}^{m \times m} \text{ invertible} \\
+                        W^{\top} A V             & = G^{\top} (A V)^{\top} (A V)                                             \\
+                        A V                 & \text{ has rank } m \text{ since } V \text{ has rank } m        \\
+                        \Rightarrow W^{\top} A V & \text{ is SPD } \Rightarrow \text{ invertible}
+                    \end{align*}
+          \end{itemize}
+\end{enumerate}
+\subsection*{Optimality results}
+\begin{align*}
+    \widetilde{\mathbf{x}} &  \in  \mathbf{x}_0 + \mathcal{K},                  \\
+    \widetilde{\mathbf{r}} & = \mathbf{b} - A\widetilde{\mathbf{x}} \perp \mathcal{L}, \\
+    \delta        & = \widetilde{\mathbf{x}} - \mathbf{x}_0  \in  \mathcal{K},  \\
+    \widetilde{\mathbf{r}} & = \mathbf{r}_0 - A\delta \perp \mathcal{L},      \\
+    A x_\star     & = \mathbf{b}.
+\end{align*}
+\begin{enumerate}[label=(\alph*)]
+    \item If $A$ is SPD and $\mathcal{L} = \mathcal{K}$, then
+          \[
+              \|\widetilde{\mathbf{x}} - x_\star\|_A = \min_{\mathbf{x}  \in  \mathbf{x}_0 + \mathcal{K}} \|\mathbf{x} - x_\star\|_A
+          \]
+    \item If $A$ is invertible and $\mathcal{L} = A\mathcal{K}$, then
+          \[
+              \|\widetilde{\mathbf{r}}\|_2 = \|\mathbf{b} - A\widetilde{\mathbf{x}}\|_2  = \min_{\mathbf{x}  \in  \mathbf{x}_0 + \mathcal{K}} \|\mathbf{b} - A \mathbf{x}\|_2
+          \]
+\end{enumerate}
+If these are used iteratively, then:
+\begin{align*}
+    \|x_\star - x_{k+1}\|_A & \leq \|x_\star - x_k\|_A \\
+    \|r_{k+1}\|_2           & \leq \|r_k\|_2
+\end{align*}
+Can we find a constant $C < 1$ such that:
+\begin{align*}
+    \|x_\star - x_{k+1}\|_A & \leq C \|x_\star - x_k\|_A \\
+    \|r_{k+1}\|_2           & \leq C \|r_k\|_2
+\end{align*}
+
+\subsection*{Example: Steepest Descent}
+If $A$ is SPD, with $\mathcal{L} = \mathcal{K} = \operatorname{span}\{r_k\}$, then:
+\begin{align*}
+    x_{k+1} & = x_k + \alpha_k r_k, \quad \alpha_k  \in  \mathbb{R}          \\
+    r_{k+1} & = \mathbf{b} - A x_{k+1} = r_k - \alpha_k A r_k                       \\
+    r_{k+1} & \perp r_k \Rightarrow r_k^{\top} (r_k - \alpha_k A r_k) = 0 \quad
+    \Rightarrow \alpha_k = \frac{r_k^{\top} r_k}{r_k^{\top} A r_k}                   \\
+    d_k     & = x_\star - x_k                                              \\
+    r_k     & = \mathbf{b} - A x_k = A x_\star - A x_k = A d_k                      \\
+\end{align*}
+
+We want to estimate $\|d_{k+1}\|_A \leq C \|d_k\|_A$ for some $C < 1$.
+\begin{align*}
+    r_{k+1}         & = \mathbf{b} - A x_{k+1} = A(x_\star - x_{k+1}) = A d_{k+1} = Ad_k - \alpha_k A r_k     \\
+    d_{k+1}         & = d_{k+1}^{\top} A d_{k+1} = d_{k+1}^{\top} r_{k+1}                                      \\
+                    & = (d_k - \alpha_k r_k)^{\top} r_{k+1} = d_k^{\top} r_{k+1}                               \\
+                    & = d_k^{\top} (r_k - \alpha_k A r_k) = d_k^{\top} r_k - \alpha_k d_k^{\top} A r_k              \\
+                    & = d_k^{\top} A d_k - \alpha_k r_k^{\top} r_k                                             \\
+                    & = \|d_k\|_A^2 - \alpha_k \|r_k|^2                                              \\
+                    & = \|d_k\|_A^2 - \frac{\|r_k|^4}{\|r_k\|_A^2}                                   \\
+    \|d_{k+1}\|_A^2 & = \|d_k\|_A^2\left(1 - \frac{\|r_k\|^4}{\|r_k\|_A^2 \|r_k\|_{A^{-1}}^2}\right)
+\end{align*}

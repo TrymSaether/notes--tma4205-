@@ -1,0 +1,221 @@
+\section{Lecture 2: Unitary Matrices, QR Decomposition, and Householder Reflections}
+
+Let $\mathbf{x}, \mathbf{y} \in \mathbb{C}^n$ be two vectors. The \emph{inner product} $(\cdot, \cdot)$ and \emph{norm} (unless otherwise specified) are defined as:
+\begin{equation}
+    (\mathbf{x}, \mathbf{y}) = \sum_{i=1}^n x_i \overline{y_i} = \mathbf{x}^H \mathbf{y}, \quad \|\mathbf{x}\|^2 = (\mathbf{x}, \mathbf{x}) = \sum_{i=1}^n |x_i|^2 = \mathbf{x}^H \mathbf{x}.
+\end{equation}
+
+\subsection{Unitary Matrices}
+
+A matrix $Q \in \mathbb{C}^{n \times n}$ is \emph{unitary} if $Q^H Q = I_n$, where $I_n$ is the $n \times n$ identity matrix. The columns of $Q$ form an orthonormal set, meaning they are mutually orthogonal and each has unit norm.
+
+Let $Q = [q_1, q_2, \ldots, q_n]$. Then the orthonormality condition is:
+\begin{equation}
+    (q_i, q_j) = \delta_{ij} = \begin{cases}
+        1 & \text{if } i = j    \\
+        0 & \text{if } i \neq j
+    \end{cases}
+\end{equation}
+
+\subsubsection{Examples of Unitary Matrices}
+
+\begin{enumerate}
+    \item \textbf{Identity matrix}: $I_n$ is trivially unitary.
+
+    \item \textbf{2D rotation matrices} (real orthogonal):
+          \begin{equation}
+              R(\theta) = \begin{bmatrix}
+                  \cos(\theta) & -\sin(\theta) \\
+                  \sin(\theta) & \cos(\theta)
+              \end{bmatrix}
+          \end{equation}
+          Verification: $R(\theta)^T R(\theta) = I_2$ since $\cos^2(\theta) + \sin^2(\theta) = 1$.
+
+    \item \textbf{Givens rotation}: $G(i,j,\theta)$ rotates components $i$ and $j$ by angle $\theta$:
+          \begin{equation}
+              G(i,j,\theta) = \begin{bmatrix}
+                  I_{i-1} &   &    &         \\
+                          & c & -s &         \\
+                          & s & c  &         \\
+                          &   &    & I_{n-j}
+              \end{bmatrix}
+          \end{equation}
+          where $c = \cos(\theta)$, $s = \sin(\theta)$, and the $2 \times 2$ rotation block appears at positions $(i,i)$ through $(j,j)$.
+
+    \item \textbf{Householder reflector}: Given a unit vector $v \in \mathbb{C}^n$ with $\|v\|_2 = 1$:
+          \begin{equation}
+              P = I_n - 2 v v^H
+          \end{equation}
+          This matrix satisfies $P = P^H = P^{-1}$ (it is Hermitian and unitary).
+
+          \textbf{Verification of unitarity:}
+          \begin{align}
+              P^H P & = (I_n - 2 v v^H)^2               \\
+                    & = I_n - 4 v v^H + 4 v (v^H v) v^H \\
+                    & = I_n - 4 v v^H + 4 v v^H = I_n
+          \end{align}
+
+          \textbf{Geometric interpretation:} For any vector $\mathbf{x}$:
+          \begin{equation}
+              P \mathbf{x} = \mathbf{x} - 2 (v^H \mathbf{x}) v = \mathbf{x} - 2 (\mathbf{x}, v) v
+          \end{equation}
+          This reflects $\mathbf{x}$ across the hyperplane orthogonal to $v$.
+\end{enumerate}
+
+\subsubsection{Key Properties of Unitary Matrices}
+
+\begin{itemize}
+    \item \textbf{Inner product preservation}: $(Q\mathbf{x}, Q\mathbf{y}) = (\mathbf{x}, \mathbf{y})$
+    \item \textbf{Norm preservation}: $\|Q\mathbf{x}\| = \|\mathbf{x}\|$
+    \item \textbf{Unit determinant}: $|\det(Q)| = 1$
+    \item \textbf{Eigenvalues on unit circle}: All eigenvalues of $Q$ satisfy $|\lambda| = 1$
+\end{itemize}
+
+\subsubsection{Applications}
+\begin{itemize}
+    \item \textbf{Spectral decomposition}: If $A = A^H$, then $A = V\Lambda V^H$ where $V$ is unitary and $\Lambda$ is real diagonal.
+    \item \textbf{QR decomposition}: Any matrix $A$ can be factored as $A = QR$ where $Q$ is unitary and $R$ is upper triangular.
+\end{itemize}
+
+\subsection{QR Decomposition}
+The QR decomposition is a fundamental matrix factorization that expresses any matrix $A \in \mathbb{C}^{m \times n}$ (with $m \geq n$) as the product $A = QR$, where $Q \in \mathbb{C}^{m \times m}$ is unitary and $R \in \mathbb{C}^{m \times n}$ is upper triangular. When $A$ has full column rank, this decomposition is unique up to signs.
+
+The QR decomposition has numerous applications including:
+\begin{itemize}
+    \item Solving least squares problems: $\min_x \|Ax - b\|_2$
+    \item Computing matrix eigenvalues (QR algorithm)
+    \item Orthogonalizing vectors (Gram-Schmidt process)
+    \item Numerical solution of linear systems
+\end{itemize}
+
+There are several algorithms for computing the QR decomposition, with Householder reflections being the most numerically stable and widely used in practice.
+
+\subsubsection{Householder Reflections for QR}
+
+The key idea is to use a sequence of Householder reflectors to systematically introduce zeros below the diagonal of $A$. For column $k$, we construct a Householder matrix $P_k$ that zeros out entries $k+1, k+2, \ldots, m$ in that column, while preserving the upper triangular structure already achieved in previous columns.
+
+The complete factorization is:
+\begin{equation}
+    P_n P_{n-1} \cdots P_2 P_1 A = R
+\end{equation}
+where each $P_k$ is a Householder reflector. Since each $P_k$ is unitary, we have:
+\begin{equation}
+    A = \underbrace{P_1^H P_2^H \cdots P_n^H}_{Q} R
+\end{equation}
+
+\subsubsection{Algorithm}
+
+Given a vector $x \in \mathbb{C}^m$, we construct a Householder reflector $P$ such that $Px = \pm\|x\|_2 e_1$.
+
+\textbf{Construction of Householder vector:}
+\begin{align}
+    \sigma & = \begin{cases}
+                   -1 & \text{if } \Re(x_1) > 0    \\
+                   1  & \text{if } \Re(x_1) \leq 0
+               \end{cases} \\
+    u      & = x - \sigma \|x\|_2 e_1          \\
+    v      & = \frac{u}{\|u\|_2}
+\end{align}
+
+The sign choice prevents cancellation when $|x_1| \approx \|x\|_2$.
+
+\textbf{Result:} $P x = (I - 2vv^H)x = -\sigma \|x\|_2 e_1$
+
+\subsubsection{Full QR Algorithm}
+
+For $k = 1, 2, \ldots, n$:
+\begin{enumerate}
+    \item Extract subcolumn: $x = A_{k:m,k}$
+    \item Construct Householder vector $v_k$ as above
+    \item Apply reflection: $A_{k:m,k:n} \leftarrow A_{k:m,k:n} - 2v_k(v_k^H A_{k:m,k:n})$
+    \item Store $v_k$ in $A_{k+1:m,k}$ (below diagonal)
+\end{enumerate}
+
+\paragraph{Complexity:}
+The total computational cost is: $2mn^2 - \frac{2}{3}n^3$ flops for $m \times n$ matrix.
+
+\subsubsection{Worked Example}
+
+Consider $A = \begin{bmatrix} 1 & 1 \\ 1 & 2 \\ 1 & 3 \end{bmatrix}$.
+
+\textbf{Step 1 — First column:}
+\begin{itemize}
+    \item $x = [1, 1, 1]^T$, $\|x\|_2 = \sqrt{3}$
+    \item $\sigma = -1$ (since $x_1 = 1 > 0$)
+    \item $u = [1, 1, 1]^T + \sqrt{3}[1, 0, 0]^T = [1+\sqrt{3}, 1, 1]^T$
+    \item $v_1 = u/\|u\|_2$
+    \item $P_1 A = \begin{bmatrix} -\sqrt{3} & -2\sqrt{3} \\ 0 & \star \\ 0 & \star \end{bmatrix}$
+\end{itemize}
+
+\textbf{Step 2 — Second column (rows 2:3):}
+Apply similar process to zero out the $(3,2)$ entry.
+
+\textbf{Result:} $R = P_2 P_1 A$ is upper triangular, and $Q = P_1^T P_2^T$.
+
+\subsubsection{Implementation Notes}
+
+\begin{itemize}
+    \item \textbf{Never form $P$ explicitly}: Use the update $A \leftarrow A - 2v(v^H A)$
+    \item \textbf{In-place storage}: Store Householder vectors below the diagonal
+    \item \textbf{Numerical stability}: The algorithm is backward stable with excellent numerical properties
+\end{itemize}
+
+\subsubsection{Visualization of Householder reflection}
+The goal of this figure is to make the algebraic action of a Householder reflector visually transparent. Let $u$ be a unit vector (the reflector normal) and set
+\[
+    \alpha = u^H x, \qquad \pi_u(x)=\alpha u, \qquad P = I - 2 uu^H.
+\]
+Then we have the decomposition
+\[
+    x = \pi_u(x) + (x-\pi_u(x)), \qquad P x = -\pi_u(x) + (x-\pi_u(x)).
+\]
+In words: the component of $x$ parallel to $u$ (the projection $\pi_u(x)$) is negated by $P$, while the perpendicular component (lying in $u^\perp$) is unchanged. The TikZ picture below illustrates these parts.
+
+\begin{center}
+    \begin{tikzpicture}
+        % coordinates (numerical values computed above)
+        \coordinate (O) at (0,0);
+        \coordinate (u) at (0.447,0.894);
+        \coordinate (x) at (1.200,0.600);
+        \coordinate (proj) at (0.479,0.958);
+        \coordinate (xp) at (0.241,-1.318);
+
+        % perpendicular direction for the hyperplane (rotate u by 90 deg)
+        \coordinate (d) at (-0.894,0.447);
+
+        % shaded hyperplane band (parallelogram centered at origin)
+        \fill[gray!15] ($(O)!-3!(d)$) -- ($(O)!3!(d)$) -- ($(O)!3!(d)+(2,0.6)$) -- ($(O)!-3!(d)+(2,0.6)$) -- cycle;
+
+        % draw the hyperplane line (long)
+        \draw[dashed] ($(O)!-3!(d)$) -- ($(O)!3!(d)$) node[near end,above] {$v^\perp$};
+
+        % draw u
+        \draw[->,very thick] (O) -- ($(O)!0.5!(u)$) node[midway,left] {$u$};
+
+        % draw x and its decomposition
+        \draw[->,thick,red] (O) -- (x) node[midway,above right] {$x$};
+        \draw[->,thick, gray!80!black] (O) -- (proj) node[midway,above left] {$\alpha u$};
+        \draw[dashed] (proj) -- (x);
+
+        % draw reflected vector
+        \draw[->,thick,blue] (O) -- (xp) node[midway,below left] {$(I-2uu^H)x$};
+        % annotate the reflected component both above and below the hyperplane
+        \draw[dashed] (xp) -- ($(u)!1!(x)$) node[midway,below right] {$-2(u,x)u$};
+
+        % small legend
+        \begin{scope}[shift={(2.1,1.0)}]
+            \draw[->,thick,red] (0,0) -- (0.45,0) node[right] {$x$};
+            \draw[->,thick,blue] (0,-0.4) -- (0.45,-0.4) node[right] {$(I-2uu^H)x$};
+            \draw[->,thick,gray!80!black] (0,-0.8) -- (0.45,-0.8) node[right] {$\alpha u$};
+        \end{scope}
+    \end{tikzpicture}
+\end{center}
+Householder reflection of a vector $x$ across the hyperplane orthogonal to $u$. The projection $\pi_u(x)$ is shown in grey, while the reflected vector $Px$ is shown in blue.
+
+
+Remarks and interpretation:
+\begin{itemize}
+    \item Decomposition: the figure shows $x$ (red), its projection $\pi_u(x)$ (grey), and the reflected vector $Px$ (blue). Algebraically $Px=x-2\alpha u$.
+    \item Symmetry: the projection point $\pi_u(x)$ lies midway (along the $u$--direction) between $x$ and $Px$, which is the geometric content of the reflector.
+    \item Use in QR: algorithmically one chooses $u$ so that $Px$ becomes a (signed) multiple of a basis vector (e.g. $\pm\|x\|_2 e_1$); repeating this across columns zeros subdiagonals and produces an upper triangular $R$.
+\end{itemize}

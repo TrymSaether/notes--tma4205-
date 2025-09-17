@@ -1,0 +1,274 @@
+\section{Lecture 10: 10.09.2025}
+
+\subsection{Krylov space}
+\[
+    \mathcal{K}_m(A,\mathbf{v}) = \text{span}\{\mathbf{v}, A\mathbf{v}, A^2\mathbf{v}, \ldots, A^{m-1}\mathbf{v}\}
+\]
+
+\subsubsection{Arnoldi Algorithm}
+\begin{algorithm}[H]
+    \caption{Arnoldi Algorithm}
+    \begin{algorithmic}[0]
+        \State $\mathbf{v}_1 = \frac{\mathbf{v}}{\|\mathbf{v}\|_2}$
+        \For{$j = 1, 2, \ldots, m$}
+        \State $\mathbf{w} = A\mathbf{v}_j$
+        \For{$i = 1, 2, \ldots, j$}
+        \State $h_{i,j} = \langle \mathbf{v}_i, \mathbf{w} \rangle$
+        \State $\mathbf{w}_j = \mathbf{w}_j - h_{i,j} \mathbf{v}_i$
+        \EndFor
+        \State $h_{j+1,j} = \|\mathbf{w}_j\|_2$
+        \If{$h_{j+1,j} = 0$}
+        \State Stop
+        \EndIf
+        \State $\mathbf{v}_{j+1} = \frac{\mathbf{w}_j}{h_{j+1,j}}$
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}
+
+Out of the algorithm we get:
+\begin{align*}
+    V_{m + 1}            & = [\mathbf{v}_1, \mathbf{v}_2, \ldots, \mathbf{v}_{m+1}] \in \mathbb{R}^{n \times (m+1)} \\
+    V_{m+1}^\top V_{m+1} & = 0                                                                                      \\
+    \overline{H}_m       & =
+    \begin{bmatrix}
+        h_{1,1} & h_{1,2} & \cdots & h_{1,m}   \\
+        h_{2,1} & h_{2,2} & \cdots & h_{2,m}   \\
+        0       & h_{3,2} & \cdots & h_{3,m}   \\
+        \vdots  & \vdots  & \ddots & \vdots    \\
+        0       & 0       & \cdots & h_{m+1,m}
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        H_m \\
+        0
+    \end{bmatrix}
+    \in \mathbb{R}^{(m+1) \times m}
+\end{align*}
+With the relations:
+\begin{align*}
+    AV_m           & = V_{m+1} \overline{H}_m = V_m H_m + h_{m+1,m} \mathbf{v}_{m+1} \mathbf{e}_m^\top \\
+    V_m^\top A V_m & = H_m
+\end{align*}
+
+\subsection{FOM: Full Orthogonalization Method}
+Let $\mathcal{L}_m = \mathcal{K}_m(A, \mathbf{r}_0)$, where $\mathbf{r}_0 = \mathbf{b} - A\mathbf{x}_0$. Find $\mathbf{x}_m \in \mathbf{x}_0 + \mathcal{L}_m$ such that
+\begin{align*}
+    \mathbf{x}_m       & = \mathbf{x}_0 + V_m^\top \mathbf{y}_m         \\
+    \mathbf{y}_m       & = \beta H_m^{-1} \mathbf{e}_1                  \\
+    \beta              & = \|\mathbf{r}_0\|_2                           \\
+    \|\mathbf{r}_m\|_2 & = |h_{m+1,m}| |\mathbf{e}_m^\top \mathbf{y}_m|
+\end{align*}
+
+\paragraph{Complexity:}
+\begin{itemize}
+    \item Arnoldi:
+          \begin{itemize}
+              \item 1 $Av$ per iteration: $\mathcal{O}(N_z(A)\cdot m)$ flops.
+              \item Inner products and update of $\mathbf{w}$: $\mathcal{O}(nm)$ flops.
+          \end{itemize}
+    \item Sol. of $H_m \mathbf{y}_m = \beta \mathbf{e}_1$: $\mathcal{O}(m^2)$ flops.
+    \item Total $V_m^\top \mathbf{y}_m$: $\mathcal{O}(nm)$ flops.
+\end{itemize}
+
+Remedies:
+\begin{itemize}
+    \item Restart after a given $m$ iterations: $\mathbf{x}_0 \leftarrow \mathbf{x}_m$.
+    \item Ortogonalize only towards the last $k$ vectors of $\mathbf{v}_j$.
+    \item incomplete orthogonalization.
+\end{itemize}
+
+\subsection{GMRES: Generalized Minimum Residual Method}
+Let $\mathcal{K} = \mathcal{K}_m(A, \mathbf{r}_0)$, and $\mathcal{L}_m = A\mathcal{K}$.
+\begin{align*}
+    \mathbf{r}_m                     & = \mathbf{b} - A\mathbf{x}_m                                                                                                                                                                    \\
+    \|\mathbf{b} - A\mathbf{x}_m\|_2 & = \min_{\mathbf{x} \in \mathbf{x}_0 + \mathcal{K}_m} \|\mathbf{b} - A\mathbf{x}\|_2                                                                                                             \\
+    \mathbf{x}                       & \in \mathbf{x}_0 + \mathcal{K}_m \quad \Rightarrow \quad \mathbf{x} = \mathbf{x}_0 + V_m \mathbf{y}_m, \quad \mathbf{y}_m \in \mathbb{R}^m                                                      \\
+    \mathbf{r}                       & = \mathbf{b} - A\mathbf{x} = \mathbf{b} - A(\mathbf{x}_0 + V_m \mathbf{y}_m) = \mathbf{r}_0 - AV_m \mathbf{y}_m                                                                                 \\
+                                     & = \mathbf{r}_0 - V_{m+1} \overline{H}_m \mathbf{y}_m                                                                                                                                            \\
+                                     & = V_{m+1}(\beta \mathbf{e}_1 - \overline{H}_m \mathbf{y}_m)                                                                                                                                     \\
+    \|\mathbf{r}\|^2                 & = \|V_{m+1}(\beta \mathbf{e}_1 - \overline{H}_m \mathbf{y}_m)\|_2 = \|\beta \mathbf{e}_1 - \overline{H}_m \mathbf{y}_m\|_2, \quad \text{since } \|V_{m+1}\|_2 = 1 \text{ (orthonormal columns)} \\
+    \mathbf{y}_m                     & = \arg\min_{\mathbf{y} \in \mathbb{R}^m} \|\beta \mathbf{e}_1 - \overline{H}_m \mathbf{y}\|_2                                                                                                   \\
+    \mathbf{x}_m                     & = \mathbf{x}_0 + V_m \mathbf{y}_m
+\end{align*}
+Want to solve the overdetermined system:
+\[
+    \overline{H}_m \mathbf{y} \approx \beta \mathbf{e}_1
+\]
+We solve this least squares problem using QR factorization of $\overline{H}_m$ with Givens rotations.
+
+\subsubsection{QR Factorization Approach}
+Since $\overline{H}_m \in \mathbb{R}^{(m+1) \times m}$ is upper Hessenberg, we can efficiently compute its QR factorization using Givens rotations. Let
+\[
+    \overline{H}_m = Q_{m+1} R_m
+\]
+where $Q_{m+1} \in \mathbb{R}^{(m+1) \times (m+1)}$ is orthogonal and $R_m \in \mathbb{R}^{(m+1) \times m}$ has the structure:
+\[
+    \tilde{R}_m = \begin{bmatrix}
+        R_m \\
+        \mathbf{0}^\top
+    \end{bmatrix}
+\]
+with $R_m \in \mathbb{R}^{m \times m}$ upper triangular.
+
+Let
+\[
+    \bar\mathbf{g}_m = Q_{m+1}^\top \beta \mathbf{e}_1 = [\gamma_1, \gamma_2, \ldots, \gamma_{m+1}]^\top
+\]
+
+The least squares problem becomes:
+\begin{align*}
+    Q_m\left(\beta \mathbf{e}_1 - \overline{H}_m \mathbf{y}\right) & = \beta Q_m \mathbf{e}_1 - Q_m \overline{H}_m \mathbf{y}
+    = \overbrace{\beta Q_m \mathbf{e}_1}^{\bar{\mathbf{g}}_m}- \begin{bmatrix}
+                                                                   R_m \\
+                                                                   \mathbf{0}^\top
+                                                               \end{bmatrix} \mathbf{y}_m                                     \\
+                                                                   & =
+    \begin{bmatrix}
+        \mathbf{g}_{1:m} \\
+        g_{m+1}
+    \end{bmatrix} - \begin{bmatrix}
+                        R_m \\
+                        \mathbf{0}^\top
+                    \end{bmatrix} \mathbf{y}_m                                                                                \\
+                                                                   & = \begin{bmatrix}
+                                                                           \mathbf{g}_{1:m} - R_m \mathbf{y}_m \\
+                                                                           g_{m+1}
+                                                                       \end{bmatrix}
+\end{align*}
+
+Then:
+\begin{align*}
+    \|\beta \mathbf{e}_1 - \overline{H}_m \mathbf{y}\|^2 & = \|\bar\mathbf{g}_m - \tilde{R}_m \mathbf{y}\|^2 = \|\mathbf{g}_{1:m} - R_m \mathbf{y}\|^2 + |g_{m+1}|^2 \\
+    \mathbf{y}_m                                         & = R_m^{-1} \mathbf{g}_{1:m}                                                                               \\
+    \|\mathbf{r}_m\|_2                                   & = |\gamma_{m+1}|
+\end{align*}
+Then we do QR factorization by Givens rotations:
+\begin{align*}
+    h                             & = \begin{bmatrix}
+                                          h_1 \\
+                                          h_2
+                                      \end{bmatrix}, \quad
+    \Omega = \begin{bmatrix}
+                 c  & s \\
+                 -s & c
+             \end{bmatrix}, \quad c^2 + s^2 = 1                                                              \\
+    \Omega h                      & = \begin{bmatrix}
+                                          \|h\| \\
+                                          0
+                                      \end{bmatrix}                                                         \\
+    \begin{bmatrix}
+        c  & s \\
+        -s & c
+    \end{bmatrix} \begin{bmatrix}
+                      h_1 \\
+                      h_2
+                  \end{bmatrix} & = \begin{bmatrix}
+                                        r \\
+                                        0
+                                    \end{bmatrix}                                                           \\
+    \Rightarrow \quad \|h\|       & = \sqrt{h_1^2 + h_2^2}, \quad c = \frac{h_1}{r}, \quad s = \frac{h_2}{r}
+\end{align*}
+In the Arnoldi process for $k=1$:
+\begin{align*}
+    H_1                & = \begin{bmatrix}
+                               h_{1,1} \\
+                               h_{2,1}
+                           \end{bmatrix} \xrightarrow{\Omega_1} \begin{bmatrix}
+                                                                    \tilde{h}_{1,1} \\
+                                                                    0
+                                                                \end{bmatrix} \\
+    \beta \mathbf{e}_1 & = \begin{bmatrix}
+                               \beta \\
+                               0
+                           \end{bmatrix} \xrightarrow{\Omega_1} \begin{bmatrix}
+                                                                    \gamma_1 \\
+                                                                    \gamma_2
+                                                                \end{bmatrix}
+\end{align*}
+For $k=2$:
+\begin{align*}
+    H_2             & = \begin{bmatrix}
+                            \tilde{h}_{1,1} & h_{1,2} \\
+                            0               & h_{2,2} \\
+                            0               & h_{3,2}
+                        \end{bmatrix} \xrightarrow{\Omega_2} \begin{bmatrix}
+                                                                 \tilde{h}_{1,1} & \tilde{h}_{1,2} \\
+                                                                 0               & \tilde{h}_{2,2} \\
+                                                                 0               & 0
+                                                             \end{bmatrix} \\
+    \begin{bmatrix}
+        \gamma_1 \\
+        \gamma_2 \\
+        \gamma_3
+    \end{bmatrix} & \xrightarrow{\Omega_2} \begin{bmatrix}
+                                               \gamma_1         \\
+                                               \tilde{\gamma}_2 \\
+                                               \tilde{\gamma}_3
+                                           \end{bmatrix}
+\end{align*}
+
+after $m$ iterations we have:
+\begin{align*}
+    \tilde{R}_m      & = \begin{bmatrix}
+                             \tilde{h}_{1,1} & \tilde{h}_{1,2} & \cdots & \tilde{h}_{1,m} \\
+                             0               & \tilde{h}_{2,2} & \cdots & \tilde{h}_{2,m} \\
+                             0               & 0               & \cdots & \tilde{h}_{3,m} \\
+                             \vdots          & \vdots          & \ddots & \vdots          \\
+                             0               & 0               & \cdots & 0
+                         \end{bmatrix} \\
+    \bar\mathbf{g}_m & = \begin{bmatrix}
+                             \gamma_1 \\
+                             \gamma_2 \\
+                             \vdots   \\
+                             \gamma_{m+1}
+                         \end{bmatrix}
+    =
+    \begin{bmatrix}
+        g_{1:m} \\
+        g_{m+1}
+    \end{bmatrix}
+\end{align*}
+
+Afer $k$ iterates:
+\begin{align*}
+    \begin{bmatrix}
+        h_{1,k} \\
+        h_{2,k} \\
+        \vdots  \\
+        h_{k,k} \\
+        h_{k+1,k}
+    \end{bmatrix} & \xrightarrow{\Omega_k} \begin{bmatrix}
+                                               \gamma_1 \\
+                                               \gamma_2 \\
+                                               \vdots   \\
+                                               \gamma_k \\
+                                               0
+                                           \end{bmatrix}
+\end{align*}
+before applying Givens rotations.
+\[
+    \|r_{k-1}\| = |\gamma_k|
+\]
+Then Givens:
+\begin{align*}
+    \begin{bmatrix}
+        c_k  & s_k \\
+        -s_k & c_k
+    \end{bmatrix} \begin{bmatrix}
+                      \gamma_k \\
+                      0
+                  \end{bmatrix} & = \begin{bmatrix}
+                                        c_k \gamma_k \\
+                                        -s_k \gamma_k
+                                    \end{bmatrix}                        \\
+    \|r_k\|                       & = |-s_k \gamma_k| = |s_k| \|r_{k-1}\|
+\end{align*}
+
+Then
+\begin{align*}
+    |s_k|            & \leq 1                                                                                                               \\
+    \text{If } |s_k| & < 1, \text{ then } \|r_k\| < \|r_{k-1}\|                                                                             \\
+    \text{If } |s_k| & = 1, \text{ then stagnation, but then } c_k = 0 \text{ which means } h_{k, k} = 0 \text{ or } A \text{ is singular.} \\
+    c_k              & = \frac{h_{k,k}}{\sqrt{h_{k,k}^2 + h_{k+1,k}^2}}, \qquad s_k = \frac{h_{k+1,k}}{\sqrt{h_{k,k}^2 + h_{k+1,k}^2}}
+\end{align*}
+

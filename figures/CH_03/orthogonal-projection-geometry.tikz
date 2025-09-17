@@ -1,0 +1,31 @@
+\begin{tikzpicture}[scale=1.2]
+    % Draw the subspace S (as a 3D plane)
+    \fill[blue!20, opacity=0.7] (-1,-1,0) -- (3,-1,0) -- (3,2,2) -- (-1,2,2) -- cycle;
+    \draw[blue, thick] (-1,-1,0) -- (3,-1,0) -- (3,2,2) -- (-1,2,2) -- cycle;
+
+    % Origin
+    \fill[black] (0,0) circle (2pt);
+    \node[below left] at (0,0) {$O$};
+
+    % Original vector v
+    \draw[red, very thick, ->] (0,0) -- (1.5,2.5);
+    \node[above right] at (1.5,2.5) {$\mathbf{v} \in \mathbb{R}^n = \mathcal{S} \oplus \mathcal{S}^\perp$};
+
+    % Projection Pv onto the subspace
+    \draw[green!70!black, very thick, ->] (0,0) -- (1.5,0.8);
+    \node[below right] at (1.5,0.8) {$P\mathbf{v} \in \mathcal{S}$};
+
+    % Orthogonal component (v - Pv)
+    \draw[orange, thick, ->] (1.5,0.8) -- (1.5,2.5);
+    \node[right] at (1.5,1.65) {$\mathbf{v} - P\mathbf{v} \in \mathcal{S}^\perp$};
+
+    % Perpendicular indicator
+    \draw[orange, thin] (1.3,0.8) -- (1.3,1.0) -- (1.5,1.0);
+
+    % Subspace label
+    \node at (-1.5,1.2) {$\mathcal{S}$};
+
+    % Annotation
+    \node[below] at (0,-2.2) {Orthogonal projection: $\mathbf{v} = P\mathbf{v} + (\mathbf{v} - P\mathbf{v})$};
+    \node[below] at (0,-2.6) {where $P\mathbf{v} \in \mathcal{S}$ and $(\mathbf{v} - P\mathbf{v}) \perp \mathcal{S}$};
+\end{tikzpicture}

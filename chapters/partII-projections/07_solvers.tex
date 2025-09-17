@@ -1,0 +1,178 @@
+\chapter{Iterative Solvers}
+\label{chap:projection-methods}
+
+\section{Stationary Iterative Methods}
+Split $A=M-N$ with easily invertible $M$. The fixed-point iteration
+\[
+  \mathbf{x}_{k+1} = M^{-1}N\,\mathbf{x}_k + M^{-1}\mathbf{b}
+\]
+converges for any $\mathbf{x}_0$ if and only if the spectral radius $\rho(M^{-1}N)<1$.
+Typical choices are:
+\begin{itemize}
+  \item \textbf{Jacobi:} $M=\operatorname{diag}(A)$, $N=M-A$.
+  \item \textbf{Gauss--Seidel:} $M=D+L$, $N=-(U)$ for $A=L+D+U$.
+  \item \textbf{SOR:} $M=\tfrac{1}{\omega}(D+\omega L)$, $N=\tfrac{1}{\omega}[(1-\omega)D-\omega U]$, $\;0<\omega<2$.
+\end{itemize}
+These methods are cheap per step but can be slow; they are often used as smoothers or preconditioners.
+
+\section{One-Dimensional Projection Step}
+Given $\mathcal{K}=\operatorname{span}\{\mathbf{v}\}$ and $\mathcal{L}=\operatorname{span}\{\mathbf{w}\}$, a single projection update from $\mathbf{x}_0$ has the form
+\[
+  \widetilde{\mathbf{x}} = \mathbf{x}_0 + \alpha\,\mathbf{v},\qquad \widetilde{\mathbf{r}}=\mathbf{r}_0-\alpha A\mathbf{v},\qquad \alpha=\frac{\mathbf{w}^\top\mathbf{r}_0}{\mathbf{w}^\top A\mathbf{v}}.
+\]
+Choices of $\mathbf{v}$ and $\mathbf{w}$ produce classical 1D methods such as Steepest Descent and Minimum Residual.
+
+\section{Steepest Descent (SD)}
+Let $A = A^{\top} \succ 0$ (SPD).
+Given $\mathbf{x}_0$ with $\mathbf{r}_0 = \mathbf{b} - A\mathbf{x}_0$.
+\begin{align*}
+  \mathcal{K}              & = \operatorname{span}\{\mathbf{r}\},                                                                                                                              \\
+  \mathcal{L}              & = \mathcal{K},                                                                                                                                                    \\
+  \mathbf{x}_{k+1}         & = \mathbf{x}_k + \alpha_k \mathbf{r}_k,
+  \quad \alpha_k = \frac{\|\mathbf{r}_k\|_2^2}{\mathbf{r}_k^{\top} A \mathbf{r}_k},                                                                                                            \\
+  \mathbf{d}_k             & = \mathbf{x}_{\star} - \mathbf{x}_k,                                                                                                                              \\
+  \|\mathbf{d}_{k+1}\|_A   & \leq \|\mathbf{d}_k\|_A,                                                                                                                                          \\
+  \|\mathbf{d}_{k+1}\|_A^2 & = \|\mathbf{d}_k\|_A^2\left(1 - \frac{(\mathbf{r}_k^{\top} \mathbf{r}_k)^2}{\mathbf{r}_k^{\top} A \mathbf{r}_k \,\mathbf{r}_k^{\top} A^{-1} \mathbf{r}_k}\right).
+\end{align*}
+
+\subsection{Convergence Bound for Steepest Descent}
+Applying the Kantorovich inequality \autoref{sec:kantorovich-inequality}
+\begin{align*}
+  \frac{\|\mathbf{r}_k\|_2^4}{\|\mathbf{r}_k\|_A^2 \|\mathbf{r}_k\|_{A^{-1}}^2}
+   & \geq \frac{4 \lambda_1 \lambda_n}{(\lambda_1 + \lambda_n)^2},                                     \\
+  \|\mathbf{d}_{k+1}\|_A^2
+   & \leq \|\mathbf{d}_k\|_A^2\left(1 - \frac{4 \lambda_1 \lambda_n}{(\lambda_1 + \lambda_n)^2}\right) \\
+   & = \|\mathbf{d}_k\|_A^2\left(\frac{\lambda_n - \lambda_1}{\lambda_n + \lambda_1}\right)^2.
+\end{align*}
+Hence steepest descent converges linearly with contraction factor
+\[
+  \rho = \frac{\kappa - 1}{\kappa + 1}, \qquad \kappa = \frac{\lambda_n}{\lambda_1}.
+\]
+
+\section{Conjugate Gradient (CG) for SPD Systems}
+
+Conjugate Gradient (CG) solves $A\mathbf{x}=\mathbf{b}$ with $A=A^T\succ0$ by searching in $\mathbf{x}_0+\mathcal{K}_m(A,\mathbf{r}_0)$ while enforcing A-orthogonality (conjugacy) of directions.
+It is optimal in the $A$-norm over the Krylov space and requires only short recurrences.
+
+\subsection{Derivation of CG}
+Let $\mathbf{r}_k=\mathbf{b}-A\mathbf{x}_k$ and directions $\mathbf{p}_k$. CG enforces
+\[
+  \mathbf{p}_i^T A\,\mathbf{p}_j=0\;(i\ne j),\qquad \mathbf{r}_{k+1}\perp \mathcal{K}_{k+1}(A,\mathbf{r}_0).
+\]
+Updates follow from 1D line minimization along $\mathbf{p}_k$:
+\[
+  \alpha_k=\frac{\mathbf{r}_k^T\mathbf{r}_k}{\mathbf{p}_k^T A\mathbf{p}_k},\quad \mathbf{x}_{k+1}=\mathbf{x}_k+\alpha_k\mathbf{p}_k,\quad \mathbf{r}_{k+1}=\mathbf{r}_k-\alpha_k A\mathbf{p}_k,
+\]
+and $\mathbf{p}_{k+1}=\mathbf{r}_{k+1}+\beta_k\mathbf{p}_k$ with $\beta_k=\dfrac{\mathbf{r}_{k+1}^T\mathbf{r}_{k+1}}{\mathbf{r}_k^T\mathbf{r}_k}$.
+
+\begin{algorithm}[H]
+  \caption{Conjugate Gradient (CG)}
+  \label{alg:cg}
+  \begin{algorithmic}[0]
+    \Require $A=A^T\succ0$, $\mathbf{b}$, $\mathbf{x}_0$
+    \State $\mathbf{r}_0=\mathbf{b}-A\mathbf{x}_0$
+    \State $\mathbf{p}_0=\mathbf{r}_0$
+    \For{$k=0,1,2,\dots$}
+    \State $\alpha_k=\dfrac{\mathbf{r}_k^T\mathbf{r}_k}{\mathbf{p}_k^T A\mathbf{p}_k}$
+    \State $\mathbf{x}_{k+1}=\mathbf{x}_k+\alpha_k\mathbf{p}_k$
+    \State $\mathbf{r}_{k+1}=\mathbf{r}_k-\alpha_k A\mathbf{p}_k$
+    \If{converged} \Return $\mathbf{x}_{k+1}$ \EndIf
+    \State $\beta_k=\dfrac{\mathbf{r}_{k+1}^T\mathbf{r}_{k+1}}{\mathbf{r}_k^T\mathbf{r}_k}$
+    \State $\mathbf{p}_{k+1}=\mathbf{r}_{k+1}+\beta_k\mathbf{p}_k$
+    \EndFor
+  \end{algorithmic}
+\end{algorithm}
+
+\subsection{Convergence and Error Bounds}
+Let $\mathbf{e}_k=\mathbf{x}_\star-\mathbf{x}_k$. In the $A$-norm,
+\[
+  \|\mathbf{e}_k\|_A=\min_{q\in\mathbb{P}_k,\;q(0)=1}\|q(A)\,\mathbf{e}_0\|_A\;\le\;2\left(\frac{\sqrt{\kappa}-1}{\sqrt{\kappa}+1}\right)^k\|\mathbf{e}_0\|_A,\quad \kappa=\frac{\lambda_{\max}(A)}{\lambda_{\min}(A)}.
+\]
+Spectrum clustering and preconditioning reduce $\kappa$ and improve convergence.
+
+\paragraph{Relation to Krylov and Lanczos.} CG is equivalent to Lanczos applied to $A$ in the energy inner product; the three-term recurrence arises from orthogonal polynomials relative to $A$.
+
+\paragraph{Preconditioning.} See Chapter~\ref{chap:preconditioning} for left/right preconditioned CG and effects on spectra.
+
+
+
+\section{Minimum Residual (MR)}
+For general $A$, choose $\mathbf{v}=\mathbf{r}_k$ and $\mathbf{w}=A\mathbf{r}_k$. The step size
+\[
+  \alpha_k = \frac{\mathbf{r}_k^\top A\mathbf{r}_k}{\|A\mathbf{r}_k\|_2^2}
+\]
+minimizes $\|\mathbf{r}_{k+1}\|_2=\|\mathbf{r}_k-\alpha A\mathbf{r}_k\|_2$ over $\alpha\in\mathbb{R}$. If the symmetric part is positive definite, i.e., $\tfrac12(A+A^\top)\succ0$, then
+\[
+  \|\mathbf{r}_{k+1}\|_2^2 \le \left(1-\frac{\mu^2}{\sigma^2}\right)\|\mathbf{r}_k\|_2^2,\qquad \mu=\lambda_{\min}\bigl(\tfrac12(A+A^\top)\bigr),\;\sigma=\|A\|_2.
+\]
+When $A$ is SPD, MR and SD coincide.
+
+\section{Full Orthogonalization Method (FOM)}
+Let $\mathbf{x}_m=\mathbf{x}_0+V_m\mathbf{y}_m$, where $V_m$ comes from $m$ steps of Arnoldi (Chapter~\ref{chap:arnoldi}). With the Galerkin choice $\mathcal{L}=\mathcal{K}_m$, the Petrov--Galerkin condition $V_m^{\top}\mathbf{r}_m=0$ gives
+\[
+  H_m\,\mathbf{y}_m = V_m^{\top}\mathbf{r}_0 = \beta\,\mathbf{e}_1,\qquad \beta=\norm{\mathbf{r}_0}_2,
+\]
+and the update $\mathbf{x}_m=\mathbf{x}_0+V_m\mathbf{y}_m$. Using the Arnoldi relation, the residual satisfies
+\[
+  \mathbf{r}_m = -h_{m+1,m}\,(\mathbf{e}_m^{\top}\mathbf{y}_m)\,\mathbf{v}_{m+1},\qquad \norm{\mathbf{r}_m}_2 = |h_{m+1,m}|\,\abs{\mathbf{e}_m^{\top}\mathbf{y}_m}.
+\]
+
+\begin{algorithm}[H]
+  \caption{FOM (incremental)}\label{alg:fom}
+  \begin{algorithmic}[0]
+    \Require $A\in\mathbb{R}^{n\times n}$, $\mathbf{b}$, $\mathbf{x}_0$, $m_{\max}$, tol
+    \State $\mathbf{r}_0=\mathbf{b}-A\mathbf{x}_0$, $\beta=\norm{\mathbf{r}_0}_2$, $\mathbf{v}_1=\mathbf{r}_0/\beta$
+    \For{$j=1,2,\dots,m_{\max}$}
+    \State One Arnoldi step to update $\overline H_j$ and $\mathbf{v}_{j+1}$
+    \State Form $H_j=\overline H_j(1{:}j,1{:}j)$, solve $H_j\mathbf{y}_j=\beta\mathbf{e}_1$
+    \State $\mathbf{x}_j=\mathbf{x}_0+V_j\mathbf{y}_j$, residual $\mathbf{r}_j = -h_{j+1,j}(\mathbf{e}_j^{\top}\mathbf{y}_j)\,\mathbf{v}_{j+1}$
+    \If{$\norm{\mathbf{r}_j}_2\le\text{tol}$} \Return $\mathbf{x}_j$ \EndIf
+    \If{$h_{j+1,j}=0$} \State \textbf{break} \Comment{happy breakdown} \EndIf
+    \EndFor
+  \end{algorithmic}
+\end{algorithm}
+
+\section{GMRES: Generalized Minimum Residual}
+GMRES chooses $\mathbf{y}_m$ to minimize the residual 2-norm over $\mathbf{x}_0+\mathcal{K}_m$ (Petrov--Galerkin with $\mathcal{L}=A\mathcal{K}_m$). Using the Arnoldi relation,
+\[
+  \norm{\mathbf{r}_m}_2 = \min_{\mathbf{y}\in\mathbb{R}^m} \norm{\beta\,\mathbf{e}_1 - \overline H_m\mathbf{y}}_2,\qquad \mathbf{x}_m=\mathbf{\,x}_0+V_m\mathbf{y}_m.
+\]
+Exploit the upper-Hessenberg structure by maintaining an implicit QR of $\overline H_m$ via Givens rotations (see Chapter~\ref{chap:qr}):
+\[
+  Q_{m+1}\,\overline H_m = \tilde{R}_m = \begin{bmatrix} R_m \\ 0 \end{bmatrix},\qquad Q_{m+1}\,(\beta\,\mathbf{e}_1)=\bar{\mathbf{g}}_m=\begin{bmatrix}\mathbf{g}_{1:m}\\g_{m+1}\end{bmatrix}.
+\]
+Then $\mathbf{y}_m = R_m^{-1}\,\mathbf{g}_{1:m}$ and the residual norm update is immediate: $\norm{\mathbf{r}_m}_2 = |g_{m+1}|$.
+
+\begin{algorithm}[H]
+  \caption{GMRES (with Givens updates)}\label{alg:gmres}
+  \begin{algorithmic}[0]
+    \Require $A\in\mathbb{R}^{n\times n}$, $\mathbf{b}$, $\mathbf{x}_0$, $m_{\max}$, tol
+    \State $\mathbf{r}_0=\mathbf{b}-A\mathbf{x}_0$, $\beta=\norm{\mathbf{r}_0}_2$, $\mathbf{v}_1=\mathbf{r}_0/\beta$, initialize empty Givens set
+    \For{$j=1,2,\dots,m_{\max}$}
+    \State Arnoldi step to get $h_{1:j+1,j}$ and $\mathbf{v}_{j+1}$
+    \State Apply existing Givens rotations to $h_{1:j+1,j}$; form and apply one new rotation $\Omega_j$ to zero $h_{j+1,j}$
+    \State Update right-hand side $\bar{\mathbf{g}}$ with $\Omega_j$; residual norm is $|g_{j+1}|$
+    \If{$|g_{j+1}|\le\text{tol}$} \State back-solve $R_j\mathbf{y}_j=\mathbf{g}_{1:j}$; \Return $\mathbf{x}_j=\mathbf{x}_0+V_j\mathbf{y}_j$ \EndIf
+    \EndFor
+  \end{algorithmic}
+\end{algorithm}
+
+\subsection*{Worked Givens Update (one step)}
+To zero the subdiagonal entry $h_{j+1,j}$ in column $j$ of $\overline H_j$, take $a=\tilde h_{j,j}$ (after applying prior rotations) and $b=h_{j+1,j}$, and form
+\[
+  r=\sqrt{a^2+b^2},\qquad c=\frac{a}{r},\quad s=\frac{b}{r},\qquad \begin{bmatrix}c&s\\-s&c\end{bmatrix}\begin{bmatrix}a\\ b\end{bmatrix}=\begin{bmatrix}r\\ 0\end{bmatrix}.
+\]
+Apply the same rotation to the right-hand side $\bar{\mathbf g}$ to update the residual surrogate:
+\[
+  \begin{bmatrix}g_j\\ g_{j+1}\end{bmatrix} \leftarrow \begin{bmatrix}c&s\\-s&c\end{bmatrix} \begin{bmatrix}g_j\\ g_{j+1}\end{bmatrix},\qquad \|\mathbf r_j\|_2=|g_{j+1}|.
+\]
+
+\section{Block Stationary Methods}
+Partition $A$ into blocks $A_{ij}$ and $\mathbf{x},\mathbf{b}$ accordingly. The block Jacobi iteration updates blocks independently using the block diagonal:
+\[
+  \mathbf{x}_i^{(k+1)} = A_{ii}^{-1}\left(\mathbf{b}_i - \sum_{j\ne i} A_{ij}\,\mathbf{x}_j^{(k)}\right),\qquad i=1,\dots,p.
+\]
+Convergence requires appropriate spectral radius conditions and invertible diagonal blocks. Block variants of Gauss–Seidel and SOR are defined analogously.
+
+\section{Restarted GMRES and Memory}
+Full GMRES stores $V_{m+1}$ and $\overline H_m$, with $O(nm)$ memory and $O(m^2)$ orthogonalization. Restarted GMRES($m$) limits the basis size by periodically resetting the Krylov space with $\mathbf{r}\leftarrow\mathbf{r}_m$ and repeating. Restarts control memory and cost but can slow convergence; preconditioning is often essential.

@@ -1,0 +1,41 @@
+\begin{tikzpicture}[scale=1.0]
+    % Set up 3D coordinate system
+    \begin{scope}[x={(1cm,0cm)}, y={(0.5cm,0.866cm)}, z={(0cm,1cm)}]
+
+        % Draw the column space as a plane
+        \fill[blue!20, opacity=0.6] (0,0,0) -- (3,0,0) -- (3,2,0) -- (0,2,0) -- cycle;
+        \draw[blue, thick] (0,0,0) -- (3,0,0) -- (3,2,0) -- (0,2,0) -- cycle;
+
+        % Origin
+        \fill[black] (0,0,0) circle (1pt);
+
+        % Original vector b (outside the plane)
+        \draw[red, very thick, ->] (0,0,0) -- (2,1,2.5);
+        \node[above] at (2,1,2.5) {$\mathbf{b}$};
+
+        % Projection P_A b onto the column space
+        \draw[green!70!black, very thick, ->] (0,0,0) -- (2,1,0);
+        \node[below right] at (2,1,0) {$P_A \mathbf{b}$};
+
+        % Residual vector (b - P_A b)
+        \draw[orange, thick, ->] (2,1,0) -- (2,1,2.5);
+        \node[right] at (2,1,1.25) {$\mathbf{b} - P_A \mathbf{b}$};
+
+        % Perpendicular indicator
+        \draw[orange, thin] (1.8,1,0) -- (1.8,1,0.2) -- (2,1,0.2);
+
+        % Column vectors of A
+        \draw[blue!70!black, thick, ->] (0,0,0) -- (1.5,0,0);
+        \node[below] at (1.5,0,0) {$\mathbf{a}_1$};
+        \draw[blue!70!black, thick, ->] (0,0,0) -- (0,1.8,0);
+        \node[left] at (0,1.8,0) {$\mathbf{a}_2$};
+
+        % Label for the column space
+        \node[blue] at (1.5,1,0.3) {$\text{Col}(A)$};
+
+    \end{scope}
+
+    % Equations
+    \node[below] at (0,-1.5) {$P_A = A(A^T A)^{-1} A^T$};
+    \node[below] at (0,-2) {$P_A \mathbf{b}$ is the closest point in $\text{Col}(A)$ to $\mathbf{b}$};
+\end{tikzpicture}

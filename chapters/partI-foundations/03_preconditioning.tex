@@ -1,0 +1,35 @@
+\chapter{Preconditioning}
+\label{chap:preconditioning}
+
+Preconditioning transforms a linear system into an equivalent one that is easier to solve iteratively. It improves spectral properties, reduces iteration counts, and can enable restarts to be effective.
+
+\begin{learninggoals}[title={Learning goals}]
+  \begin{itemize}[nosep]
+    \item distinguish left, right, and split preconditioning,
+    \item understand spectral effects and conditioning improvements,
+    \item recognize basic preconditioners (Jacobi/SSOR/ILU/IC) and when to use them.
+  \end{itemize}
+\end{learninggoals}
+
+\section{Forms of Preconditioning}
+Let $M\approx A$ be nonsingular.
+\begin{itemize}
+  \item Left: solve $M^{-1}A\,\mathbf{x}=M^{-1}\mathbf{b}$; Krylov space is $\mathcal{K}_m(M^{-1}A,\,M^{-1}\mathbf{r}_0)$.
+  \item Right: solve $AM^{-1}\,\mathbf{y}=\mathbf{b}$ and set $\mathbf{x}=M^{-1}\mathbf{y}$; residuals live in the original space.
+  \item Split/symmetric: e.g., $M=LL^T$ with SPD $M$ for CG.
+\end{itemize}
+
+\section{Spectral Effects}
+Ideal preconditioning clusters eigenvalues and reduces $\kappa$. For CG, use SPD $M$ and apply CG to $M^{-1}A$ in the $M$-inner product. For GMRES, right preconditioning preserves residual minimization in the Euclidean norm.
+
+\section{Basic Preconditioners}
+\begin{itemize}
+  \item Jacobi (diagonal): $M=\operatorname{diag}(A)$; cheap, modest improvement.
+  \item SSOR: uses symmetric Gauss--Seidel splitting; SPD if $A$ is SPD.
+  \item Incomplete LU/Cholesky (ILU/IC): drop small/far fill to approximate LU/Cholesky; strong in practice on sparse PDE matrices.
+  \item Algebraic/Geometric multigrid (AMG/GMG): powerful for elliptic PDEs; often used as preconditioners for CG/GMRES.
+\end{itemize}
+
+\section{Restarts and Flexibility}
+Restarted GMRES($m$) limits memory; with good preconditioning, restarts remain effective. Flexible GMRES allows iteration-varying preconditioners (e.g., inner solves), at the cost of additional storage.
+

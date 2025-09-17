@@ -1,0 +1,165 @@
+\section{Lecture 6}
+\textbf{Date:} 03.09.2025
+
+\section*{Steepest Descent (SD)}
+Let $A = A^{\top} \succ 0$ (SPD). Given $\mathbf{x}_0$ with $\mathbf{r}_0 = \mathbf{b} - A\mathbf{x}_0$.
+\begin{align*}
+    \mathcal{K}              & = \operatorname{span}\{\mathbf{r}\}                                                                                                                            \\
+    \mathcal{L}              & = \mathcal{K}                                                                                                                                                  \\
+    \mathbf{x}_{k+1}         & = \mathbf{x}_k + \alpha_k \mathbf{r}_k, \quad \alpha_k = \|\mathbf{r}_k\|_2^2 / \mathbf{r}_k^{\top} A \mathbf{r}_k                                             \\
+    \mathbf{d}_k             & = \mathbf{x}_{\star} - \mathbf{x}_k                                                                                                                            \\
+    \|\mathbf{d}_{k+1}\|_A   & \leq \|\mathbf{d}_k\|_A                                                                                                                                        \\
+    \|\mathbf{d}_{k+1}\|_A^2 & = \|\mathbf{d}_k\|_A^2\left(1 - \frac{(\mathbf{r}_k^{\top} \mathbf{r}_k)^2}{\mathbf{r}_k^{\top} A \mathbf{r}_k \mathbf{r}_k^{\top} A^{-1} \mathbf{r}_k}\right)
+\end{align*}
+Using Kantorovich inequality: Let $B \in \mathbb{R}^{n \times n}$ be SPD then for all $\mathbf{x} \in \mathbb{R}^n$:
+\[
+    \frac{\|\mathbf{x}\|_B^2 \|\mathbf{x}\|_{B^{-1}}^2}{\|\mathbf{x}\|_2^4} \leq \frac{1}{4}\cdot\frac{(\lambda_1 + \lambda_n)^2}{\lambda_1 \lambda_n}, \qquad \lambda_1 \geq \ldots \geq \lambda_n > 0
+\]
+
+$B$ is SPD so there exists $Q$ orthogonal and $\Lambda = \operatorname{diag}(\lambda_1, \ldots, \lambda_n)$ such that $B = Q^{\top}\Lambda Q$. Choose $\|\mathbf{x}\|_2 = 1$ where $\|Q \mathbf{x}\|_2 = \|\mathbf{x}\|_2 = 1$. Then:
+\begin{align*}
+    B^{-1}                    & = Q^{\top} \Lambda^{-1} Q                                                                                                           \\
+    \|\mathbf{x}\|_B^2        & = \mathbf{x}^{\top} B \mathbf{x} = (Q\mathbf{x})^{\top} \Lambda (Q\mathbf{x}) = \sum_{i=1}^n \lambda_i y_i^2, \quad y = Q\mathbf{x} \\
+    \|\mathbf{x}\|_{B^{-1}}^2 & = \mathbf{x}^{\top} B^{-1} \mathbf{x} = (Q\mathbf{x})^{\top} \Lambda^{-1} (Q\mathbf{x}) = \sum_{i=1}^n \lambda_i^{-1} y_i^2         \\
+\end{align*}
+$(\overline{\lambda}, \overline{\lambda}^{-1})$ as a weighted discre center of gravity for the point $(\lambda_i, \frac{1}{\lambda_i})$ for $i = 1, \ldots, n$.
+
+\[ \ell(\lambda) = \frac{1}{\lambda_1} + \frac{1}{\lambda_n} - \frac{\lambda}{\lambda_1 \lambda_n}, \qquad \ell(\lambda_1) = \frac{1}{\lambda_1}, \qquad \ell(\lambda_n) = \frac{1}{\lambda_n} \]
+
+Then $(\bar\lambda, \bar{\lambda}^{-1})$ is below $\ell(\lambda)$:
+\[
+\bar\lambda^{-1} \leq \ell(\bar\lambda)
+\]
+which has maximum at $\lambda = \tfrac12(\lambda_1 + \lambda_n)$.
+\[
+\bar\lambda \bar\lambda^{-1} \leq \frac{(\lambda_1 + \lambda_n)^2}{4 \lambda_1 \lambda_n} = \bar\lambda\left(\frac{1}{\lambda_1} + \frac{1}{\lambda_n}\right)
+\]
+\begin{tikzpicture}
+    \begin{axis}[
+            width=10cm, height=6.2cm,
+            axis lines=middle,
+            xmin=0.8, xmax=4.4,
+            ymin=0,   ymax=1.15,
+            xlabel={$\lambda$}, ylabel={$1/\lambda$},
+            xtick={1,2.4,4},
+            xticklabels={$\,\lambda_n$, $\bar\lambda$, $\,\lambda_1$},
+            ytick={1,0.25},
+            yticklabels={$1/\lambda_n$, $1/\lambda_1$},
+            tick style={black},
+        ]
+        % curve y = 1/x
+        \addplot[thick, samples=200, domain=1:4] {1/x} node[pos=0.85, above] {$1/\lambda$};
+
+        % chord between (\lambda_n,1/\lambda_n) and (\lambda_1,1/\lambda_1)
+        \addplot[thick, dashed, domain=1:4, samples=2]
+        {(1/1) + ((1/4)-(1/1))*((x-1)/(4-1))}
+        node[pos=0.6, above right] {$\ell(\lambda)$};
+
+        % endpoints
+        \addplot[only marks, mark=*] coordinates {(1,1) (4,0.25)};
+
+        % bar-lambda marks
+        \addplot[densely dotted] coordinates {(2.4,0) (2.4,1.2)};
+        \addplot[only marks, mark=*, mark size=1.8pt] coordinates {(2.4,{1/2.4})}; % point on curve
+        \addplot[only marks, mark=o, mark size=2pt]
+        coordinates {(2.4,{ (1/1) + ((1/4)-(1/1))*((2.4-1)/(4-1)) })}; % point on chord
+        \addplot[only marks, mark=*, mark size=2pt, color=blue]
+        coordinates {(2.4,{ (1/2.4 + ( (1/1) + ((1/4)-(1/1))*((2.4-1)/(4-1)) ))/2 })}; % centroid-like point
+
+        % labels near special x-positions
+        \node[below] at (axis cs:2.4,0) {$\bar\lambda$};
+    \end{axis}
+\end{tikzpicture}
+
+
+If $A$ has the eigenvalues $0 < \lambda_1 \leq \ldots \leq \lambda_n$, then:
+\begin{align*}
+    \frac{\|\mathbf{r}_k\|_2^4}{\|\mathbf{r}_k\|_A^2 \|\mathbf{r}_k\|_{A^{-1}}^2} & \geq \frac{4 \lambda_1 \lambda_n}{(\lambda_1 + \lambda_n)^2}                                      \\
+    \|\mathbf{d}_{k+1}\|_A^2                                                      & \leq \|\mathbf{d}_k\|_A^2\left(1 - 4 \frac{\lambda_1 \lambda_n}{(\lambda_1 + \lambda_n)^2}\right) \\
+                                                                                  & = \|\mathbf{d}_k\|_A^2\left(\frac{\lambda_n - \lambda_1}{\lambda_n + \lambda_1}\right)^2
+\end{align*}
+
+\section*{Example: Discrete Laplacian}
+\begin{align*}
+    A & =
+    \begin{bmatrix}
+        B  & -I &        &        & 0  \\
+        -I & B  & -I     &        &    \\
+           & -I & \ddots & \ddots &    \\
+           &    & \ddots & \ddots & -I \\
+        0  &    &        & -I     & B
+    \end{bmatrix} \in \mathbb{R}^{N^2 \times N^2},
+    \begin{bmatrix}
+        4  & -1 &        & 0 \\
+        -1 & 4  & -1     &   \\
+           & -1 & \ddots &   \\
+        0  &    &        & 4
+    \end{bmatrix} \in \mathbb{R}^{N \times N} \\
+\end{align*}
+Eigenvalues of $A$:
+\[
+    \lambda_{ij} = 4 - 2\left(\cos\left(\frac{i \pi}{N+1}\right) + \cos\left(\frac{j \pi}{N+1}\right)\right), \quad i, j = 1, \ldots, N
+\]
+\begin{align*}
+    \lambda_{\max}                                                          & = 4 \text{ if } N \text{ odd}                                                                                                                \\
+    \lambda_{\min}                                                          & = 4 - 4\cos\left(\frac{\pi}{N+1}\right)                                                                                                      \\
+    \frac{\lambda_{\max} - \lambda_{\min}}{\lambda_{\max} + \lambda_{\min}} & = \frac{4\cos\left(\frac{\pi}{N+1}\right)}{8 - 4\cos\left(\frac{\pi}{N+1}\right)} \approx 1 - \frac12\left(\frac{\pi}{N+1}\right)^2 + \ldots \\
+\end{align*}
+So for $N$ large, convergence is slow.
+
+\section*{Other 1D projection methods}
+Let $\mathcal{K} = \operatorname{span}\{\mathbf{v}\}$, $\mathcal{L} = \operatorname{span}\{\mathbf{w}\}$.
+One step, starting from $\mathbf{x}_0$:
+\begin{align*}
+    \tilde{\mathbf{x}} & = \mathbf{x}_0 + \alpha \mathbf{v}, \quad \alpha = \frac{\mathbf{w}^{\top} \mathbf{r}_0}{\mathbf{w}^{\top} A \mathbf{v}} \\
+    \tilde{\mathbf{r}} & = \mathbf{b} - A\tilde{\mathbf{x}} = \mathbf{r}_0 - \alpha A \mathbf{v}
+\end{align*}
+if SD: $\mathbf{v} = \mathbf{w} = \mathbf{r}_0$.
+
+\subsection*{Minimim residual (MR)}
+$\mathbf{v} = \mathbf{r}_0$, $\mathbf{w} = A\mathbf{r}_0$.
+Converges if
+\[
+    \frac12\left(A + A^{\top}\right) \succ 0 \text{ (SPD)}
+\]
+This is the definition of $A$ being \textit{positive definite}.
+\begin{align*}
+    \|\mathbf{r}_{k+1}\|_2^2 & \leq \left(1 - \frac{\mu^2}{\sigma^2}\right) \|\mathbf{r}_k\|_2^2 \\
+    \mu                      & = \lambda_{\min}\left(\tfrac12(A + A^{\top})\right)               \\
+    \sigma                   & = \|A\|_2
+\end{align*}
+If we have the system $A\mathbf{x} = \mathbf{b}$ where $A$ is not positive definite, then we can solve the equivalent system:
+\[
+    (A^{\top} A) \mathbf{x} = A^{\top} \mathbf{b}
+\]
+and do SD.
+\begin{align*}
+    \mathbf{v} & = A^{\top} \mathbf{r}_0 \\
+    \mathbf{w} & = A\mathbf{r}_0
+\end{align*}
+residual norm, steepest descent.
+
+\section*{Block Methods}
+Block methods extend basic iterative techniques to handle systems where variables are grouped into blocks, improving convergence for certain problems.
+
+\subsection*{Block Jacobi}
+For a matrix $A$ partitioned into blocks $A_{ij}$, $i,j=1,\dots,p$, and vectors $\mathbf{x}$ and $\mathbf{b}$ partitioned accordingly:
+\[
+    A = \begin{bmatrix} A_{11} & A_{12} & \cdots & A_{1p} \\ A_{21} & A_{22} & \cdots & A_{2p} \\ \vdots & \vdots & \ddots & \vdots \\ A_{p1} & A_{p2} & \cdots & A_{pp} \end{bmatrix}, \quad \mathbf{x} = \begin{bmatrix} \mathbf{x}_1 \\ \vdots \\ \mathbf{x}_p \end{bmatrix}, \quad \mathbf{b} = \begin{bmatrix} \mathbf{b}_1 \\ \vdots \\ \mathbf{b}_p \end{bmatrix},
+    \quad V_i = \begin{bmatrix} 0 \\ \vdots \\ I \\ \vdots \\ 0 \end{bmatrix} \text{ (identity at block } i\text{)}
+\]
+The block Jacobi iteration is:
+\begin{align*}
+    A_{ii} \tilde{\mathbf{x}}_i & = \mathbf{b}_i - \sum_{j \neq i} A_{ij} \mathbf{x}_j^{(k)}                                               \\
+    \mathbf{x}_i^{(k+1)}        & = A_{ii}^{-1} \left( \mathbf{b}_i - \sum_{j \neq i} A_{ij} \mathbf{x}_j^{(k)} \right), \quad i=1,\dots,p
+\end{align*}
+Convergence requires diagonal blocks to be invertible and the method to satisfy spectral radius conditions.
+
+
+\section*{Key Takeaways (Exam)}
+\begin{itemize}
+    \item What is a projection method.
+    \item How can we implement it.
+    \item The optimaly result $\mathcal{L} = \mathcal{K}$ and $\mathcal{L} = A\mathcal{K}$.
+    \item Derive one dimensional projection methods, and how to find convergence results.
+\end{itemize}

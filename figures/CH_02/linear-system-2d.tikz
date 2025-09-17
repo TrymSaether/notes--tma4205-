@@ -1,0 +1,23 @@
+\begin{tikzpicture}
+    % Draw grid and axes
+    \begin{axis}[
+            axis lines=middle,
+            xlabel={$x_1$},
+            ylabel={$x_2$},
+            xtick={0,1,2,3,4},
+            ytick={0,1,2,3,4},
+            xmin=0, xmax=4.2,
+            ymin=0, ymax=4.2,
+            grid=major,
+            width=10cm, height=10cm,
+        ]
+        % Plot the lines
+        \addplot[thick, blue, domain=0:2, samples=2] {4 - 2*x};
+        \addlegendentry{$2x_1 + x_2 = 4$}
+        \addplot[thick, red, domain=0:3, samples=2] {3 - x};
+        \addlegendentry{$x_1 + x_2 = 3$}
+        % Mark intersection point
+        \addplot[only marks, mark=*, black] coordinates {(1,2)};
+        \node[above right] at (axis cs:1,2) {Solution: $(1,2)$};
+    \end{axis}
+\end{tikzpicture}

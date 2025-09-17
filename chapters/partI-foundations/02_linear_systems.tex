@@ -1,0 +1,240 @@
+\chapter{Linear Systems}
+\label{chap:linear-systems}
+
+Consider the linear system:
+\begin{equation}
+    A \mathbf{x} = \mathbf{b},
+    \label{eq:linear-system}
+\end{equation}
+where $A \in \mathbb{R}^{m \times n}$ is a given matrix, $\mathbf{x} \in \mathbb{R}^n$ is the vector of unknowns, and $\mathbf{b} \in \mathbb{R}^m$ is the right-hand side vector.
+
+\section{Types of Linear Systems}
+\subsection{Overdetermined Systems}
+When $m > n$, the system is \textbf{overdetermined}. Such systems often arise in data fitting and regression problems. In general, there may be no exact solution, and we seek a least-squares solution that minimizes the residual norm:
+\[
+    \min_{\mathbf{x} \in \mathbb{R}^n} \|A\mathbf{x} - \mathbf{b}\|_2.
+\]
+\subsection{Underdetermined Systems}
+When $m < n$, the system is \textbf{underdetermined}. These systems have infinitely many solutions if consistent, and we often seek the minimum-norm solution:
+\[
+    \min_{\mathbf{x} \in \mathbb{R}^n} \|\mathbf{x}\|_2.
+\]
+\subsection{Square Systems}
+When $m = n$, the system is \textbf{square}. If $A$ is non-singular, there exists a unique solution given by:
+\[
+    \mathbf{x} = A^{-1}\mathbf{b}.
+\]
+
+\subsection{Homogeneous Systems}
+If a linear system is \textbf{homogeneous} then:
+\begin{equation}
+    A\mathbf{x} = \mathbf{0}.
+    \label{eq:homogeneous-system}
+\end{equation}
+
+\section{Existence and Uniqueness of Solutions}
+The solvability of system~\eqref{eq:linear-system} depends on the relationship between $\mathbf{b}$ and the fundamental subspaces of $A$:
+
+\paragraph{No Solution (Inconsistent System)}
+The system has \textbf{no solution} when $\mathbf{b} \notin \operatorname{Im}(A)$. This means the right-hand side vector lies outside the column space of $A$.
+\paragraph{Unique Solution}
+The system has a \textbf{unique solution} when:
+\begin{itemize}
+    \item $\mathbf{b} \in \operatorname{Im}(A)$ (consistency condition), and
+    \item $\operatorname{rank}(A) = n$ (full column rank).
+\end{itemize}
+When $A$ is square ($m = n$) and invertible, the unique solution is: $\mathbf{x} = A^{-1}\mathbf{b}.$
+
+\paragraph{Infinitely Many Solutions}
+The system has \textbf{infinitely many solutions} when:
+\begin{itemize}
+    \item $\mathbf{b} \in \operatorname{Im}(A)$ (consistency condition), and
+    \item $\operatorname{rank}(A) < n$ (rank deficient).
+\end{itemize}
+The general solution has the form:
+\[
+    \mathbf{x} = \mathbf{x}_p + \mathbf{x}_h,
+\]
+where $\mathbf{x}_p$ is any particular solution satisfying $A\mathbf{x}_p = \mathbf{b}$, and $\mathbf{x}_h \in \ker(A)$ is any solution to the homogeneous system $A\mathbf{x}_h = \mathbf{0}$.
+
+\section{Methods for Solving Linear Systems}
+Various numerical methods exist for solving linear systems:
+
+\begin{description}
+    \item[Direct Methods:] Compute the exact solution (up to rounding errors) in a finite number of steps.
+          \begin{itemize}
+              \item \textbf{Gaussian elimination}: Reduces the system to row echelon form
+              \item \textbf{LU decomposition}: Factorizes $A = LU$ with $L$ lower triangular and $U$ upper triangular
+              \item \textbf{Cholesky decomposition}: For symmetric positive definite matrices
+          \end{itemize}
+
+    \item[Iterative Methods:] Generate a sequence of approximations converging to the solution.
+          \begin{itemize}
+              \item \textbf{Stationary methods}: Jacobi, Gauss-Seidel, SOR
+              \item \textbf{Krylov subspace methods}: Conjugate Gradient, GMRES, BiCGSTAB
+          \end{itemize}
+\end{description}
+
+\section{Matrix Storage}
+Practical computations use compressed formats instead of dense storage. Common schemes include:
+\begin{itemize}
+    \item CSR (Compressed Sparse Row): arrays \texttt{values}, \texttt{col\_idx}, and \texttt{row\_ptr} for fast SpMV and row access.
+    \item CSC (Compressed Sparse Column): column-oriented analogue of CSR; favors column operations.
+    \item COO (Coordinate): triples (row, col, value); simple to assemble, converted to CSR/CSC for compute.
+\end{itemize}
+We denote by $N_z(A)$ the number of nonzeros; memory and SpMV cost scale with $O(N_z(A))$.
+
+
+\subsection{Model Problem: 2D Poisson and Sparsity}
+A standard test case is the 2D Poisson equation $-\Delta u=f$ on $\Omega=(0,1)^2$ with Dirichlet data. Using a five-point stencil on an $N\times N$ interior grid ($h=1/(N+1)$) gives
+\[
+    4u_{ij} - u_{i+1,j} - u_{i-1,j} - u_{i,j+1} - u_{i,j-1} = h^2 f_{ij},\quad i,j=1,\dots,N.
+\]
+After ordering the unknowns, we obtain $A\mathbf{u}=\mathbf{f}$ where $A\in\mathbb{R}^{N^2\times N^2}$ is sparse, symmetric, and block tridiagonal with tridiagonal blocks.
+
+\begin{definition}{Banded matrix}{banded}
+    A matrix $A=(a_{ij})$ is \emph{banded} with bandwidth $m_u+m_l+1$ if $a_{ij}=0$ whenever $|i-j|>m_u+m_l$, where $m_u$ and $m_l$ are the upper and lower bandwidths.
+\end{definition}
+
+For the 2D Laplacian with natural ordering, $\operatorname{bandwidth}(A)=2N+1$. Sparse direct factorizations of banded matrices preserve the band but generally introduce \emph{fill-in}. Exploiting sparsity and structure is essential for large $n$.
+
+\subsection{Spectrum of the Discrete 2D Laplacian}
+For the $N\times N$ five-point Laplacian on $(0,1)^2$ with Dirichlet data, the eigenpairs are known in closed form. Enumerating interior grid indices $(i,j)=1,\dots,N$,
+\[
+  \lambda_{ij} = 4 - 2\left(\cos\frac{i\pi}{N+1} + \cos\frac{j\pi}{N+1}\right),\qquad i,j=1,\dots,N.
+\]
+Hence $\lambda_{\min}=4-4\cos\bigl(\tfrac{\pi}{N+1}\bigr)$ and $\lambda_{\max}\approx 4$. The condition number grows like $O\big((N+1)^2\big)$, which implies slow convergence for basic gradient-like methods on fine grids unless preconditioned.
+
+\begin{example}{Classification of Solutions}{solution-classification}
+    Consider the simple $2 \times 2$ diagonal systems to illustrate the three cases: $\begin{pmatrix} 2 & 0 \\ 0 & 4 \end{pmatrix} \mathbf{x} = \begin{pmatrix} \\ 8 \end{pmatrix}$
+    Since $\operatorname{rank}(A) = 2 = n$ and $A$ is invertible:
+    \[
+        \mathbf{x} = \begin{pmatrix} \frac12 \\ 2 \end{pmatrix} \tag{unique solution}
+    \]
+    Let $\begin{pmatrix} 2 & 0 \\ 0 & 0 \end{pmatrix} \mathbf{x} = \begin{pmatrix} 1 \\ 0 \end{pmatrix}$. Here $\operatorname{rank}(A) = 1 < n = 2$ and $\mathbf{b} \in \operatorname{Im}(A)$. The general solution is:
+    \[
+        \mathbf{x}(t) = \begin{pmatrix} \frac12 \\ t \end{pmatrix}, \quad t \in \mathbb{R} \tag{infinitely many solutions}
+    \]
+    Finally, consider the system: $\begin{pmatrix} 2 & 0 \\ 0 & 0 \end{pmatrix} \mathbf{x} = \begin{pmatrix} 1 \\ 1 \end{pmatrix}$.
+    Since $\mathbf{b} \notin \operatorname{Im}(A)$ (the second component of $\mathbf{b}$ is nonzero while the second row of $A$ is zero), the system is inconsistent (no solution).
+\end{example}
+
+\section{Perturbation Analysis}
+When solving linear systems numerically, we often want to understand how sensitive the solution is to small changes in the input data.
+
+\subsection{Perturbation Framework}
+
+Consider the linear system $A\mathbf{x} = \mathbf{b}$ where $A \in \mathbb{R}^{n \times n}$ is non-singular. Let $\mathbf{x}$ be the exact solution. Now consider perturbations in both the coefficient matrix and right-hand side:
+\begin{align}
+    \tilde{A}          & = A + \Delta A,                   \\
+    \tilde{\mathbf{b}} & = \mathbf{b} + \Delta \mathbf{b},
+\end{align}
+where $\Delta A$ and $\Delta \mathbf{b}$ represent small perturbations. The perturbed system becomes:
+\begin{equation}
+    (A + \Delta A)\tilde{\mathbf{x}} = \mathbf{b} + \Delta \mathbf{b}.
+    \label{eq:perturbed-system}
+\end{equation}
+
+Let $\tilde{\mathbf{x}} = \mathbf{x} + \Delta \mathbf{x}$ denote the solution to the perturbed system. Substituting into \eqref{eq:perturbed-system} and using $A\mathbf{x} = \mathbf{b}$:
+\begin{equation}
+    A\Delta \mathbf{x} + \Delta A(\mathbf{x} + \Delta \mathbf{x}) = \Delta \mathbf{b}.
+\end{equation}
+
+For sufficiently small perturbations, we neglect the second-order term $\Delta A \Delta \mathbf{x}$ to obtain the \textbf{first-order perturbation equation}:
+\begin{equation}
+    A\Delta \mathbf{x} = \Delta \mathbf{b} - \Delta A \mathbf{x}.
+    \label{eq:first-order-perturbation}
+\end{equation}
+
+Since $A$ is non-singular, we can solve for the change in solution:
+\begin{equation}
+    \Delta \mathbf{x} = A^{-1}\Delta \mathbf{b} - A^{-1}\Delta A \mathbf{x}.
+    \label{eq:solution-perturbation}
+\end{equation}
+
+This relationship shows how perturbations in the data propagate to the solution.
+
+\subsection{Condition Number}
+
+The \emph{condition number} of an invertible matrix $A$ with respect to a matrix norm $\|\cdot\|$ is defined as:
+\begin{equation}
+    \kappa(A) = \|A\| \|A^{-1}\|.
+    \label{eq:condition-number}
+\end{equation}
+
+The condition number quantifies the sensitivity of the linear system to perturbations and has the following key properties:
+\begin{itemize}
+    \item $\kappa(A) \geq 1$ for any invertible matrix.
+    \item $\kappa(A) = 1$ if and only if $A$ is a scaled orthogonal matrix (see \autoref{sec:orthogonal-subspaces}).
+    \item $\kappa(A) = +\infty$ if $A$ is singular.
+    \item $\kappa(\alpha A) = \kappa(A)$ for any $\alpha \neq 0$.
+\end{itemize}
+
+\subsection{Perturbation Bounds}
+Let $A$ be invertible and assume $\|\Delta A\| < \frac{1}{\|A^{-1}\|}$. Then:
+\begin{itemize}
+    \item \textbf{Right-hand side perturbation only:} If $\Delta A = 0$, then
+          \[
+              \frac{\|\Delta \mathbf{x}\|}{\|\mathbf{x}\|} \leq \kappa(A) \frac{\|\Delta \mathbf{b}\|}{\|\mathbf{b}\|}.
+          \]
+    \item \textbf{Matrix perturbation only:} If $\Delta \mathbf{b} = 0$, then
+          \[
+              \frac{\|\Delta \mathbf{x}\|}{\|\mathbf{x}\|} \leq \frac{\kappa(A)}{1 - \kappa(A)\frac{\|\Delta A\|}{\|A\|}} \frac{\|\Delta A\|}{\|A\|}.
+          \]
+
+    \item \textbf{General case:} For both perturbations,
+          \[
+              \frac{\|\Delta \mathbf{x}\|}{\|\mathbf{x}\|} \leq \frac{\kappa(A)}{1 - \kappa(A)\frac{\|\Delta A\|}{\|A\|}} \left( \frac{\|\Delta A\|}{\|A\|} + \frac{\|\Delta \mathbf{b}\|}{\|\mathbf{b}\|} \right).
+          \]
+\end{itemize}
+
+Based on the condition number, we classify matrices as:
+
+\begin{description}
+    \item[Well-conditioned:] $\kappa(A)$ is small (typically $\kappa(A) \leq 10^{12}$ in double precision)
+    \item[Ill-conditioned:] $\kappa(A)$ is large, making the system sensitive to perturbations
+    \item[Singular:] $\kappa(A) = +\infty$, indicating the matrix is not invertible
+\end{description}
+
+\begin{example}{Hilbert Matrix}{hilbert-example}
+    The $n \times n$ Hilbert matrix has entries $H_{ij} = \frac{1}{i+j-1}$. These matrices are notoriously ill-conditioned:
+    \[
+        H_3 = \begin{pmatrix}
+            1           & \frac{1}{2} & \frac{1}{3} \\
+            \frac{1}{2} & \frac{1}{3} & \frac{1}{4} \\
+            \frac{1}{3} & \frac{1}{4} & \frac{1}{5}
+        \end{pmatrix}, \quad \kappa_2(H_3) \approx 524.
+    \]
+    For larger $n$, the condition number grows exponentially: $\kappa_2(H_{10}) \approx 1.6 \times 10^{13}$.
+\end{example}
+
+\subsection{Residual Analysis}
+For an approximate solution $\tilde{\mathbf{x}}$ to $A\mathbf{x} = \mathbf{b}$, we distinguish between:
+\begin{itemize}
+    \item \textbf{Residual:} $\mathbf{r} = \mathbf{b} - A\tilde{\mathbf{x}}$ (computable)
+    \item \textbf{Error:} $\mathbf{e} = \mathbf{x} - \tilde{\mathbf{x}}$ (typically unknown)
+\end{itemize}
+
+The condition number relates these quantities:
+\begin{equation}
+    \frac{1}{\kappa(A)} \frac{\|\mathbf{r}\|}{\|\mathbf{b}\|} \leq \frac{\|\mathbf{e}\|}{\|\mathbf{x}\|} \leq \kappa(A) \frac{\|\mathbf{r}\|}{\|\mathbf{b}\|}.
+    \label{eq:residual-error-bound}
+\end{equation}
+
+\begin{remark}{Residual and Error Bounds}{residual-error-remark}
+    The bounds in \eqref{eq:residual-error-bound} show that:
+    \begin{itemize}
+        \item For well-conditioned systems, small residual implies small error:
+              \[
+                  \|\mathbf{r}\| \ll \|\mathbf{b}\| \implies \|\mathbf{e}\| \ll \|\mathbf{x}\|.
+              \]
+        \item For ill-conditioned systems, small residual does \emph{not} guarantee small error:
+              \[
+                  \|\mathbf{r}\| \ll \|\mathbf{b}\| \text{ does not imply } \|\mathbf{e}\| \ll \|\mathbf{x}\|.
+              \]
+        \item The condition number provides both upper and lower bounds on the relative error:
+              \[
+                  \frac{1}{\kappa(A)} \frac{\|\mathbf{r}\|}{\|\mathbf{b}\|} \leq \frac{\|\mathbf{e}\|}{\|\mathbf{x}\|} \leq \kappa(A) \frac{\|\mathbf{r}\|}{\|\mathbf{b}\|}.
+              \]
+    \end{itemize}
+\end{remark}

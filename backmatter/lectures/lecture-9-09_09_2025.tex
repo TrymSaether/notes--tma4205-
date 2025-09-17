@@ -1,0 +1,246 @@
+\section{Lecture 9: 09.09.2025}
+
+\subsection{Krylov Subspace Methods (Saad Ch. 6)}
+\paragraph{Motivation:}
+Solve $A\mathbf{x} = \mathbf{b}$ for $\mathbf{x}, \mathbf{b} \in \mathbb{R}^n$.
+
+\paragraph{Projection Methods:}
+Given $\mathbf{x}_0$ (initial guess), define the residual $\mathbf{r}_0 = \mathbf{b} - A\mathbf{x}_0$.
+Choose $\mathcal{K}$ and $\mathcal{L}$ subspaces (same dimension) where you want to find
+
+\[
+    \tilde{\mathbf{x}} - \mathbf{x}_0 \in \mathcal{K}, \quad \text{and} \quad \mathbf{b} - A\tilde{\mathbf{x}} \perp \mathcal{L}.
+\]
+
+One-dimensional methods: (SD, MR)
+
+\[
+    \mathbf{x}_{k+1} = \mathbf{x}_k + \alpha_k \mathbf{r}_k, \quad \mathbf{r}_k = \mathbf{b} - A\mathbf{x}_k.
+\]
+
+\begin{align*}
+    \mathbf{x}_{1} & = \mathbf{x}_0 + \alpha_0 \mathbf{r}_0, \quad \mathbf{r}_1 = \mathbf{b} - A\mathbf{x}_1 = \mathbf{r}_0 - \alpha_0 A\mathbf{r}_0                      \\
+    \mathbf{x}_{2} & = \mathbf{x}_1 + \alpha_1 \mathbf{r}_1, \quad \mathbf{r}_2 = \mathbf{b} - A\mathbf{x}_2 = \mathbf{r}_1 - \alpha_1 A\mathbf{r}_1                      \\
+                   & \vdots                                                                                                                                               \\
+    \mathbf{x}_{k} & = \mathbf{x}_0 + \tilde{\alpha}_0 \mathbf{r}_0 + \tilde{\alpha}_1 A\mathbf{r}_0 + \ldots + \tilde{\alpha}_{k-1} A^{k-1}\mathbf{r}_0,                 \\
+                   & = \mathbf{x}_0 + q_{k-1}(A)\mathbf{r}_0
+    \\q_{k-1} &\in \mathbb{P}_{k-1} \\
+    \mathbf{x}_{k} & \in \mathbf{x}_0 + \operatorname{span}\{\mathbf{r}_0, A\mathbf{r}_0, \ldots, A^{k-1}\mathbf{r}_0\} =: \mathbf{x}_0 + \mathcal{K}_k(A, \mathbf{r}_0).
+\end{align*}
+
+We now define the \textbf{Krylov subspace}:
+\begin{definition}{Krylov Subspace}{krylov-subspace}
+    Given $A: \mathbb{R}^n \to \mathbb{R}^n$ and $\mathbf{v} \in \mathbb{R}^n$, the $m$-th Krylov subspace is
+    \[
+        \mathcal{K}_m(A, \mathbf{v}) := \operatorname{span}\{\mathbf{v}, A\mathbf{v}, A^2\mathbf{v}, \ldots, A^{m-1}\mathbf{v}\} = \mathcal{K}_m.
+    \]
+    Note that $\dim(\mathcal{K}_k(A, \mathbf{v})) \leq k$ and $\dim(\mathcal{K}_k(A, \mathbf{v})) \leq n$.
+\end{definition}
+
+\subsection{Important Properties of Krylov Subspaces}
+\textbf{1st Property:} What is the smallest $m$ s.t. $A\mathcal{K}_m = \mathcal{K}_m$? (i.e. $\mathcal{K}_m$ is invariant under $A$ meaning $A\mathbf{v} \in \mathcal{K}_m$ for all $\mathbf{v} \in \mathcal{K}_m$)
+\begin{definition}{minimal polynomial}{min-poly}
+    The minimal polynomial of $\mathbf{v}$ with respect to $A$ is the monic polynomial of the lowest possible degree s.t.
+    \[
+        A^\mu \mathbf{v} + \sum_{i=0}^{\mu-1} d_i A^i \mathbf{v} = p_A(A)\mathbf{v} = 0.
+    \]
+    $\mu$ is the grade of $\mathbf{v}$ with respect to $A$.
+\end{definition}
+
+\begin{example}{}{}
+    Let $A = \begin{pmatrix}
+            1 & 1 \\
+            0 & 1
+        \end{pmatrix}$,
+    $\mathbf{v}_1 = \begin{pmatrix}
+            1 \\ 1
+        \end{pmatrix}$ and $\mathbf{v}_2 = \begin{pmatrix}
+            1 \\ 0
+        \end{pmatrix}$.
+    \[
+        A\mathbf{v}_1 = \begin{pmatrix}
+            2 \\ 1
+        \end{pmatrix}, \quad A^2\mathbf{v}_1 = \begin{pmatrix}
+            3 \\ 1
+        \end{pmatrix}, \quad A\mathbf{v}_2 = \begin{pmatrix}
+            1 \\ 0
+        \end{pmatrix}, \quad A^2\mathbf{v}_2 = \begin{pmatrix}
+            1 \\ 0
+        \end{pmatrix}.
+    \]
+    Then $\operatorname{grade}(\mathbf{v}_1) = 2$ and $\operatorname{grade}(\mathbf{v}_2) = 1$.
+\end{example}
+
+\textbf{2nd Property:}
+is that $\operatorname{grade}(\mathbf{v}) \leq n$ where $\mu = \operatorname{grade}(\mathbf{v})$ and $n$ is the size of the matrix $A$.
+
+\subsection{Cayley-Hamilton Theorem}
+\begin{theorem}{Cayley-Hamilton Theorem}{}
+    Let $A \in \mathbb{R}^{n \times n}$ and
+    \[
+        p_A(\lambda) = \det(\lambda I - A), \quad p_A \in \mathbb{P}_n
+    \]
+    be the characteristic polynomial of $A$. Then
+    \[
+        p_A(A) = 0.
+    \]
+\end{theorem}
+
+Assume $\mathbf{x} \in \mathcal{K}_m(A, \mathbf{v})$, where $m \geq \mu = \operatorname{grade}(\mathbf{v})$. Then
+\begin{align*}
+    \mathbf{x} & = q_{m-1}(A)\mathbf{v}, \quad q_{m-1} \in \mathbb{P}_{m-1}                                                                   \\
+    q(t)       & = q_1(t) p_A(t) + q_2(t), \quad p_A(t) \in \mathbb{P}_{\mu}, \qquad q_2(t) \in \mathbb{P}_{\mu-1}                            \\
+    \mathbf{x} & = q_{m-1}(A)\mathbf{v} = q_1(A) p_A(A) \mathbf{v} + q_2(A) \mathbf{v} = q_2(A) \mathbf{v}, \qquad q_2 \in \mathbb{P}_{\mu-1}
+\end{align*}
+
+\textbf{3rd Property:}
+If $\mu = \operatorname{grade}(\mathbf{v})$, then
+\[
+    A\mathcal{K}_\mu = \mathcal{K}_\mu, \quad \text{and} \quad \mathcal{K}_m = \mathcal{K}_\mu \, \forall m \geq \mu.
+\]
+
+\textbf{4th Property:}
+\[
+    \dim(\mathcal{K}_m) = \min(m, \operatorname{grade}(\mathbf{v})).
+\]
+
+If
+\begin{align*}
+    \dim(\mathcal{K}_m) & = \dim(\mathcal{L}_m)
+    \begin{cases}
+        \tilde{\mathbf{x}}               & \in \mathbf{x} + \mathcal{K}_m \\
+        \mathbf{b} - A\tilde{\mathbf{x}} & \perp \mathcal{L}_m
+    \end{cases}
+\end{align*}
+For simplicity, let $\mathbf{x}_0 = 0$.
+If $A\mathcal{K}_m = \mathcal{K}_m$, and $\mathbf{b} \in \mathcal{K}_m$, then the exact solution $\mathbf{x}_\star = \tilde{\mathbf{x}}$ (independent of $\mathcal{L}_m$)\footnote{see lemma 1.36 in Saad}.
+\begin{proof}
+    Let $\tilde{\mathbf{x}} \in \mathcal{K}$, $A\tilde{\mathbf{x}} \in \mathcal{K}$, and $\mathbf{b} \in \mathcal{K} = A\mathcal{K}$.
+    Then
+    \begin{align*}
+        \mathbf{b} - A\tilde{\mathbf{x}}   & \in \mathcal{K}                                                                                             \\
+        \mathbf{b} - A\tilde{\mathbf{x}}   & \perp \mathcal{L}                                                                                           \\
+        \mathbf{b} - A\tilde{\mathbf{x}}   & \in \mathcal{K} \cap \mathcal{L}^\perp = \{0\} \quad \Rightarrow \quad \mathbf{b} - A\tilde{\mathbf{x}} = 0 \\
+        \Leftrightarrow \tilde{\mathbf{x}} & = \mathbf{x}_\star
+    \end{align*}
+    \qed
+\end{proof}
+
+\begin{lemma}{Lemma 1.36}{}
+    Given two subspaces $M$ and $L$ of the same dimension $m$, the following two conditions are mathematically equivalent.
+
+    \begin{enumerate}
+        \item No nonzero vector of $M$ is orthogonal to $L$;
+        \item For any $x \in \mathbb{C}^n$ there is a unique vector $u$ which satisfies the conditions:
+              \begin{equation}
+                  u     \in M \quad  x - u  \perp L
+              \end{equation}
+    \end{enumerate}
+\end{lemma}
+
+\subsection{Practical implementation of Krylov Subspace Methods}
+Let
+\begin{align*}
+    A\mathbf{x}                    & = \mathbf{b}, \quad \exists \mathbf{x}_0, \quad \mathbf{r}_0 = \mathbf{b} - A\mathbf{x}_0 \\
+    \mathcal{K}_m(A, \mathbf{r}_0) & = \operatorname{span}\{\mathbf{r}_0, A\mathbf{r}_0, \ldots, A^{m-1}\mathbf{r}_0\}
+\end{align*}
+
+\subsubsection{FOM: Full Orthogonalization Method}
+\begin{align*}
+    \mathcal{K}  & = \mathcal{K}_m(A, \mathbf{r}_0)                                            \\
+    \mathcal{L}  & = \mathcal{K}                                                               \\
+    \mathbf{x}_m & = \mathbf{x}_0 + V_m \left(V_m^\top A V_m\right)^{-1} V_m^\top \mathbf{r}_0 \\
+    V_m          & = [\mathbf{v}_1, \ldots, \mathbf{v}_m] \text{ with } V_m^\top V_m = I
+\end{align*}
+
+\begin{enumerate}
+    \item How to find an orthogonal basis for $\mathcal{K}_m$?
+    \item What is $V_m^\top A V_m$?
+    \item When to stop?
+          \[ \|\mathbf{r}_m\|_2 \leq \text{tol} \]
+\end{enumerate}
+
+\subsubsection{1. Arnoldi Algorithm}
+\begin{algorithm}[htbp]
+    \begin{algorithmic}[0]
+        \Require
+        \State $A \in \mathbb{R}^{n \times n}$
+        \State $\mathbf{v}_1 = \frac{\mathbf{r}_0}{\|\mathbf{r}_0\|_2}$
+        \Ensure
+        \State $V_{m+1} = [\mathbf{v}_1, \ldots, \mathbf{v}_{m+1}]$ orthonormal basis for $\mathcal{K}_{m+1}(A, \mathbf{r}_0)$
+        \State $\overline{H}_m = (h_{ij}) \in \mathbb{R}^{(m+1) \times m}$ upper Hessenberg matrix
+        \For{$j = 1, 2, \ldots, m$}
+        \State Compute $w = A\mathbf{v}_j$
+        \For{$i = 1,\ldots,j$}
+        \State $h_{ij} = \langle w, \mathbf{v}_i \rangle$
+        \State $w = w - h_{ij}\mathbf{v}_i$
+        \EndFor
+        \State $h_{j+1,j} = \|w\|_2$
+        \If{$h_{j+1,j} = 0$}
+        \State Stop (breakdown)
+        \EndIf
+        \State $\mathbf{v}_{j+1} = w / h_{j+1,j}$
+        \EndFor
+    \end{algorithmic}
+    \caption{Arnoldi Algorithm}
+    \label{alg:arnoldi}
+\end{algorithm}
+\paragraph{What do we get from the Arnoldi algorithm?}
+\begin{align*}
+    V_{m+1}        & = [\mathbf{v}_1, \ldots, \mathbf{v}_{m+1}] \in \mathbb{R}^{n \times (m+1)}, \quad V_m = [\mathbf{v}_1, \ldots, \mathbf{v}_m] \in \mathbb{R}^{n \times m} \\
+    \overline{H}_m & = (h_{ij}) \in \mathbb{R}^{(m+1) \times m} \text{ upper Hessenberg matrix}, \qquad H_m := \overline{H}_m(1:m,1:m) \in \mathbb{R}^{m\times m}
+\end{align*}
+s.t.
+\begin{align*}
+    A V_m &= V_{m+1} \overline{H}_m = V_m H_m + h_{m+1,m} \mathbf{v}_{m+1}\mathbf{e}_m^\top,\\
+    V_m^\top A V_m &= H_m.
+\end{align*}
+
+Using the Galerkin condition for FOM (take $\mathcal{L}=\mathcal{K}_m$) we obtain the small system
+\[
+    H_m \mathbf{y}_m = V_m^\top \mathbf{r}_0 = \beta \mathbf{e}_1, \qquad \beta=\|\mathbf{r}_0\|_2,
+\]
+so
+\[
+    \mathbf{x}_m = \mathbf{x}_0 + V_m \mathbf{y}_m, \qquad \mathbf{y}_m = H_m^{-1} (\beta \mathbf{e}_1).
+\]
+
+The residual can be computed cheaply from the Arnoldi relation:
+\begin{align*}
+    \mathbf{r}_m &= \mathbf{r}_0 - A V_m \mathbf{y}_m
+    = \beta \mathbf{v}_1 - V_{m+1}\overline{H}_m \mathbf{y}_m \\
+    &= \beta \mathbf{v}_1 - V_m H_m \mathbf{y}_m - h_{m+1,m}\mathbf{v}_{m+1} \mathbf{e}_m^\top \mathbf{y}_m
+    = -h_{m+1,m}\mathbf{v}_{m+1} \mathbf{e}_m^\top \mathbf{y}_m,
+\end{align*}
+since $H_m\mathbf{y}_m=\beta\mathbf{e}_1$. Hence
+\[
+    \|\mathbf{r}_m\|_2 = |h_{m+1,m}|\,|\mathbf{e}_m^\top \mathbf{y}_m|.
+\]
+
+Thus we get the FOM algorithm (Arnoldi performed incrementally; solve the small system at each step and check residual):
+
+\begin{algorithm}[H]
+    \begin{algorithmic}[0]
+        \Require
+        \State $A \in \mathbb{R}^{n \times n}, \mathbf{b} \in \mathbb{R}^n, \mathbf{x}_0 \in \mathbb{R}^n, m_{\max} \in \mathbb{N}, \text{tol} > 0$
+        \State $\mathbf{r}_0 = \mathbf{b} - A\mathbf{x}_0, \quad \beta = \|\mathbf{r}_0\|_2$
+        \State $\mathbf{v}_1 = \mathbf{r}_0 / \beta$
+        \Ensure
+        \State $\mathbf{x}_j$ approximations, stop when converged or breakdown
+        \For{$j = 1, 2, \ldots, m_{\max}$}
+        \State Perform one Arnoldi step to compute $h_{1:j+1,j}$ and $\mathbf{v}_{j+1}$ (see Alg. \ref{alg:arnoldi})
+        \State Let $H_j = \overline{H}_j(1:j,1:j)$ and $V_j = [\mathbf{v}_1,\ldots,\mathbf{v}_j]$
+        \State Solve $H_j \mathbf{y}_j = \beta \mathbf{e}_1$
+        \State $\mathbf{x}_j = \mathbf{x}_0 + V_j \mathbf{y}_j$
+        \State $\mathbf{r}_j = -h_{j+1,j} \mathbf{v}_{j+1} \mathbf{e}_j^\top \mathbf{y}_j$
+        \If{$\|\mathbf{r}_j\|_2 \leq \text{tol}$}
+        \State Return $\mathbf{x}_j$
+        \EndIf
+        \If{$h_{j+1,j}=0$}
+        \State Breakdown: exact solution in $\mathcal{K}_j$ (stop)
+        \EndIf
+        \EndFor
+    \end{algorithmic}
+    \caption{Full Orthogonalization Method (FOM)}
+    \label{alg:fom}
+\end{algorithm}

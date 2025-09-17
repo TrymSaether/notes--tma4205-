@@ -1,0 +1,37 @@
+\begin{tikzpicture}[scale=1.25,>=latex]
+    % coordinates (numerical values computed above)
+    \coordinate (O) at (0,0);
+    \coordinate (u) at (0.447,0.894);
+    \coordinate (x) at (1.200,0.600);
+    \coordinate (proj) at (0.479,0.958);
+    \coordinate (xp) at (0.241,-1.318);
+
+    % perpendicular direction for the hyperplane (rotate u by 90 deg)
+    \coordinate (d) at (-0.894,0.447);
+
+    % shaded hyperplane band (parallelogram centered at origin)
+    \fill[gray!15] ($(O)!-3!(d)$) -- ($(O)!3!(d)$) -- ($(O)!3!(d)+(2,0.6)$) -- ($(O)!-3!(d)+(2,0.6)$) -- cycle;
+
+    % draw the hyperplane line (long)
+    \draw[dashed] ($(O)!-3!(d)$) -- ($(O)!3!(d)$) node[near end,above] {$v^\perp$};
+
+    % draw u
+    \draw[->,very thick] (O) -- ($(O)!0.5!(u)$) node[midway,left] {$u$};
+
+    % draw x and its decomposition
+    \draw[->,thick,red] (O) -- (x) node[midway,above right] {$x$};
+    \draw[->,thick, gray!80!black] (O) -- (proj) node[midway,above left] {$\alpha u$};
+    \draw[dashed] (proj) -- (x);
+
+    % draw reflected vector
+    \draw[->,thick,blue] (O) -- (xp) node[midway,below left] {$(I-2uu^H)x$};
+    % annotate the reflected component both above and below the hyperplane
+    \draw[dashed] (xp) -- ($(u)!1!(x)$) node[midway,below right] {$-2(u,x)u$};
+
+    % small legend
+    \begin{scope}[shift={(2.1,1.0)}]
+        \draw[->,thick,red] (0,0) -- (0.45,0) node[right] {$x$};
+        \draw[->,thick,blue] (0,-0.4) -- (0.45,-0.4) node[right] {$(I-2uu^H)x$};
+        \draw[->,thick,gray!80!black] (0,-0.8) -- (0.45,-0.8) node[right] {$\alpha u$};
+    \end{scope}
+\end{tikzpicture}

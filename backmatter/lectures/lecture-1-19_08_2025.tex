@@ -1,0 +1,245 @@
+\section{Lecture 1: Introduction to Numerical Linear Algebra}
+\textit{19. August 2025}
+
+What is the course about? \emph{Solving linear problems}
+\begin{equation}
+    A\mathbf{x} = \mathbf{b}
+\end{equation}
+and \emph{eigenvalue problems}
+\begin{equation}
+    A\mathbf{v} = \lambda \mathbf{v}
+\end{equation}
+for $A$ large (e.g., $n \geq 10^4$), and \emph{sparse} (most elements are non-zero).
+
+$N_z(A)$: number of non-zero elements in $A$.
+
+Stick to $A \mathbf{x} = \mathbf{b}$, $A \in \mathbb{R}^{n \times n}$ and non-singular.
+
+Classical methods:
+
+LU decomposition $A = (P)LU$ (Gaussian elimination, complexity $\mathcal{O}(n^3)$)
+
+If $A$ is symmetric positive definite (SPD), i.e. $A = A^T \succ 0$, then Cholesky decomposition $A = C^T C$ where $C$ is triangular. Complexity $\mathcal{O}(n^3)$.
+
+\paragraph{Standard test problems: Discrete Laplacian in 2D:}
+Discretization of $\Delta u = f$ in a square domain $\Omega = (0,1) \times (0,1)$ with Dirichlet boundary conditions $u = g$ on $\partial \Omega$.
+\begin{align*}
+    \Delta u                 & = u_{xx} + u_{yy} = f,                                                  \\
+                             & \quad \text{with} \quad
+    \begin{cases}
+        u = g & \text{on } \partial \Omega, \\
+        h = \frac{1}{N + 1},                \\
+        x_i = ih, \;\; y_j = jh, \quad i,j = 0, \ldots, N+1
+    \end{cases}                                                 \\[1em]
+    U_{ij}                   & \approx u(x_i, y_j) = u_{ij},                                           \\[0.5em]
+    u_{xx}\big|_{(x_i, y_j)} & \approx \frac{u_{i+1,j} - 2u_{ij} + u_{i-1,j}}{h^2} + \mathcal{O}(h^2), \\[0.5em]
+    u_{yy}\big|_{(x_i, y_j)} & \approx \frac{u_{i,j+1} - 2u_{ij} + u_{i,j-1}}{h^2} + \mathcal{O}(h^2).
+\end{align*}
+This leads to the linear system (5-point formula):
+\begin{align*}
+    4U_{ij} - U_{i+1,j} - U_{i-1,j} - U_{i,j+1} - U_{i,j-1} & = h^2 f_{ij}, \quad i,j = 1, \ldots, N
+\end{align*}
+This can be written in matrix form $A \mathbf{U} = \mathbf{f}$, where $\mathbf{U}$ is the vector of unknowns $U_{ij}$ and $\mathbf{f}$ is the vector of right-hand side values $f_{ij}$.
+$A$ is a \emph{block tridiagonal matrix} with blocks $B \in \mathbb{R}^{N \times N}$, where $B$ is the discrete Laplacian in one dimension:
+
+\begin{align*}
+    A \mathbf{U} & = \mathbf{f},                                                                 \\
+    A            & = \begin{bmatrix}
+                         B      & -I_N   & 0      & \cdots & 0    \\
+                         -I_N   & B      & -I_N   & \cdots & 0    \\
+                         0      & -I_N   & B      & \cdots & 0    \\
+                         \vdots & \vdots & \vdots & \ddots & -I_N \\
+                         0      & 0      & 0      & -I_N   & B
+                     \end{bmatrix}, \qquad
+    B = \begin{bmatrix}
+            4      & -1     & 0      & \cdots & 0  \\
+            -1     & 4      & -1     & \cdots & 0  \\
+            0      & -1     & 4      & \cdots & 0  \\
+            \vdots & \vdots & \vdots & \ddots & -1 \\
+            0      & 0      & 0      & -1     & 4
+        \end{bmatrix},                                                   \\
+    \mathbf{U}   & = \begin{bmatrix}
+                         U_{11} \\ U_{12} \\ \vdots \\ U_{1N} \\ U_{21} \\ U_{22} \\ \vdots \\ U_{NN}
+                     \end{bmatrix}, \quad
+    \mathbf{f} = \begin{bmatrix}
+                     f_{11} \\ f_{12} \\ \vdots \\ f_{1N} \\ f_{21} \\ f_{22} \\ \vdots \\ f_{NN}
+                 \end{bmatrix}.
+\end{align*}
+
+\subsubsection{Properties of $A$}
+The matrix $A$ is \emph{symmetric}, \emph{sparse}, and \emph{structured}. In particular, $A$ is a \textbf{banded matrix}.
+Total of $N^2$ equations.
+\subsubsection{Banded Matrix}
+\begin{definition}{Banded Matrix}{Banded Matrix}
+    $A$ is banded with bandwidth:
+    \begin{equation}
+        m_u + m_l + 1 \text{ if } a_{ij} \neq 0 \text{ only if } |i - j| \leq m_u + m_l
+    \end{equation}
+    where $m_u$ is the upper bandwidth and $m_l$ is the lower bandwidth.
+\end{definition}
+
+For the discrete Laplacian, $A$ has bandwidth $2N + 1$.
+
+Even if $A$ is sparse the LU-factorization is not (fill-in), however the banded structure is preserved.
+
+\subsection{Iterative techniques for solving linear systems}
+Let $A\mathbf{x} = \mathbf{b}$, where $A \in \mathbb{R}^{n \times n}$.
+
+Instead of solving the system directly (which becomes expensive for large $n$), we generate a sequence of approximations $\mathbf{x}_0, \mathbf{x}_1, \mathbf{x}_2, \ldots$ that converges to the exact solution $\mathbf{x}^*$.
+
+\paragraph{Classical iterative methods/Fixed-point iterations:}
+The key idea is to split the matrix $A$ into two parts: an "easy" part $M$ and the remainder $N$.
+
+\textbf{Basic approach:}
+\begin{align*}
+    A                & = M - N,                                  \\
+    M\mathbf{x}      & = N\mathbf{x} + \mathbf{b},               \\
+    \mathbf{x}       & = M^{-1}N\mathbf{x} + M^{-1}\mathbf{b},   \\
+    \mathbf{x}_{k+1} & = M^{-1}N\mathbf{x}_k + M^{-1}\mathbf{b}.
+\end{align*}
+
+Choose $M$ such that:
+\begin{itemize}
+    \item $M\mathbf{v} = \mathbf{c}$ is easy to solve
+    \item $\rho(M^{-1}N) < 1$ (spectral radius) for convergence
+    \item $\mathbf{c} = M^{-1}\mathbf{b}$
+\end{itemize}
+
+\textbf{Standard splitting methods:}
+
+Let $A = D + L + U$ where:
+\begin{itemize}
+    \item $D$ = diagonal part of $A$
+    \item $L$ = strictly lower triangular part of $A$
+    \item $U$ = strictly upper triangular part of $A$
+\end{itemize}
+
+\begin{itemize}
+    \item \textbf{Jacobi:} $M = D$, $N = L + U$
+    \item \textbf{Gauss-Seidel:} $M = D + L$, $N = U$
+    \item \textbf{SOR (Successive Over-Relaxation):} $M = \frac{1}{\omega}D + L$, $N = \frac{1-\omega}{\omega}D - U$, where $0 < \omega < 2$
+\end{itemize}
+
+% \subsubsection{The Jacobi Method}
+
+% The Jacobi method updates all components of $\mathbf{x}$ simultaneously using values from the previous iteration.
+
+% \begin{algorithm}[H]
+%     \caption{Jacobi Method}
+%     \begin{algorithmic}[1]
+%         \Require{$A$, $\mathbf{b}$, initial guess $\mathbf{x}_0$, tolerance $\epsilon$}
+%         \State $k \leftarrow 0$
+%         \While{$\|\mathbf{r}_k\| = \|A\mathbf{x}_k - \mathbf{b}\| > \epsilon$}
+%             \For{$i = 1$ to $n$}
+%                 \State $x_i^{(k+1)} \leftarrow \frac{1}{a_{ii}}\left(b_i - \sum_{j=1, j \neq i}^n a_{ij} x_j^{(k)}\right)$
+%             \EndFor
+%             \State $k \leftarrow k + 1$
+%         \EndWhile
+%         \Return{$\mathbf{x}_k$}
+%     \end{algorithmic}
+% \end{algorithm}
+
+% \textbf{Matrix form:} $\mathbf{x}_{k+1} = D^{-1}(L + U)\mathbf{x}_k + D^{-1}\mathbf{b}$
+
+% \subsubsection{The Gauss-Seidel Method}
+
+% The Gauss-Seidel method uses updated values as soon as they become available.
+
+% \begin{algorithm}[H]
+%     \caption{Gauss-Seidel Method}
+%     \begin{algorithmic}[1]
+%         \Require{$A$, $\mathbf{b}$, initial guess $\mathbf{x}_0$, tolerance $\epsilon$}
+%         \State $k \leftarrow 0$
+%         \While{$\|\mathbf{r}_k\| = \|A\mathbf{x}_k - \mathbf{b}\| > \epsilon$}
+%             \For{$i = 1$ to $n$}
+%                 \State $x_i^{(k+1)} \leftarrow \frac{1}{a_{ii}}\left(b_i - \sum_{j=1}^{i-1} a_{ij} x_j^{(k+1)} - \sum_{j=i+1}^n a_{ij} x_j^{(k)}\right)$
+%             \EndFor
+%             \State $k \leftarrow k + 1$
+%         \EndWhile
+%         \Return{$\mathbf{x}_k$}
+%     \end{algorithmic}
+% \end{algorithm}
+
+% \textbf{Matrix form:} $\mathbf{x}_{k+1} = -(D + L)^{-1}U\mathbf{x}_k + (D + L)^{-1}\mathbf{b}$
+
+% \subsubsection{Convergence Theory}
+
+% For any splitting method $\mathbf{x}_{k+1} = T\mathbf{x}_k + \mathbf{c}$ where $T = M^{-1}N$:
+
+% \begin{theorem}{Convergence of Splitting Methods}{}
+%     The iteration converges for any initial guess $\mathbf{x}_0$ if and only if $\rho(T) < 1$, where $\rho(T)$ is the spectral radius of $T$.
+% \end{theorem}
+
+% \textbf{Sufficient conditions for convergence:}
+% \begin{itemize}
+%     \item If $A$ is \emph{strictly diagonally dominant}, then both Jacobi and Gauss-Seidel converge
+%     \item If $A$ is symmetric positive definite, then Gauss-Seidel converges
+%     \item For SOR with SPD matrix $A$: convergence occurs when $0 < \omega < 2$
+% \end{itemize}
+
+\subsection{Projection methods for solving linear systems}
+
+Idea (of one iteration): Choose $\mathcal{L}, \mathcal{K} \subset \mathbb{R}^n$ where $\dim(\mathcal{K}) = \dim(\mathcal{L}) = m \ll n$.
+Choose some initial guess $\mathbf{x}_0 \in \mathbb{R}^n$:
+
+\begin{align*}
+    \mathbf{x}_1 & = \mathbf{x}_0 + \Delta \mathbf{x}_1, \text{ s.t. the residual } \mathbf{r}_1 = A\mathbf{x}_1 - \mathbf{b} \perp \mathcal{L}, \\
+\end{align*}
+
+\subsubsection*{Example}
+
+Let $\mathcal{K} = \mathcal{L} = \text{span}\{\mathbf{r}_0\}$, where $\mathbf{r}_0 = \mathbf{b} - A\mathbf{x}_0$ is the initial residual.
+
+Then we can write:
+
+\begin{align*}
+    \Delta \mathbf{x}_0 & = \alpha_0 \mathbf{r}_0, \alpha_0 \in \mathbb{R},                                                                            \\
+    \mathbf{r}_1        & = \mathbf{b} - A\mathbf{x}_1 = \mathbf{b} - A(\mathbf{x}_0 - \alpha_0 \mathbf{r}_0) = \mathbf{r}_0 - \alpha_0 A\mathbf{r}_0.
+\end{align*}
+
+We can choose $\alpha_0$ such that $\mathbf{r}_1 \perp \mathcal{L}$, i.e. $\langle \mathbf{r}_1, \mathbf{v} \rangle = 0$ for all $\mathbf{v} \in \mathcal{L}$.
+This leads to the equation:
+
+\begin{align*}
+    \langle \mathbf{r}_1, \mathbf{r}_0 \rangle & = \langle \mathbf{r}_0, \mathbf{r}_0 \rangle - \alpha_0 \langle A\mathbf{r}_0, \mathbf{r}_0 \rangle = 0.
+\end{align*}
+
+Solving for $\alpha_0$ gives:
+
+\begin{align*}
+    \alpha_0 & = \frac{\langle \mathbf{r}_0, \mathbf{r}_0 \rangle}{\langle A\mathbf{r}_0, \mathbf{r}_0 \rangle}.
+\end{align*}
+
+This is the first step in a projection method, where we iteratively refine our solution by projecting onto the subspace defined by the initial residual.
+
+\subsection{How to store sparse matrices?}
+
+\begin{itemize}
+    \item \textbf{List of lists (LIL)}: Each row is stored as a list of non-zero elements and their column indices.
+          \begin{align*}
+              \text{LIL} & =
+              \begin{bmatrix}
+                  [1, 2, 3] & [4, 5]   & [6]  \\
+                  [7, 8]    & [9]      & []   \\
+                  []        & [10, 11] & [12]
+              \end{bmatrix}
+          \end{align*}
+    \item \textbf{Compressed Sparse Row (CSR)}: Three arrays: values, column indices, and row pointers.
+          \begin{align*}
+              \text{values}        & = [1, 2, 3, 4, 5, 6], \\
+              \text{col\_indices}  & = [0, 1, 2, 0, 1, 2], \\
+              \text{row\_pointers} & = [0, 3, 5, 6]
+          \end{align*}
+    \item \textbf{Compressed Sparse Column (CSC)}: Similar to CSR but column-wise.
+          \begin{align*}
+              \text{values}        & = [1, 4, 2, 5, 3, 6], \\
+              \text{row\_indices}  & = [0, 1, 0, 1, 2, 2], \\
+              \text{col\_pointers} & = [0, 2, 4, 6]
+          \end{align*}
+    \item \textbf{Coordinate List (COO)}: Three arrays: row indices, column indices, and values.
+          \begin{align*}
+              \text{row\_indices} & = [0, 0, 0, 1, 1, 2], \\
+              \text{col\_indices} & = [0, 1, 2, 0, 1, 2], \\
+              \text{values}       & = [1, 2, 3, 4, 5, 6]
+          \end{align*}
+\end{itemize}

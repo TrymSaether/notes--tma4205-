@@ -1,0 +1,410 @@
+
+\section{Exercise 1}
+
+\subsection{Problem 2}
+
+\begin{equation}
+    \|A\|_{pq} = \max_{\mathbf{x} \neq 0} \frac{\|A\mathbf{x}\|_p}{\|\mathbf{x}\|_q}
+\end{equation}
+
+Let $A = \begin{bmatrix} 1 & -1 \\ 1 & 1 \end{bmatrix}$.
+
+\paragraph*{(a)} Computing $\|A\|_{1\infty,\mathbb{R}}$
+
+We need to find the maximum of $\frac{\|A\mathbf{x}\|_1}{\|\mathbf{x}\|_\infty}$ over all real vectors $\mathbf{x} \neq 0$.
+
+Let $\mathbf{x} = \begin{bmatrix} x_1 \\ x_2 \end{bmatrix}$ be a real vector. Then:
+\begin{align*}
+    A\mathbf{x} & = \begin{bmatrix} 1 & -1 \\ 1 & 1 \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \end{bmatrix} = \begin{bmatrix} x_1 - x_2 \\ x_1 + x_2 \end{bmatrix}
+\end{align*}
+
+The $1$-norm of $A\mathbf{x}$ is:
+\begin{align*}
+    \|A\mathbf{x}\|_1 & = |x_1 - x_2| + |x_1 + x_2|
+\end{align*}
+
+The $\infty$-norm of $\mathbf{x}$ is:
+\begin{align*}
+    \|\mathbf{x}\|_\infty & = \max(|x_1|, |x_2|)
+\end{align*}
+
+To analyze $|x_1 - x_2| + |x_1 + x_2|$, we consider different cases based on the signs of $x_1 \pm x_2$:
+
+\textbf{Case 1:} $x_1 + x_2 \geq 0$ and $x_1 - x_2 \geq 0$ (i.e., $x_1 \geq |x_2|$)
+\begin{align*}
+    |x_1 - x_2| + |x_1 + x_2| & = (x_1 - x_2) + (x_1 + x_2) = 2x_1 = 2|x_1|
+\end{align*}
+Since $x_1 \geq |x_2|$, we have $\|\mathbf{x}\|_\infty = |x_1|$, so:
+\begin{align*}
+    \frac{\|A\mathbf{x}\|_1}{\|\mathbf{x}\|_\infty} = \frac{2|x_1|}{|x_1|} = 2
+\end{align*}
+
+\textbf{Case 2:} $x_1 + x_2 \geq 0$ and $x_1 - x_2 \leq 0$ (i.e., $x_2 \geq x_1 \geq -x_2$)
+\begin{align*}
+    |x_1 - x_2| + |x_1 + x_2| & = -(x_1 - x_2) + (x_1 + x_2) = 2x_2 = 2|x_2|
+\end{align*}
+Since $x_2 \geq |x_1|$, we have $\|\mathbf{x}\|_\infty = |x_2|$, so:
+\begin{align*}
+    \frac{\|A\mathbf{x}\|_1}{\|\mathbf{x}\|_\infty} = \frac{2|x_2|}{|x_2|} = 2
+\end{align*}
+
+\textbf{Case 3:} $x_1 + x_2 \leq 0$ and $x_1 - x_2 \geq 0$ (i.e., $-x_2 \geq x_1 \geq x_2$)
+\begin{align*}
+    |x_1 - x_2| + |x_1 + x_2| & = (x_1 - x_2) - (x_1 + x_2) = -2x_2 = 2|x_2|
+\end{align*}
+Since $|x_2| \geq |x_1|$, we have $\|\mathbf{x}\|_\infty = |x_2|$, so:
+\begin{align*}
+    \frac{\|A\mathbf{x}\|_1}{\|\mathbf{x}\|_\infty} = \frac{2|x_2|}{|x_2|} = 2
+\end{align*}
+
+\textbf{Case 4:} $x_1 + x_2 \leq 0$ and $x_1 - x_2 \leq 0$ (i.e., $x_1 \leq -|x_2|$)
+\begin{align*}
+    |x_1 - x_2| + |x_1 + x_2| & = -(x_1 - x_2) - (x_1 + x_2) = -2x_1 = 2|x_1|
+\end{align*}
+Since $|x_1| \geq |x_2|$, we have $\|\mathbf{x}\|_\infty = |x_1|$, so:
+\begin{align*}
+    \frac{\|A\mathbf{x}\|_1}{\|\mathbf{x}\|_\infty} = \frac{2|x_1|}{|x_1|} = 2
+\end{align*}
+
+In all cases, we get $\frac{\|A\mathbf{x}\|_1}{\|\mathbf{x}\|_\infty} = 2$. Therefore:
+\begin{align*}
+    \|A\|_{1\infty,\mathbb{R}} = 2
+\end{align*}
+
+\paragraph*{(b)} Computing $\|A\|_{1\infty}$ over complex vectors
+
+Now we consider complex vectors. Let $\mathbf{x} = \begin{bmatrix} 1 + i \\ 1 - i \end{bmatrix}$.
+
+First, compute $A\mathbf{x}$:
+\begin{align*}
+    A\mathbf{x} & = \begin{bmatrix} 1 & -1 \\ 1 & 1 \end{bmatrix} \begin{bmatrix} 1 + i \\ 1 - i \end{bmatrix} \\
+                & = \begin{bmatrix} (1 + i) - (1 - i) \\ (1 + i) + (1 - i) \end{bmatrix}                       \\
+                & = \begin{bmatrix} 1 + i - 1 + i \\ 1 + i + 1 - i \end{bmatrix}                               \\
+                & = \begin{bmatrix} 2i \\ 2 \end{bmatrix}
+\end{align*}
+
+Compute the norms:
+\begin{align*}
+    \|A\mathbf{x}\|_1                               & = |2i| + |2| = 4                                                                                               \\
+    \|\mathbf{x}\|_{\infty}                         & = \max(|1 + i|, |1 - i|) = \max(\sqrt{1^2 + 1^2}, \ \sqrt{1^2 + (-1)^2}) = \max(\sqrt{2}, \sqrt{2}) = \sqrt{2} \\
+    \frac{\|A\mathbf{x}\|_1}{\|\mathbf{x}\|_\infty} & = \frac{4}{\sqrt{2}} = \frac{4\sqrt{2}}{2} = 2\sqrt{2}
+\end{align*}
+Thus:
+\[
+    \|A\|_{1\infty,\mathbb{R}} = 2 < \|A\|_{1\infty} \geq 2\sqrt{2}
+\]
+This shows that allowing complex vectors can increase the norm value.
+
+\subsection{Problem 3}
+
+\paragraph*{(a)} 2-norm of rank-1 matrix $E = uv^H$
+
+Let $E = uv^H$ where $\mathbf{u}, \mathbf{v} \in \mathbb{C}^n$. We compute $\|E\|_2 = \sqrt{\rho(E^H E)}$.
+
+First, find $E^H$:
+\begin{align*}
+    E^H & = (uv^H)^H = (\mathbf{v}^H)^H \mathbf{u}^H = \mathbf{v} \mathbf{u}^H
+\end{align*}
+
+Next, compute $E^H E$:
+\begin{align*}
+    E^H E & = (\mathbf{v} \mathbf{u}^H)(\mathbf{u} \mathbf{v}^H)                                                                     \\
+          & = \mathbf{v} (\mathbf{u}^H \mathbf{u}) \mathbf{v}^H \quad \text{(associativity)}                                         \\
+          & = \mathbf{v} (\|\mathbf{u}\|_2^2) \mathbf{v}^H \quad \text{(since } \mathbf{u}^H \mathbf{u} = \|\mathbf{u}\|_2^2\text{)} \\
+          & = \|\mathbf{u}\|_2^2 (\mathbf{v} \mathbf{v}^H)
+\end{align*}
+
+Now we find the spectral radius. Note that $vv^H$ is a rank-1 matrix with:
+\begin{itemize}
+    \item Eigenvalue $\mathbf{v}^H \mathbf{v} = \|\mathbf{v}\|_2^2$, with $m_g(\|\mathbf{v}\|_2^2) = 1$
+    \item Eigenvalue $0$ with multiplicity $m_g(0) = n-1$
+\end{itemize}
+
+Therefore:
+\begin{align*}
+    \rho(E^H E) & = \rho(\|\mathbf{u}\|_2^2 \cdot \mathbf{v} \mathbf{v}^H) \\
+                & = \|\mathbf{u}\|_2^2 \cdot \rho(\mathbf{v} \mathbf{v}^H) \\
+                & = \|\mathbf{u}\|_2^2 \cdot \|\mathbf{v}\|_2^2
+\end{align*}
+
+Thus:
+\begin{align*}
+    \|E\|_2 = \sqrt{\rho(E^H E)} = \sqrt{\|\mathbf{u}\|_2^2 \|\mathbf{v}\|_2^2} = \|\mathbf{u}\|_2 \|\mathbf{v}\|_2
+\end{align*}
+
+\paragraph*{(b)} Frobenius norm of rank-1 matrix
+
+The Frobenius norm is defined as $\|A\|_F = \sqrt{\operatorname{trace}(A^H A)}$.
+
+Using our previous calculation of $E^H E$:
+\begin{align*}
+    \|E\|_F^2 & = \operatorname{trace}(E^H E)                                            \\
+              & = \operatorname{trace}(\|\mathbf{u}\|_2^2 \cdot \mathbf{v} \mathbf{v}^H) \\
+              & = \|\mathbf{u}\|_2^2 \operatorname{trace}(\mathbf{v} \mathbf{v}^H)
+\end{align*}
+
+Now, $\mathbf{v} \mathbf{v}^H$ is an $n \times n$ matrix where $(\mathbf{v} \mathbf{v}^H)_{ij} = v_i \overline{v_j}$. The diagonal entries are:
+\begin{align*}
+    (\mathbf{v} \mathbf{v}^H)_{ii} = v_i \overline{v_i} = |v_i|^2
+\end{align*}
+
+Therefore:
+\begin{align*}
+    \operatorname{trace}(\mathbf{v} \mathbf{v}^H) & = \sum_{i=1}^n |v_i|^2 = \|\mathbf{v}\|_2^2
+\end{align*}
+
+Substituting back:
+\begin{align*}
+    \|E\|_F^2 & = \|\mathbf{u}\|_2^2 \|\mathbf{v}\|_2^2
+\end{align*}
+
+Thus:
+\begin{align*}
+    \|E\|_F = \|\mathbf{u}\|_2 \|\mathbf{v}\|_2
+\end{align*}
+
+The result holds for both the 2-norm and Frobenius norm.
+
+\subsection{Problem 4}
+
+\paragraph*{(a) Eigenvalues and Jordan form of $A = uv^H$}
+
+Let $A = uv^H$ where $\mathbf{u}, \mathbf{v} \in \mathbb{C}^n$. To find eigenvalues, we solve $A\mathbf{x} = \lambda \mathbf{x}$.
+
+\begin{align*}
+    uv^H \mathbf{x}                     & = \lambda \mathbf{x} \\
+    \mathbf{u}(\mathbf{v}^H \mathbf{x}) & = \lambda \mathbf{x}
+\end{align*}
+
+Since $\mathbf{v}^H \mathbf{x}$ is a scalar, let $\alpha = \mathbf{v}^H \mathbf{x}$. Then:
+\begin{align*}
+    \alpha \mathbf{u} = \lambda \mathbf{x}
+\end{align*}
+\begin{enumerate}
+    \item $\mathbf{x}$ is parallel to $\mathbf{u}$, i.e., $\mathbf{x} = \beta \mathbf{u}$ for some $\beta \neq 0$.
+          \begin{align*}
+              \mathbf{u}(\mathbf{v}^H (\beta \mathbf{u})) & = \lambda (\beta \mathbf{u}) \\
+              \beta \mathbf{u}(\mathbf{v}^H \mathbf{u})   & = \lambda \beta \mathbf{u}   \\
+              \beta (\mathbf{v}^H \mathbf{u}) \mathbf{u}  & = \lambda \beta \mathbf{u}
+          \end{align*}
+          For $\beta \neq 0$, dividing by $\beta \mathbf{u}$ gives:
+          \begin{align*}
+              \lambda = \mathbf{v}^H \mathbf{u}
+          \end{align*}
+          So $\lambda_1 = \mathbf{v}^H \mathbf{u}$ is an eigenvalue with eigenvector in the direction of $\mathbf{u}$.
+    \item $\mathbf{x}$ is orthogonal to $\mathbf{u}$.
+
+          If $\mathbf{x} \perp \mathbf{u}$, then from $\alpha \mathbf{u} = \lambda \mathbf{x}$ and $\alpha = \mathbf{v}^H \mathbf{x}$, we need $\alpha = 0$ (since $\mathbf{u}$ and $\mathbf{x}$ are orthogonal and $\mathbf{u} \neq 0$).
+          This means $\mathbf{v}^H \mathbf{x} = 0$, so $\mathbf{x}$ is orthogonal to $\mathbf{v}$. From $\alpha \mathbf{u} = \lambda \mathbf{x}$ with $\alpha = 0$, we get $\lambda \mathbf{x} = 0$, which implies $\lambda = 0$.
+          The eigenspace for $\lambda = 0$ consists of all vectors orthogonal to $\mathbf{v}$, which has dimension $n-1$ (assuming $\mathbf{v} \neq 0$).
+\end{enumerate}
+
+\begin{itemize}
+    \item  $\lambda_1 = \mathbf{v}^H \mathbf{u}$ with geometric multiplicity 1
+    \item  $\lambda_2 = \cdots = \lambda_n = 0$ with geometric multiplicity $n-1$
+\end{itemize}
+
+\emph{Jordan Normal Form:} Since $\operatorname{rank}(A) = 1$ and the geometric multiplicity of eigenvalue 0 is $n-1$, we have:
+\[
+    \operatorname{nullity}\left(A- 0 \cdot I\right) = \operatorname{nullity}(A) = n - \operatorname{rank}(A) = n - 1
+\]
+
+This equals the algebraic multiplicity of eigenvalue 0, so all Jordan blocks for eigenvalue 0 have size 1.
+The Jordan normal form is:
+\begin{align*}
+    J = \begin{bmatrix}
+            \mathbf{v}^H \mathbf{u} & 0      & \cdots & 0      \\
+            0                       & 0      & \cdots & 0      \\
+            \vdots                  & \vdots & \ddots & \vdots \\
+            0                       & 0      & \cdots & 0
+        \end{bmatrix}
+\end{align*}
+
+\paragraph*{(b) eigenpair relation between $A$ and $A + \lambda I$}
+
+Let $A \in \mathbb{C}^{n \times n}$ and let $\mu$ be an eigenvalue of $A$ with eigenvector $\mathbf{x} \neq 0$, so $A\mathbf{x} = \mu\mathbf{x}$.
+
+Consider the matrix $B = A + \lambda I$. Then:
+\begin{align*}
+    B\mathbf{x} & = \left(A+ \lambda I\right)\mathbf{x} \\
+                & = A\mathbf{x} + \lambda I\mathbf{x}   \\
+                & = A\mathbf{x} + \lambda \mathbf{x}    \\
+                & = \mu\mathbf{x} + \lambda \mathbf{x}  \\
+                & = (\mu + \lambda)\mathbf{x}
+\end{align*}
+
+Therefore, $\mu + \lambda$ is an eigenvalue of $B = A + \lambda I$ with the same eigenvector $\mathbf{x}$.
+
+Conversely, if $\nu$ is an eigenvalue of $B = A + \lambda I$ with eigenvector $\mathbf{y}$, then:
+\begin{align*}
+    \left(A+ \lambda I\right)\mathbf{y} & = \nu \mathbf{y}            \\
+    A\mathbf{y} + \lambda \mathbf{y}    & = \nu \mathbf{y}            \\
+    A\mathbf{y}                         & = (\nu - \lambda)\mathbf{y}
+\end{align*}
+
+So $\nu - \lambda$ is an eigenvalue of $A$, which means $\nu = (\nu - \lambda) + \lambda$ where $\nu - \lambda \in \sigma(A)$.
+
+This establishes the bijection:
+\begin{align*}
+    \sigma\left(A+ \lambda I\right) = \{\mu + \lambda : \mu \in \sigma(A)\}
+\end{align*}
+
+The Jordan structure remains unchanged because the eigenvector relationships are preserved.
+
+\paragraph*{(c) Eigenvalues and eigenbasis of a given matrix}
+\begin{align*}
+    A & = \begin{bmatrix}
+              2 & 1 & 1 & 1 \\
+              1 & 2 & 1 & 1 \\
+              1 & 1 & 2 & 1 \\
+              1 & 1 & 1 & 2
+          \end{bmatrix}                  \\
+      & = \mathbf{e}\mathbf{e}^\top + I_4 \\
+    A & = J + I_4
+\end{align*}
+From part (a), the eigenvalues of $J = \mathbf{e}\mathbf{e}^T$ are:
+\begin{align*}
+    \lambda_1 & = \mathbf{e}^T\mathbf{e} = 1^2 + 1^2 + 1^2 + 1^2 = 4, & \mathbf{\mathbf{v}}_1 = \mathbf{e}, \\
+    \lambda_2 & = \lambda_3 = \lambda_4 = 0                           & m_g(0) = 3
+\end{align*}
+
+From part (b), the eigenvalues of $A = J + I_4$ are:
+\begin{align*}
+    \mu_1 & = 1 + 4 = 5,                 & \mathbf{\mathbf{v}}_1 = \mathbf{e}, \\
+    \mu_2 & = \mu_3 = \mu_4 = 1 + 0 = 1, & m_g(1) = 3
+\end{align*}
+To find the eigenspace for $\mu = 1$, we solve:
+\begin{align*}
+    \left(A- 1\cdot I\right)\mathbf{x} & = \mathbf{0} \\
+    \left(J + I - I\right)\mathbf{x}   & = \mathbf{0} \\
+    J\mathbf{x}                        & = \mathbf{0}
+\end{align*}
+The null space of $J = \mathbf{e}\mathbf{e}^T$ consists of all vectors orthogonal to $\mathbf{e}$:
+\begin{align*}
+    \mathbf{e}^T\mathbf{x} & = 0 \\
+    x_1 + x_2 + x_3 + x_4  & = 0
+\end{align*}
+A basis for this 3-dimensional space is:
+\begin{align*}
+    \mathbf{\mathbf{v}}_2 & = \begin{bmatrix} 1 \\ -1 \\ 0 \\ 0 \end{bmatrix}, \quad
+    \mathbf{\mathbf{v}}_3 = \begin{bmatrix} 1 \\ 0 \\ -1 \\ 0 \end{bmatrix}, \quad
+    \mathbf{\mathbf{v}}_4 = \begin{bmatrix} 1 \\ 0 \\ 0 \\ -1 \end{bmatrix}
+\end{align*}
+
+We can verify these are eigenvectors:
+\begin{align*}
+    A\mathbf{\mathbf{v}}_2 & = \begin{bmatrix} 2 & 1 & 1 & 1 \\ 1 & 2 & 1 & 1 \\ 1 & 1 & 2 & 1 \\ 1 & 1 & 1 & 2 \end{bmatrix} \begin{bmatrix} 1 \\ -1 \\ 0 \\ 0 \end{bmatrix} = \begin{bmatrix} 1 \\ -1 \\ 0 \\ 0 \end{bmatrix} = \mathbf{\mathbf{v}}_2
+\end{align*}
+
+Therefore, the complete eigenbasis and eigenvalues of $A$ are:
+\begin{align*}
+    \{\mathbf{\mathbf{v}}_1, \mathbf{\mathbf{v}}_2, \mathbf{\mathbf{v}}_3, \mathbf{\mathbf{v}}_4\} = \left\{\begin{bmatrix} 1 \\ 1 \\ 1 \\ 1 \end{bmatrix}, \begin{bmatrix} 1 \\ -1 \\ 0 \\ 0 \end{bmatrix}, \begin{bmatrix} 1 \\ 0 \\ -1 \\ 0 \end{bmatrix}, \begin{bmatrix} 1 \\ 0 \\ 0 \\ -1 \end{bmatrix}\right\},
+    \quad
+    \{\mu_1, \mu_2, \mu_3, \mu_4\} = \{5, 1, 1, 1\}
+\end{align*}
+
+\subsection{Problem 5}
+
+Given matrix:
+\[
+    A = \begin{bmatrix}
+        1 & 2 & 0 \\
+        1 & 0 & 1 \\
+        2 & 2 & 1 \\
+        1 & 1 & 1
+    \end{bmatrix}
+\]
+
+\paragraph*{(a) Gram-Schmidt process}
+
+Let $\mathbf{a}_1 = \begin{bmatrix} 1 \\ 1 \\ 2 \\ 1 \end{bmatrix}$, $\mathbf{a}_2 = \begin{bmatrix} 2 \\ 0 \\ 2 \\ 1 \end{bmatrix}$, $\mathbf{a}_3 = \begin{bmatrix} 0 \\ 1 \\ 1 \\ 1 \end{bmatrix}$ be the columns of $A$.
+
+\textbf{Step 1:} Compute $\mathbf{q}_1$
+\begin{align*}
+    \mathbf{u}_1       & = \mathbf{a}_1 = \begin{bmatrix} 1 \\ 1 \\ 2 \\ 1 \end{bmatrix}                                               \\
+    \|\mathbf{u}_1\|_2 & = \sqrt{1^2 + 1^2 + 2^2 + 1^2} = \sqrt{7}                                                                     \\
+    \mathbf{q}_1       & = \frac{\mathbf{u}_1}{\|\mathbf{u}_1\|_2} = \frac{1}{\sqrt{7}} \begin{bmatrix} 1 \\ 1 \\ 2 \\ 1 \end{bmatrix}
+\end{align*}
+
+\textbf{Step 2:} Compute $\mathbf{q}_2$
+\begin{align*}
+    \mathbf{q}_1^T \mathbf{a}_2 & = \frac{1}{\sqrt{7}} \begin{bmatrix} 1 & 1 & 2 & 1 \end{bmatrix} \begin{bmatrix} 2 \\ 0 \\ 2 \\ 1 \end{bmatrix} = \frac{1}{\sqrt{7}}(2 + 0 + 4 + 1) = \frac{7}{\sqrt{7}} = \sqrt{7} \\
+    \mathbf{u}_2                & = \mathbf{a}_2 - (\mathbf{q}_1^T \mathbf{a}_2)\mathbf{q}_1                                                                                                                          \\
+                                & = \begin{bmatrix} 2 \\ 0 \\ 2 \\ 1 \end{bmatrix} - \sqrt{7} \cdot \frac{1}{\sqrt{7}} \begin{bmatrix} 1 \\ 1 \\ 2 \\ 1 \end{bmatrix}                                                 \\
+                                & = \begin{bmatrix} 2 \\ 0 \\ 2 \\ 1 \end{bmatrix} - \begin{bmatrix} 1 \\ 1 \\ 2 \\ 1 \end{bmatrix} = \begin{bmatrix} 1 \\ -1 \\ 0 \\ 0 \end{bmatrix}                                 \\
+    \|\mathbf{u}_2\|_2          & = \sqrt{1^2 + (-1)^2 + 0^2 + 0^2} = \sqrt{2}                                                                                                                                        \\
+    \mathbf{q}_2                & = \frac{\mathbf{u}_2}{\|\mathbf{u}_2\|_2} = \frac{1}{\sqrt{2}} \begin{bmatrix} 1 \\ -1 \\ 0 \\ 0 \end{bmatrix}
+\end{align*}
+
+\textbf{Step 3:} Compute $\mathbf{q}_3$
+\begin{align*}
+    \mathbf{q}_1^T \mathbf{a}_3 & = \frac{1}{\sqrt{7}} \begin{bmatrix} 1 & 1 & 2 & 1 \end{bmatrix} \begin{bmatrix} 0 \\ 1 \\ 1 \\ 1 \end{bmatrix} = \frac{1}{\sqrt{7}}(0 + 1 + 2 + 1) = \frac{4}{\sqrt{7}}                                                                                  \\
+    \mathbf{q}_2^T \mathbf{a}_3 & = \frac{1}{\sqrt{2}} \begin{bmatrix} 1 & -1 & 0 & 0 \end{bmatrix} \begin{bmatrix} 0 \\ 1 \\ 1 \\ 1 \end{bmatrix} = \frac{1}{\sqrt{2}}(0 - 1 + 0 + 0) = -\frac{1}{\sqrt{2}}                                                                                \\
+    \mathbf{u}_3                & = \mathbf{a}_3 - (\mathbf{q}_1^T \mathbf{a}_3)\mathbf{q}_1 - (\mathbf{q}_2^T \mathbf{a}_3)\mathbf{q}_2                                                                                                                                                    \\
+                                & = \begin{bmatrix} 0 \\ 1 \\ 1 \\ 1 \end{bmatrix} - \frac{4}{\sqrt{7}} \cdot \frac{1}{\sqrt{7}} \begin{bmatrix} 1 \\ 1 \\ 2 \\ 1 \end{bmatrix} - \left(-\frac{1}{\sqrt{2}}\right) \cdot \frac{1}{\sqrt{2}} \begin{bmatrix} 1 \\ -1 \\ 0 \\ 0 \end{bmatrix} \\
+                                & = \begin{bmatrix} 0 \\ 1 \\ 1 \\ 1 \end{bmatrix} - \frac{4}{7} \begin{bmatrix} 1 \\ 1 \\ 2 \\ 1 \end{bmatrix} + \frac{1}{2} \begin{bmatrix} 1 \\ -1 \\ 0 \\ 0 \end{bmatrix}                                                                               \\
+                                & = \begin{bmatrix} 0 \\ 1 \\ 1 \\ 1 \end{bmatrix} - \begin{bmatrix} 4/7 \\ 4/7 \\ 8/7 \\ 4/7 \end{bmatrix} + \begin{bmatrix} 1/2 \\ -1/2 \\ 0 \\ 0 \end{bmatrix}                                                                                           \\
+                                & = \begin{bmatrix} 0 - 4/7 + 1/2 \\ 1 - 4/7 - 1/2 \\ 1 - 8/7 + 0 \\ 1 - 4/7 + 0 \end{bmatrix} = \begin{bmatrix} -1/14 \\ -1/14 \\ -1/7 \\ 3/7 \end{bmatrix}
+\end{align*}
+
+\begin{align*}
+    \|\mathbf{u}_3\|_2 & = \sqrt{\left(-\frac{1}{14}\right)^2 + \left(-\frac{1}{14}\right)^2 + \left(-\frac{1}{7}\right)^2 + \left(\frac{3}{7}\right)^2}                                                                      \\
+                       & = \sqrt{\frac{1}{196} + \frac{1}{196} + \frac{1}{49} + \frac{9}{49}}                                                                                                                                 \\
+                       & = \sqrt{\frac{1 + 1 + 4 + 36}{196}} = \sqrt{\frac{42}{196}} = \sqrt{\frac{3}{14}} = \frac{\sqrt{42}}{14}                                                                                             \\
+    \mathbf{q}_3       & = \frac{\mathbf{u}_3}{\|\mathbf{u}_3\|_2} = \frac{14}{\sqrt{42}} \begin{bmatrix} -1/14 \\ -1/14 \\ -1/7 \\ 3/7 \end{bmatrix} = \frac{1}{\sqrt{42}} \begin{bmatrix} -1 \\ -1 \\ -2 \\ 6 \end{bmatrix}
+\end{align*}
+
+\textbf{Final QR factorization:}
+\begin{align*}
+    Q & = \begin{bmatrix}
+              \frac{1}{\sqrt{7}} & \frac{1}{\sqrt{2}}  & \frac{-1}{\sqrt{42}} \\
+              \frac{1}{\sqrt{7}} & \frac{-1}{\sqrt{2}} & \frac{-1}{\sqrt{42}} \\
+              \frac{2}{\sqrt{7}} & 0                   & \frac{-2}{\sqrt{42}} \\
+              \frac{1}{\sqrt{7}} & 0                   & \frac{6}{\sqrt{42}}
+          \end{bmatrix} \\
+    R & = \begin{bmatrix}
+              \sqrt{7} & \sqrt{7} & \frac{4}{\sqrt{7}}   \\
+              0        & \sqrt{2} & -\frac{1}{\sqrt{2}}  \\
+              0        & 0        & \frac{\sqrt{42}}{14}
+          \end{bmatrix}
+\end{align*}
+
+\paragraph*{(b) Householder reflections}
+
+\textbf{Step 1:} Eliminate first column below diagonal
+
+Let $\mathbf{x} = \begin{bmatrix} 1 \\ 1 \\ 2 \\ 1 \end{bmatrix}$. We want $H_1 \mathbf{x} = \begin{bmatrix} \|\mathbf{x}\|_2 \\ 0 \\ 0 \\ 0 \end{bmatrix} = \begin{bmatrix} \sqrt{7} \\ 0 \\ 0 \\ 0 \end{bmatrix}$.
+
+\begin{align*}
+    \mathbf{v}         & = \mathbf{x} - \|\mathbf{x}\|_2 \mathbf{e}_1 = \begin{bmatrix} 1 \\ 1 \\ 2 \\ 1 \end{bmatrix} - \sqrt{7} \begin{bmatrix} 1 \\ 0 \\ 0 \\ 0 \end{bmatrix} = \begin{bmatrix} 1 - \sqrt{7} \\ 1 \\ 2 \\ 1 \end{bmatrix} \\
+    \|\mathbf{v}\|_2^2 & = (1-\sqrt{7})^2 + 1^2 + 2^2 + 1^2 = 1 - 2\sqrt{7} + 7 + 1 + 4 + 1 = 14 - 2\sqrt{7}                                                                                                                                 \\
+    \mathbf{u}         & = \frac{\mathbf{v}}{\|\mathbf{v}\|_2}                                                                                                                                                                               \\
+    H_1                & = I - 2\mathbf{u}\mathbf{u}^T
+\end{align*}
+
+\begin{align*}
+    H_1 A & = \begin{bmatrix}
+                  \sqrt{7} & * & * \\
+                  0        & * & * \\
+                  0        & * & * \\
+                  0        & * & *
+              \end{bmatrix}
+\end{align*}
+
+\textbf{Step 2:} Apply Householder to eliminate second column below diagonal
+
+Consider the $3 \times 1$ subvector from rows 2-4 of column 2 after first transformation. Apply similar process to eliminate entries below $(2,2)$.
+
+After computing both Householder transformations, we get:
+\begin{align*}
+    H_2 H_1 A & = R = \begin{bmatrix}
+                          \sqrt{7} & \sqrt{7} & \frac{4}{\sqrt{7}}   \\
+                          0        & \sqrt{2} & -\frac{1}{\sqrt{2}}  \\
+                          0        & 0        & \frac{\sqrt{42}}{14} \\
+                          0        & 0        & 0
+                      \end{bmatrix} \\
+    Q         & = (H_2 H_1)^T = H_1^T H_2^T
+\end{align*}
+
+The final reduced QR factorization gives the same result as the Gram-Schmidt method.
+

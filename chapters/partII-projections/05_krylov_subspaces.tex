@@ -1,0 +1,36 @@
+\chapter{Krylov Subspaces}
+\label{chap:krylov}
+
+Krylov subspaces capture the span of repeated applications of a matrix to a vector and are the foundation of projection methods driven by matrix--vector products.
+
+\begin{definition}{Krylov subspace}{krylov}
+  For $A\in\mathbb{R}^{n\times n}$ and a nonzero $\mathbf{v}\in\mathbb{R}^n$, the $m$-th Krylov subspace is
+  \[
+    \mathcal{K}_m(A,\mathbf{v}) := \operatorname{span}\{\mathbf{v},A\mathbf{v},A^2\mathbf{v},\ldots,A^{m-1}\mathbf{v}\}.
+  \]
+  Always $\dim\,\mathcal{K}_m\le \min\{m,n\}$.
+\end{definition}
+
+\paragraph{Minimal polynomial and grade.} The \emph{grade} $\mu$ of $\mathbf{v}$ with respect to $A$ is the degree of the monic polynomial $p$ of least degree such that $p(A)\mathbf{v}=0$. Then
+\[
+  A\mathcal{K}_\mu(A,\mathbf{v}) = \mathcal{K}_\mu(A,\mathbf{v}),\qquad \mathcal{K}_m(A,\mathbf{v})=\mathcal{K}_\mu(A,\mathbf{v})\;\text{for all }m\ge \mu.
+\]
+Thus Krylov spaces stabilize once an $A$-invariant subspace is reached (``happy breakdown'').
+
+\paragraph{Cayley--Hamilton connection.} For any $\mathbf{x}\in\mathcal{K}_m(A,\mathbf{v})$ with $m\ge\mu$, there exists a polynomial $q_{\mu-1}$ of degree at most $\mu-1$ such that
+\[
+  \mathbf{x}=q_{\mu-1}(A)\,\mathbf{v}.
+\]
+Indeed, dividing any polynomial representative by the minimal polynomial gives $q=q_1\,p+q_{\mu-1}$ and $q(A)\mathbf{v}=q_{\mu-1}(A)\mathbf{v}$.
+
+\paragraph{Dimension and nesting.} The dimensions satisfy
+\[
+  \dim\,\mathcal{K}_m(A,\mathbf{v})\le m,\qquad \mathcal{K}_1\subseteq\mathcal{K}_2\subseteq\cdots\subseteq\mathcal{K}_\mu=\cdots.
+\]
+
+\paragraph{Projection viewpoint.} Given an initial guess $\mathbf{x}_0$ for $A\mathbf{x}=\mathbf{b}$ and residual $\mathbf{r}_0$, Krylov methods search in $\mathbf{x}_0+\mathcal{K}_m(A,\mathbf{r}_0)$ while enforcing a Petrov--Galerkin condition on the residual. Choices of the test space $\mathcal{L}$ produce FOM ($\mathcal{L}=\mathcal{K}_m$) and GMRES ($\mathcal{L}=A\mathcal{K}_m$); see Chapters~\ref{chap:arnoldi} and \ref{chap:projection-methods}.
+
+\section{Practical Notes}
+- \textbf{Storage:} A basis of $\mathcal{K}_m$ costs $O(nm)$ storage; restarts (e.g., GMRES($m$)) limit memory.
+- \textbf{Orthogonalization:} Build $V_m$ with Modified Gram--Schmidt; use selective reorthogonalization when needed.
+- \textbf{Breakdown:} A zero $h_{j+1,j}$ in Arnoldi indicates an invariant subspace has been reached (exactness on $\mathcal{K}_j$).

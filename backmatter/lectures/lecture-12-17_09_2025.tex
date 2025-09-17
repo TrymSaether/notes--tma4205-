@@ -1,0 +1,127 @@
+\section{Lecture 12: 17.09.2025}
+
+\subsection{Convergence of CG and GMRES (Saad 6.11)}
+Let $A \in \R^{n \times n}$, $\mathbf{b}, \mathbf{x}_0 \in \R^n$, and $A \underbrace{\mathbf{x}_{\star}}_{\text{Exact solution}} = \mathbf{b}$ where $\mathbf{r}_0 = \mathbf{b} - A \mathbf{x}_0$ with the Krylov subspace:
+\[
+    \mathcal{K}_k(A, \mathbf{r}_0) = \text{span} \{\mathbf{r}_0, A \mathbf{r}_0, A^2 \mathbf{r}_0, \ldots, A^{k-1} \mathbf{r}_0\}.
+\]
+\paragraph{Projection idea:}
+Find $\mathbf{x}_m - \mathbf{x}_0 \in \mathcal{K}_m$, with $\mathbf{b} - A \mathbf{x}_m \perp \mathcal{L}_m$ for some subspace $\mathcal{L}_m$.
+\begin{itemize}
+    \item $A$ is SPD, $\mathcal{L}_m = \mathcal{K}_m \implies$ CG method.
+          \[
+              \|\mathbf{x}_{\star} - \mathbf{x}_m\|_A = \min_{\mathbf{x} \in \mathbf{x}_0 + \mathcal{K}_m} \|\mathbf{x}_{\star} - \mathbf{x}\|_A \tag{CG}
+          \]
+    \item $A$ is general, $\mathcal{L}_m = A \mathcal{K}_m \implies$ GMRES method.
+          \[
+              \|\mathbf{b} - A \mathbf{x}_m\|_2 = \min_{\mathbf{x} \in \mathbf{x}_0 + \mathcal{K}_m} \|\mathbf{b} - A \mathbf{x}\|_2 \tag{GMRES}
+          \]
+\end{itemize}
+\paragraph{What we want:}
+\begin{align*}
+    \|\mathbf{x}_{\star} - \mathbf{x}_m\|_A & \leq C_m \|\mathbf{x}_{\star} - \mathbf{x}_0\|_A \tag{CG}      \\
+    \|\mathbf{b} - A \mathbf{x}_m\|_A       & \leq \tilde{C}_m \|\mathbf{b} - A \mathbf{x}_0\|_A \tag{GMRES}
+\end{align*}
+where $\mathbf{x} \in \mathbf{x}_0 \in \mathcal{K}_m$, $\mathbf{x} = \mathbf{x}_0 + q_m(A) \mathbf{r}_0$ where $q_m \in \mathbb{P}_{m-1}$.
+\begin{align*}
+    \mathbf{x}_{\star} - \mathbf{x}_m & = \mathbf{x}_{\star} - \mathbf{x}_0 - q_m(A) \mathbf{r}_0 = (I - A q_m(A)) (\mathbf{x}_{\star} - \mathbf{x}_0) \\
+                                      & = p_m(A) (\mathbf{x}_{\star} - \mathbf{x}_0) \quad \text{where } p_m \in \mathbb{P}_m, \, p_m(0) = 1           \\
+    \mathbf{r}                        & = \mathbf{b} - A \mathbf{x} = \mathbf{b} - A (\mathbf{x}_0 + q_m(A) \mathbf{r}_0)                              \\
+                                      & = (I - A q_m(A)) \mathbf{r}_0
+\end{align*}
+For the residual:
+\[
+    \mathbf{r}_0 = \mathbf{b} - A \mathbf{x}_0 = A (\mathbf{x}_{\star} - \mathbf{x}_0)
+\]
+We have:
+\begin{align*}
+    \|\mathbf{x} - \mathbf{x}_m\|_A   & = \|p_m(A) (\mathbf{x}_{\star} - \mathbf{x}_0)\|_A = \min_{\mathbf{x} \in \mathbf{x}_0 + \mathcal{K}_m} \|p_m(A) (\mathbf{x}_{\star} - \mathbf{x}_0)\|_A \tag{CG} \\
+    \|\mathbf{b} - A \mathbf{x}_m\|_2 & = \|p_m(A) \mathbf{r}_0\|_2 = \min_{\mathbf{x} \in \mathbf{x}_0 + \mathcal{K}_m} \|p_m(A) \mathbf{r}_0\|_2 \tag{GMRES}
+\end{align*}
+
+\paragraph{Consider only the CG case ($A$ SPD):}
+Then the eigenvalues are $0 < \lambda_1 \leq \lambda_2 \leq \ldots \leq \lambda_n$ and a full set of orthogonal eigenvectors $\mathbf{v}_1, \ldots, \mathbf{v}_n$ s.t.
+\[
+    V =
+    \begin{bmatrix}
+        \mathbf{v}_1 & \mathbf{v}_2 & \ldots & \mathbf{v}_n
+    \end{bmatrix}
+    \in \R^{n \times n}, \quad V^T V = I
+\]
+and
+\begin{align*}
+    A\mathbf{v}_i     & = \lambda_i \mathbf{v}_i, \quad i = 1, \ldots, n \\
+    p(A) \mathbf{v}_i & = p(\lambda_i) \mathbf{v}_i
+\end{align*}
+Then we define $\mathbf{y} \in \R^n$ s.t.
+\begin{align*}
+    \mathbf{y}              & = V \symbf{\alpha}  = \sum_{i=1}^n \symbf{\alpha}_i \mathbf{v}_i             \\
+    \|\mathbf{y}\|_A^2      & = \sum_{i=1}^n \lambda_i \symbf{\alpha}_i^2                                  \\
+    \|\mathbf{y}\|_A^2      & = \mathbf{y}^\top A \mathbf{y} = \mathbf{y}^\top V \Lambda V^\top \mathbf{y} \\
+    \|p(A) \mathbf{y}\|_A^2 & = \sum_{i=1}^n p(\lambda_i) ^2 \lambda_i \symbf{\alpha}_i^2
+\end{align*}
+If $\mathbf{x}_{\star} - \mathbf{x}_0 = \sum_{i=1}^n \xi_i \mathbf{v}_i$, then:
+\begin{align*}
+    \|\mathbf{x}_{\star} - \mathbf{x}_m\|_A^2 & = \sum_{i=1}^n p_m(\lambda_i)^2 \lambda_i \xi_i^2
+\end{align*}
+And $p_m$ is the solution of:
+\[
+    \min_{p_m \in \mathbb{P}_m, p_m(0) = 1} \max_{1 \leq i \leq n} |p_m(\lambda_i)|
+\]
+\paragraph{Chebyshev polynomials:}
+\begin{align*}
+    C_k(t) & = \cos(k \arccos(t)) = \frac{1}{2} \left( \left(t - \sqrt{t^2 - 1}\right)^k + \left(t + \sqrt{t^2 - 1}\right)^k \right), \quad |t| \geq 1 \\
+    C_0(t) & = 1, \quad C_1(t) = t, \quad C_{k+1}(t) = 2t C_k(t) - C_{k-1}(t)
+\end{align*}
+
+They are orthogonal on the inner product:
+\[
+    \langle f, g \rangle = \int_{-1}^1 \frac{1}{\sqrt{1 - t^2}} f(t) g(t) \, dt
+\]
+We will search for a polynomial $p \in \mathbb{P}_m$ s.t. $p(0) = 1$ satisfying:
+\[
+    p^\star = \arg\min_{\substack{p \in \mathbb{P}_m \\ p(0) = 1}} \max_{\lambda_{\min} \leq \lambda \leq \lambda_{\max}} |p(\lambda)|
+\]
+
+\subsection{Theorem (Saad 6.11.4)}
+$C_k(t)$ is the solution of:
+\[
+    \min_{\substack{p \in \mathbb{P}_k \\ p(0) = 1}} \max_{-1 \leq t \leq 1} |p(t)|
+\]
+Map $[-1, 1] \to [\lambda_{\min}, \lambda_{\max}]$ by scaling it so $p_k(0) = 1$:
+\[
+    p_k(\lambda) = \frac{C_k\left(\frac{2\lambda - \lambda_{\max} -\lambda_{\min}}{\lambda_{\max} - \lambda_{\min}}\right)}{C_k\left(\frac{- \lambda_{\max} - \lambda_{\min}}{\lambda_{\max} - \lambda_{\min}}\right)}, \quad \lambda \in [\lambda_{\min}, \lambda_{\max}]
+\]
+Then the maximum value of $|p_k(\lambda)|$ on $[\lambda_{\min}, \lambda_{\max}]$ is:
+\[
+    |p_k(\lambda)| \leq \frac{1}{|C_k\left(\frac{\lambda_{\max} + \lambda_{\min}}{\lambda_{\max} - \lambda_{\min}}\right)|}
+\]
+Thus we have found the bound for $\|\mathbf{x}_{\star} - \mathbf{x}_m\|_A = \|p_m(A) (\mathbf{x}_{\star} - \mathbf{x}_0)\|_A$:
+\begin{align*}
+    \|\mathbf{x}_{\star} - \mathbf{x}_m\|_A & \leq \frac{1}{|C_m\left(\frac{\lambda_{\max} + \lambda_{\min}}{\lambda_{\max} - \lambda_{\min}}\right)|} \|\mathbf{x}_{\star} - \mathbf{x}_0\|_A \\
+                                            & = \frac{1}{|C_m\left(\frac{\kappa + 1}{\kappa - 1}\right)|} \|\mathbf{x}_{\star} - \mathbf{x}_0\|_A
+\end{align*}
+Where $\kappa_2(A) = \|A\|_2 \cdot \|A^{-1}\|_2 = \frac{\lambda_{\max}}{\lambda_{\min}}$ is the condition number of $A$.
+Let $t = \frac{\kappa + 1}{\kappa - 1}$ then plugging this into the formula for $C_m(t)$ gives:
+
+\[
+    C_m(\frac{\kappa + 1}{\kappa - 1}) = \frac{1}{2} \left[\left(\frac{\sqrt{\kappa} + 1}{\sqrt{\kappa} - 1}\right)^m + \left(\frac{\sqrt{\kappa} - 1}{\sqrt{\kappa} + 1}\right)^m\right] \geq \frac{1}{2} \left(\frac{\sqrt{\kappa} + 1}{\sqrt{\kappa} - 1}\right)^m
+\]
+
+Thus we have the final bound for CG:
+\[
+    \boxed{\|\mathbf{x}_{\star} - \mathbf{x}_m\|_A^2 \leq 2 \left(\frac{\sqrt{\kappa} - 1}{\sqrt{\kappa} + 1}\right)^m \|\mathbf{x}_{\star} - \mathbf{x}_0\|_A^2}
+\]
+
+\subsection{Practical remarks}
+Lets generate a random SPD matrix $A \in \R^{n \times n}$, and do CG on $A^{N_{\text{pot}}}$ for some $N_{\text{pot}} \in (0,1)$.
+
+
+\subsection{Lecture 13: 24.09.2025}
+
+\subsection{Convergence of CG and GMRES (Saad 6.11)}
+$A \in \R^{n \times n}$, $\mathbf{b}, \mathbf{x}_0 \in \R^n$, and $A \underbrace{\mathbf{x}_{\star}}_{\text{Exact solution}} = \mathbf{b}$ where $\mathbf{r}_0 = \mathbf{b} - A \mathbf{x}_0$ with the Krylov subspace:
+
+\begin{align*}
+    \mathcal{K}_k(A, \mathbf{r}_0) & = \text{span} \{\mathbf{r}_0, A \mathbf{r}_0, A^2 \mathbf{r}_0, \ldots, A^{k-1} \mathbf{r}_0\}.
+\end{align*}

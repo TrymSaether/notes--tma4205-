@@ -1,0 +1,52 @@
+\begin{tikzpicture}
+    \begin{axis}[
+        width=10cm,
+        height=7cm,
+        xlabel={$\log_{10}(\kappa(A))$},
+        ylabel={Relative Error},
+        ymode=log,
+        xmin=0,
+        xmax=4,
+        ymin=1e-16,
+        ymax=1e-4,
+        grid=major,
+        legend pos=north west,
+        legend style={font=\footnotesize}
+    ]
+
+    % QR approach (better conditioning)
+    \addplot[blue, thick, solid] coordinates {
+        (0, 1e-15)
+        (0.5, 3e-15)
+        (1, 1e-14)
+        (1.5, 5e-14)
+        (2, 2e-13)
+        (2.5, 8e-13)
+        (3, 3e-12)
+        (3.5, 1e-11)
+        (4, 5e-11)
+    };
+    \addlegendentry{QR approach}
+
+    % Normal equations (worse conditioning)
+    \addplot[red, thick, dashed] coordinates {
+        (0, 1e-15)
+        (0.5, 1e-14)
+        (1, 1e-13)
+        (1.5, 1e-12)
+        (2, 1e-11)
+        (2.5, 1e-10)
+        (3, 1e-9)
+        (3.5, 1e-8)
+        (4, 1e-7)
+    };
+    \addlegendentry{Normal equations}
+
+    % Reference lines
+    \addplot[gray, thin, dotted] coordinates {(0, 1e-16) (4, 1e-16)};
+    \addplot[gray, thin, dotted] coordinates {(0, 1e-12) (4, 1e-12)};
+
+    \end{axis}
+
+    \node[below] at (5,-1) {Error scales as $\kappa(A) \cdot \varepsilon$ for QR vs $\kappa(A)^2 \cdot \varepsilon$ for normal equations};
+\end{tikzpicture}

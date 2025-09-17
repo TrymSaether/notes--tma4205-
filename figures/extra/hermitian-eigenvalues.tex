@@ -1,0 +1,26 @@
+\documentclass[border=10pt, tikz]{standalone}
+\usepackage{tikz,pgfplots}
+\usetikzlibrary{arrows.meta,positioning}
+\pgfplotsset{compat=newest}
+
+\begin{document}
+\begin{tikzpicture}
+  \begin{axis}[
+    axis lines=middle,
+    xmin=-3.5, xmax=3.5, ymin=-2.2, ymax=2.2,
+    xlabel={$\,\Re z$}, ylabel={$\,\Im z$},
+    xtick={-3,-2,-1,0,1,2,3},
+    ytick={-2,-1,0,1,2},
+    axis line style={thick},
+    tick style={semithick}
+  ]
+    % Real axis highlight
+    \addplot+[mark=*,only marks] coordinates {(-2,0) (-0.5,0) (1.2,0) (2.6,0)};
+    \node[anchor=north] at (axis cs:-2,0) {$\lambda_1$};
+    \node[anchor=north] at (axis cs:-0.5,0) {$\lambda_2$};
+    \node[anchor=south] at (axis cs:1.2,0) {$\lambda_3$};
+    \node[anchor=south] at (axis cs:2.6,0) {$\lambda_4$};
+
+  \end{axis}
+\end{tikzpicture}
+\end{document}
