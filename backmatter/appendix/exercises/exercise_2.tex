@@ -38,16 +38,16 @@ Compute centers and radii (row-form Gershgorin):
     \begin{center}
         \begin{tikzpicture}[scale=0.8]
             % axes
-            \draw[->] (-3.5,0) -- (6,0) node[below] {$\Re$};
-            \draw[->] (0,-2) -- (0,2) node[right] {$\Im$};
+            \draw[->] (-3,0) -- (6,0) node[below] {$\Re$};
+            \draw[->] (0,-1.5) -- (0,2) node[right] {$\Im$};
             % disks with transparent fill
-            \draw[fill=blue, fill opacity=0.3, draw=blue] (-2,0) circle (1) node[above, font=\small, fill opacity=1] {$D(-2,1)$};
-            \draw[fill=red, fill opacity=0.3, draw=red] (3,0) circle (1.5) node[above, font=\small, fill opacity=1] {$D(3,1.5)$};
-            \draw[fill=green, fill opacity=0.3, draw=green] (4,0) circle (1) node[above right, font=\small, fill opacity=1] {$D(4,1)$};
+            \draw[fill=blue, fill opacity=0.2, draw=blue] (-2,0) circle (1) node[above, font=\small, fill opacity=1] {$D(-2,1)$};
+            \draw[fill=red, fill opacity=0.2, draw=red] (3,0) circle (1.5) node[above, font=\small, fill opacity=1] {$D(3,1.5)$};
+            \draw[fill=green, fill opacity=0.2, draw=green] (4,0) circle (1) node[above right, font=\small, fill opacity=1] {$D(4,1)$};
             % center markers
-            \fill (-2,0) circle (0.05);
-            \fill (3,0) circle (0.05);
-            \fill (4,0) circle (0.05);
+            \fill (-2,0) circle (0.075);
+            \fill (3,0) circle (0.075);
+            \fill (4,0) circle (0.075);
         \end{tikzpicture}
     \end{center}
 \end{minipage}
@@ -69,12 +69,12 @@ Compute centers and radii (row-form Gershgorin):
             \draw[->] (-0.5,0) -- (5,0) node[below] {$\Re$};
             \draw[->] (0,-2) -- (0,3) node[right] {$\Im$};
             % disks with transparent fill
-            \draw[fill=blue, fill opacity=0.3, draw=blue] (2,0) circle (1) node[above right, font=\small, fill opacity=1] {$D(2,1)$};
-            \draw[fill=red, fill opacity=0.3, draw=red] (2,0) circle (2) node[below right, font=\small, fill opacity=1] {$D(2,2)$};
-            \draw[fill=green, fill opacity=0.3, draw=green] (1,0) circle (1) node[left, font=\small, fill opacity=1] {$D(1,1)$};
+            \draw[fill=blue, fill opacity=0.2, draw=blue] (2,0) circle (1) node[above right, font=\small, fill opacity=1] {$D(2,1)$};
+            \draw[fill=red, fill opacity=0.2, draw=red] (2,0) circle (2) node[below right, font=\small, fill opacity=1] {$D(2,2)$};
+            \draw[fill=green, fill opacity=0.2, draw=green] (1,0) circle (1) node[left, font=\small, fill opacity=1] {$D(1,1)$};
             % center markers
-            \fill (2,0) circle (0.05);
-            \fill (1,0) circle (0.05);
+            \fill (2,0) circle (0.075);
+            \fill (1,0) circle (0.075);
         \end{tikzpicture}
     \end{center}
 \end{minipage}
@@ -97,13 +97,17 @@ Compute centers and radii (row-form Gershgorin):
             \draw[->] (-1,0) -- (4,0) node[below] {$\Re$};
             \draw[->] (0,-1) -- (0,4) node[right] {$\Im$};
             % disks with transparent fill (centers: (1,0), (0,1), (1,2))
-            \draw[fill=blue, fill opacity=0.3, draw=blue] (1,0) circle (1) node[above, font=\small, fill opacity=1] {$D(1,1)$};
-            \draw[fill=red, fill opacity=0.3, draw=red] (0,1) circle (1) node[above, font=\small, fill opacity=1] {$D(i,1)$};
-            \draw[fill=green, fill opacity=0.3, draw=green] (1,2) circle (1) node[above, font=\small, fill opacity=1] {$D(1+2i,1)$};
+            \draw[fill=blue, fill opacity=0.2, draw=blue] (1,0) circle (1) node[above, font=\small, fill opacity=1] {$D(1,1)$};
+            \draw[fill=red, fill opacity=0.2, draw=red] (0,1) circle (1) node[above, font=\small, fill opacity=1] {$D(i,1)$};
+            \draw[fill=green, fill opacity=0.2, draw=green] (1,2) circle (1) node[above, font=\small, fill opacity=1] {$D(1+2i,1)$};
             % center markers
-            \fill (1,0) circle (0.05);
-            \fill (0,1) circle (0.05);
-            \fill (1,2) circle (0.05);
+            \fill (1,0) circle (0.075);
+            \fill (0,1) circle (0.075);
+            \fill (1,2) circle (0.075);
         \end{tikzpicture}
     \end{center}
 \end{minipage}
+
+\subsection{Problem 2: 1D Poisson problem}
+
+\subsection{Problem 3: 1D-projection method on SPD matrix}

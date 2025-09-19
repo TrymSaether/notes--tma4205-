@@ -1,0 +1,115 @@
+\section{Lecture 4: 27.08.2025}
+
+\subsection{Similarity and eigenvectors}
+
+Let \(A\in\mathbb{C}^{n\times n}\). If \(B=X^{-1}AX\) with \(\det X\neq0\), then \(A\) and \(B\) are similar and have the same eigenvalues. If \(Av=\lambda v\), then \(X^{-1}v\) is an eigenvector of \(B\) with eigenvalue \(\lambda\).
+
+If \(A\) is diagonalizable with eigenbasis \(V=[v_1,\ldots,v_n]\), then
+\[
+V^{-1}AV=\Lambda=\operatorname{diag}(\lambda_1,\ldots,\lambda_n).
+\]
+If \(A\) is defective, there exists invertible \(X\) with
+\[
+X^{-1}AX=J=\text{blockdiag}\Big(J_1(\lambda_1),\ldots,J_s(\lambda_s)\Big),\qquad
+J_k(\lambda)=\begin{bmatrix}\lambda&1\\[2pt]0&\lambda\end{bmatrix}\ \text{or larger}.
+\]
+
+\subsection{Schur decomposition}
+\begin{theorem}{Schur decomposition}
+For any \(A\in\mathbb{C}^{n\times n}\) there exists a unitary \(Q\) and upper triangular \(T\) such that
+\[
+A=QTQ^H,\qquad T=Q^HAQ.
+\]
+\end{theorem}
+
+\begin{proof}
+Pick a unit eigenvector \(u\) of \(A\), complete to a unitary \(U=[u\ \tilde U]\). Then
+\[
+U^HAU=\begin{bmatrix}\alpha&c^H\\0&\tilde A\end{bmatrix}.
+\]
+By induction, choose unitary \(\tilde V\) with \(\tilde V^H\tilde A\tilde V=T_{n-1}\). With
+\(Q=U\,\operatorname{diag}(1,\tilde V)\),
+\[
+Q^HAQ=\begin{bmatrix}\alpha&b^H\\0&T_{n-1}\end{bmatrix},
+\]
+which is upper triangular.\qed
+\end{proof}
+
+\paragraph{Hermitian case:}
+If \(A=A^H\), then \(T\) is normal and upper triangular, hence diagonal with real entries. Thus
+\[
+A=Q\Lambda Q^H,\qquad \Lambda=\operatorname{diag}(\lambda_1,\ldots,\lambda_n)\in\mathbb{R}^{n\times n}.
+\]
+
+\subsection{Real Schur form}
+For \(A\in\mathbb{R}^{n\times n}\) there exists orthogonal \(Q\) with
+\[
+A=QTQ^T,\qquad
+T=\begin{bmatrix}T_1&*\\0&T_2\end{bmatrix},
+\]
+where each diagonal block \(T_i\) is either \(1\times1\) (real eigenvalue) or a real \(2\times2\) block corresponding to a complex conjugate pair.
+
+\subsection{QR factorization}
+
+For \(A\in\mathbb{R}^{m\times n}\) with \(m\ge n\),
+\[
+A=QR,\qquad Q^TQ=I,\quad R\ \text{upper triangular},\quad R=Q^TA.
+\]
+
+\subsection{Eigenvalue perturbation}
+Let \(Au=\lambda u\) and \(v^HA=\lambda v^H\) with \(\|u\|_2=\|v\|_2=1\). For \(A(\varepsilon)=A+\varepsilon E\) with \(|\varepsilon|\ll1\), the first–order eigenvalue change is
+\[
+\delta\lambda=\varepsilon\,v^HEu,\qquad
+|\delta\lambda|\le|\varepsilon|\,\|E\|.
+\]
+Condition number of a simple eigenvalue:
+\[
+\kappa(\lambda)=\frac{1}{|v^Hu|}.
+\]
+If \(v^Hu\to0\) (nearly defective), then \(\kappa(\lambda)\to\infty\).
+
+\subsection{Linear system perturbation}
+
+Consider
+\[
+(A+\varepsilon E)x(\varepsilon)=b+\varepsilon e,\qquad Ax=b.
+\]
+Let \(\delta x=x(\varepsilon)-x\). Then
+\[
+(A+\varepsilon E)\,\delta x=\varepsilon(e-Ex),
+\qquad
+\delta x=\varepsilon(A+\varepsilon E)^{-1}(e-Ex).
+\]
+Using \((I+\varepsilon A^{-1}E)^{-1}=I-\varepsilon A^{-1}E+O(\varepsilon^2)\),
+\[
+\delta x=\varepsilon A^{-1}(e-Ex)+O(\varepsilon^2).
+\]
+Relative error bound:
+\[
+\frac{\|\delta x\|}{\|x\|}\ \lesssim\ |\varepsilon|\,\kappa(A)\!
+\left(\frac{\|e\|}{\|b\|}+\frac{\|E\|}{\|A\|}\right),
+\qquad
+\kappa(A)=\|A\|\,\|A^{-1}\|.
+\]
+
+\subsection{Projection methods}
+
+A projector \(P:\mathbb{C}^n\to\mathbb{C}^n\) satisfies \(P^2=P\).
+Then \(\operatorname{Range}(P)=M\) and \(\operatorname{Range}(I-P)=\ker(P)\).
+
+\paragraph{Oblique projection:}
+Let \(M=\operatorname{span}\{v_1,\ldots,v_m\}\) and \(W=\operatorname{span}\{w_1,\ldots,w_m\}\).
+With \(V=[v_1,\ldots,v_m]\) and \(W=[w_1,\ldots,w_m]\),
+\[
+P=V\,(W^*V)^{-1}W^*,\qquad Px\in M,\quad W^*(x-Px)=0.
+\]
+
+\paragraph{Orthogonal projection:}
+Take \(W=V\). Then
+\[
+P_M=V\,(V^*V)^{-1}V^*,\qquad P_M^*=P_M,\quad P_M^2=P_M,
+\]
+and the best-approximation property holds:
+\[
+\|x-P_Mx\|_2=\min_{y\in M}\|x-y\|_2.
+\]

@@ -183,7 +183,7 @@ Let
         \EndFor
     \end{algorithmic}
     \caption{Arnoldi Algorithm}
-    \label{alg:arnoldi}
+    \label{alg:arnoldi-lecture}
 \end{algorithm}
 \paragraph{What do we get from the Arnoldi algorithm?}
 \begin{align*}
@@ -228,7 +228,7 @@ Thus we get the FOM algorithm (Arnoldi performed incrementally; solve the small 
         \Ensure
         \State $\mathbf{x}_j$ approximations, stop when converged or breakdown
         \For{$j = 1, 2, \ldots, m_{\max}$}
-        \State Perform one Arnoldi step to compute $h_{1:j+1,j}$ and $\mathbf{v}_{j+1}$ (see Alg. \ref{alg:arnoldi})
+        \State Perform one Arnoldi step to compute $h_{1:j+1,j}$ and $\mathbf{v}_{j+1}$ (see Alg. \ref{alg:arnoldi-lecture})
         \State Let $H_j = \overline{H}_j(1:j,1:j)$ and $V_j = [\mathbf{v}_1,\ldots,\mathbf{v}_j]$
         \State Solve $H_j \mathbf{y}_j = \beta \mathbf{e}_1$
         \State $\mathbf{x}_j = \mathbf{x}_0 + V_j \mathbf{y}_j$

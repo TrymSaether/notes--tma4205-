@@ -36,7 +36,7 @@ Given $\mathbf{x}_0$ with $\mathbf{r}_0 = \mathbf{b} - A\mathbf{x}_0$.
 \end{align*}
 
 \subsection{Convergence Bound for Steepest Descent}
-Applying the Kantorovich inequality \autoref{sec:kantorovich-inequality}
+Applying the Kantorovich inequality (see ~\autoref{subsec:kantorovich-inequality}) to the Rayleigh quotients in the denominator,
 \begin{align*}
   \frac{\|\mathbf{r}_k\|_2^4}{\|\mathbf{r}_k\|_A^2 \|\mathbf{r}_k\|_{A^{-1}}^2}
    & \geq \frac{4 \lambda_1 \lambda_n}{(\lambda_1 + \lambda_n)^2},                                     \\
@@ -117,8 +117,9 @@ and the update $\mathbf{x}_m=\mathbf{x}_0+V_m\mathbf{y}_m$. Using the Arnoldi re
   \mathbf{r}_m = -h_{m+1,m}\,(\mathbf{e}_m^{\top}\mathbf{y}_m)\,\mathbf{v}_{m+1},\qquad \norm{\mathbf{r}_m}_2 = |h_{m+1,m}|\,\abs{\mathbf{e}_m^{\top}\mathbf{y}_m}.
 \]
 
-\begin{algorithm}[H]
-  \caption{FOM (incremental)}\label{alg:fom}
+\begin{algorithm}[ht]
+  \caption{FOM (incremental)}
+  \label{alg:fom-lecture}
   \begin{algorithmic}[0]
     \Require $A\in\mathbb{R}^{n\times n}$, $\mathbf{b}$, $\mathbf{x}_0$, $m_{\max}$, tol
     \State $\mathbf{r}_0=\mathbf{b}-A\mathbf{x}_0$, $\beta=\norm{\mathbf{r}_0}_2$, $\mathbf{v}_1=\mathbf{r}_0/\beta$
@@ -137,7 +138,7 @@ GMRES chooses $\mathbf{y}_m$ to minimize the residual 2-norm over $\mathbf{x}_0+
 \[
   \norm{\mathbf{r}_m}_2 = \min_{\mathbf{y}\in\mathbb{R}^m} \norm{\beta\,\mathbf{e}_1 - \overline H_m\mathbf{y}}_2,\qquad \mathbf{x}_m=\mathbf{\,x}_0+V_m\mathbf{y}_m.
 \]
-Exploit the upper-Hessenberg structure by maintaining an implicit QR of $\overline H_m$ via Givens rotations (see Chapter~\ref{chap:qr}):
+Exploit the upper-Hessenberg structure by maintaining an implicit QR of $\overline H_m$ via Givens rotations (see ~\autoref{subsec:givens-qr}).
 \[
   Q_{m+1}\,\overline H_m = \tilde{R}_m = \begin{bmatrix} R_m \\ 0 \end{bmatrix},\qquad Q_{m+1}\,(\beta\,\mathbf{e}_1)=\bar{\mathbf{g}}_m=\begin{bmatrix}\mathbf{g}_{1:m}\\g_{m+1}\end{bmatrix}.
 \]

@@ -1,4 +1,3 @@
-
 \section{Exercise 1}
 
 \subsection{Problem 2}
@@ -9,13 +8,14 @@
 
 Let $A = \begin{bmatrix} 1 & -1 \\ 1 & 1 \end{bmatrix}$.
 
-\paragraph*{(a)} Computing $\|A\|_{1\infty,\mathbb{R}}$
+\paragraph{(a)} Computing $\|A\|_{1\infty,\mathbb{R}}$
 
 We need to find the maximum of $\frac{\|A\mathbf{x}\|_1}{\|\mathbf{x}\|_\infty}$ over all real vectors $\mathbf{x} \neq 0$.
 
-Let $\mathbf{x} = \begin{bmatrix} x_1 \\ x_2 \end{bmatrix}$ be a real vector. Then:
+Let $\mathbf{x} = \begin{bmatrix} x_1 & x_2 \end{bmatrix}^\top$ be a real vector. Then:
 \begin{align*}
-    A\mathbf{x} & = \begin{bmatrix} 1 & -1 \\ 1 & 1 \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \end{bmatrix} = \begin{bmatrix} x_1 - x_2 \\ x_1 + x_2 \end{bmatrix}
+    A\mathbf{x} & = \begin{bmatrix} 1 & -1 \\ 1 & 1 \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \end{bmatrix} \\
+                & = \begin{bmatrix} x_1 - x_2 \\ x_1 + x_2 \end{bmatrix}
 \end{align*}
 
 The $1$-norm of $A\mathbf{x}$ is:
@@ -57,10 +57,12 @@ Since $|x_2| \geq |x_1|$, we have $\|\mathbf{x}\|_\infty = |x_2|$, so:
     \frac{\|A\mathbf{x}\|_1}{\|\mathbf{x}\|_\infty} = \frac{2|x_2|}{|x_2|} = 2
 \end{align*}
 
-\textbf{Case 4:} $x_1 + x_2 \leq 0$ and $x_1 - x_2 \leq 0$ (i.e., $x_1 \leq -|x_2|$)
+\textbf{Case 4:}
+$x_1 + x_2 \leq 0$ and $x_1 - x_2 \leq 0$ (i.e., $x_1 \leq -|x_2|$)
 \begin{align*}
     |x_1 - x_2| + |x_1 + x_2| & = -(x_1 - x_2) - (x_1 + x_2) = -2x_1 = 2|x_1|
 \end{align*}
+
 Since $|x_1| \geq |x_2|$, we have $\|\mathbf{x}\|_\infty = |x_1|$, so:
 \begin{align*}
     \frac{\|A\mathbf{x}\|_1}{\|\mathbf{x}\|_\infty} = \frac{2|x_1|}{|x_1|} = 2
@@ -71,9 +73,9 @@ In all cases, we get $\frac{\|A\mathbf{x}\|_1}{\|\mathbf{x}\|_\infty} = 2$. Ther
     \|A\|_{1\infty,\mathbb{R}} = 2
 \end{align*}
 
-\paragraph*{(b)} Computing $\|A\|_{1\infty}$ over complex vectors
+\paragraph{(b)} Computing $\|A\|_{1\infty}$ over complex vectors
 
-Now we consider complex vectors. Let $\mathbf{x} = \begin{bmatrix} 1 + i \\ 1 - i \end{bmatrix}$.
+Now we consider complex vectors. Let $\mathbf{x} = \begin{bmatrix} 1 + i & 1 - i \end{bmatrix}^\top$.
 
 First, compute $A\mathbf{x}$:
 \begin{align*}
@@ -85,9 +87,13 @@ First, compute $A\mathbf{x}$:
 
 Compute the norms:
 \begin{align*}
-    \|A\mathbf{x}\|_1                               & = |2i| + |2| = 4                                                                                               \\
-    \|\mathbf{x}\|_{\infty}                         & = \max(|1 + i|, |1 - i|) = \max(\sqrt{1^2 + 1^2}, \ \sqrt{1^2 + (-1)^2}) = \max(\sqrt{2}, \sqrt{2}) = \sqrt{2} \\
-    \frac{\|A\mathbf{x}\|_1}{\|\mathbf{x}\|_\infty} & = \frac{4}{\sqrt{2}} = \frac{4\sqrt{2}}{2} = 2\sqrt{2}
+    \|A\mathbf{x}\|_1                               & = |2i| + |2| = 4                                \\
+    \|\mathbf{x}\|_{\infty}                         & = \max(|1 + i|, |1 - i|)                        \\
+                                                    & = \max(\sqrt{1^2 + 1^2}, \ \sqrt{1^2 + (-1)^2}) \\
+                                                    & = \max(\sqrt{2}, \sqrt{2})                      \\
+                                                    & = \sqrt{2}                                      \\
+    \frac{\|A\mathbf{x}\|_1}{\|\mathbf{x}\|_\infty} & = \frac{4}{\sqrt{2}}                            \\
+                                                    & = 2\sqrt{2}
 \end{align*}
 Thus:
 \[
@@ -97,7 +103,7 @@ This shows that allowing complex vectors can increase the norm value.
 
 \subsection{Problem 3}
 
-\paragraph*{(a)} 2-norm of rank-1 matrix $E = uv^H$
+\paragraph{(a)} 2-norm of rank-1 matrix $E = uv^H$
 
 Let $E = uv^H$ where $\mathbf{u}, \mathbf{v} \in \mathbb{C}^n$. We compute $\|E\|_2 = \sqrt{\rho(E^H E)}$.
 
@@ -132,7 +138,7 @@ Thus:
     \|E\|_2 = \sqrt{\rho(E^H E)} = \sqrt{\|\mathbf{u}\|_2^2 \|\mathbf{v}\|_2^2} = \|\mathbf{u}\|_2 \|\mathbf{v}\|_2
 \end{align*}
 
-\paragraph*{(b)} Frobenius norm of rank-1 matrix
+\paragraph{(b)} Frobenius norm of rank-1 matrix
 
 The Frobenius norm is defined as $\|A\|_F = \sqrt{\operatorname{trace}(A^H A)}$.
 
@@ -167,9 +173,9 @@ The result holds for both the 2-norm and Frobenius norm.
 
 \subsection{Problem 4}
 
-\paragraph*{(a) Eigenvalues and Jordan form of $A = uv^H$}
-
-Let $A = uv^H$ where $\mathbf{u}, \mathbf{v} \in \mathbb{C}^n$. To find eigenvalues, we solve $A\mathbf{x} = \lambda \mathbf{x}$.
+\paragraph{(a) Eigenvalues and Jordan form of $A = uv^H$:}
+Let $A = uv^H$ where $\mathbf{u}, \mathbf{v} \in \mathbb{C}^n$.
+To find eigenvalues, we solve $A\mathbf{x} = \lambda \mathbf{x}$.
 
 \begin{align*}
     uv^H \mathbf{x}                     & = \lambda \mathbf{x} \\
@@ -177,9 +183,11 @@ Let $A = uv^H$ where $\mathbf{u}, \mathbf{v} \in \mathbb{C}^n$. To find eigenval
 \end{align*}
 
 Since $\mathbf{v}^H \mathbf{x}$ is a scalar, let $\alpha = \mathbf{v}^H \mathbf{x}$. Then:
+
 \begin{align*}
     \alpha \mathbf{u} = \lambda \mathbf{x}
 \end{align*}
+
 \begin{enumerate}
     \item $\mathbf{x}$ is parallel to $\mathbf{u}$, i.e., $\mathbf{x} = \beta \mathbf{u}$ for some $\beta \neq 0$.
           \begin{align*}
@@ -220,8 +228,7 @@ The Jordan normal form is:
         \end{bmatrix}
 \end{align*}
 
-\paragraph*{(b) eigenpair relation between $A$ and $A + \lambda I$}
-
+\paragraph{(b) eigenpair relation between $A$ and $A + \lambda I$:}
 Let $A \in \mathbb{C}^{n \times n}$ and let $\mu$ be an eigenvalue of $A$ with eigenvector $\mathbf{x} \neq 0$, so $A\mathbf{x} = \mu\mathbf{x}$.
 
 Consider the matrix $B = A + \lambda I$. Then:
@@ -251,7 +258,7 @@ This establishes the bijection:
 
 The Jordan structure remains unchanged because the eigenvector relationships are preserved.
 
-\paragraph*{(c) Eigenvalues and eigenbasis of a given matrix}
+\paragraph{(c) Eigenvalues and eigenbasis of a given matrix}
 \begin{align*}
     A & = \begin{bmatrix}
               2 & 1 & 1 & 1 \\
@@ -293,14 +300,32 @@ A basis for this 3-dimensional space is:
 
 We can verify these are eigenvectors:
 \begin{align*}
-    A\mathbf{\mathbf{v}}_2 & = \begin{bmatrix} 2 & 1 & 1 & 1 \\ 1 & 2 & 1 & 1 \\ 1 & 1 & 2 & 1 \\ 1 & 1 & 1 & 2 \end{bmatrix} \begin{bmatrix} 1 \\ -1 \\ 0 \\ 0 \end{bmatrix} = \begin{bmatrix} 1 \\ -1 \\ 0 \\ 0 \end{bmatrix} = \mathbf{\mathbf{v}}_2
+    A\mathbf{\mathbf{v}}_2 & =
+    \begin{bmatrix}
+        2 & 1 & 1 & 1 \\
+        1 & 2 & 1 & 1 \\
+        1 & 1 & 2 & 1 \\
+        1 & 1 & 1 & 2
+    \end{bmatrix}
+    \begin{bmatrix}
+        1  \\
+        -1 \\
+        0  \\
+        0
+    \end{bmatrix} =
+    \begin{bmatrix}
+        1  \\
+        -1 \\
+        0  \\
+        0
+    \end{bmatrix}
+    = \mathbf{\mathbf{v}}_2
 \end{align*}
 
 Therefore, the complete eigenbasis and eigenvalues of $A$ are:
 \begin{align*}
-    \{\mathbf{\mathbf{v}}_1, \mathbf{\mathbf{v}}_2, \mathbf{\mathbf{v}}_3, \mathbf{\mathbf{v}}_4\} = \left\{\begin{bmatrix} 1 \\ 1 \\ 1 \\ 1 \end{bmatrix}, \begin{bmatrix} 1 \\ -1 \\ 0 \\ 0 \end{bmatrix}, \begin{bmatrix} 1 \\ 0 \\ -1 \\ 0 \end{bmatrix}, \begin{bmatrix} 1 \\ 0 \\ 0 \\ -1 \end{bmatrix}\right\},
-    \quad
-    \{\mu_1, \mu_2, \mu_3, \mu_4\} = \{5, 1, 1, 1\}
+    \operatorname{eig}(A) & = \{\mathbf{v}_1, \mathbf{v}_2, \mathbf{v}_3, \mathbf{v}_4\} = \left\{\begin{bmatrix} 1 \\ 1 \\ 1 \\ 1 \end{bmatrix}, \begin{bmatrix} 1 \\ -1 \\ 0 \\ 0 \end{bmatrix}, \begin{bmatrix} 1 \\ 0 \\ -1 \\ 0 \end{bmatrix}, \begin{bmatrix} 1 \\ 0 \\ 0 \\ -1 \end{bmatrix}\right\} \\
+    \sigma(A)             & = \{5, 1, 1, 1\}
 \end{align*}
 
 \subsection{Problem 5}
@@ -315,86 +340,112 @@ Given matrix:
     \end{bmatrix}
 \]
 
-\paragraph*{(a) Gram-Schmidt process}
-
-Let $\mathbf{a}_1 = \begin{bmatrix} 1 \\ 1 \\ 2 \\ 1 \end{bmatrix}$, $\mathbf{a}_2 = \begin{bmatrix} 2 \\ 0 \\ 2 \\ 1 \end{bmatrix}$, $\mathbf{a}_3 = \begin{bmatrix} 0 \\ 1 \\ 1 \\ 1 \end{bmatrix}$ be the columns of $A$.
+\paragraph{(a) Gram-Schmidt process:}
+The columns of $A$ are:
+\[
+    \mathbf{a}_1 = \begin{bmatrix} 1 \\ 1 \\ 2 \\ 1 \end{bmatrix},\quad
+    \mathbf{a}_2 = \begin{bmatrix} 2 \\ 0 \\ 2 \\ 1 \end{bmatrix},\quad
+    \mathbf{a}_3 = \begin{bmatrix} 0 \\ 1 \\ 1 \\ 1 \end{bmatrix}
+\]
 
 \textbf{Step 1:} Compute $\mathbf{q}_1$
 \begin{align*}
-    \mathbf{u}_1       & = \mathbf{a}_1 = \begin{bmatrix} 1 \\ 1 \\ 2 \\ 1 \end{bmatrix}                                               \\
-    \|\mathbf{u}_1\|_2 & = \sqrt{1^2 + 1^2 + 2^2 + 1^2} = \sqrt{7}                                                                     \\
-    \mathbf{q}_1       & = \frac{\mathbf{u}_1}{\|\mathbf{u}_1\|_2} = \frac{1}{\sqrt{7}} \begin{bmatrix} 1 \\ 1 \\ 2 \\ 1 \end{bmatrix}
+    \mathbf{u}_1       & = \mathbf{a}_1 =
+    \begin{bmatrix}
+        1 \\ 1 \\ 2 \\ 1
+    \end{bmatrix}                                                                     \\
+    \|\mathbf{u}_1\|_2 & = \sqrt{1^2 + 1^2 + 2^2 + 1^2} = \sqrt{7}                      \\
+    \mathbf{q}_1       & = \frac{\mathbf{u}_1}{\|\mathbf{u}_1\|_2} = \frac{1}{\sqrt{7}}
+    \begin{bmatrix}
+        1 \\ 1 \\ 2 \\ 1
+    \end{bmatrix}
 \end{align*}
 
 \textbf{Step 2:} Compute $\mathbf{q}_2$
 \begin{align*}
-    \mathbf{q}_1^T \mathbf{a}_2 & = \frac{1}{\sqrt{7}} \begin{bmatrix} 1 & 1 & 2 & 1 \end{bmatrix} \begin{bmatrix} 2 \\ 0 \\ 2 \\ 1 \end{bmatrix} = \frac{1}{\sqrt{7}}(2 + 0 + 4 + 1) = \frac{7}{\sqrt{7}} = \sqrt{7} \\
-    \mathbf{u}_2                & = \mathbf{a}_2 - (\mathbf{q}_1^T \mathbf{a}_2)\mathbf{q}_1                                                                                                                          \\
-                                & = \begin{bmatrix} 2 \\ 0 \\ 2 \\ 1 \end{bmatrix} - \sqrt{7} \cdot \frac{1}{\sqrt{7}} \begin{bmatrix} 1 \\ 1 \\ 2 \\ 1 \end{bmatrix}                                                 \\
-                                & = \begin{bmatrix} 2 \\ 0 \\ 2 \\ 1 \end{bmatrix} - \begin{bmatrix} 1 \\ 1 \\ 2 \\ 1 \end{bmatrix} = \begin{bmatrix} 1 \\ -1 \\ 0 \\ 0 \end{bmatrix}                                 \\
-    \|\mathbf{u}_2\|_2          & = \sqrt{1^2 + (-1)^2 + 0^2 + 0^2} = \sqrt{2}                                                                                                                                        \\
-    \mathbf{q}_2                & = \frac{\mathbf{u}_2}{\|\mathbf{u}_2\|_2} = \frac{1}{\sqrt{2}} \begin{bmatrix} 1 \\ -1 \\ 0 \\ 0 \end{bmatrix}
+    \mathbf{q}_1^T \mathbf{a}_2 & = \frac{1}{\sqrt{7}}
+    \begin{bmatrix}
+        1 & 1 & 2 & 1
+    \end{bmatrix}
+    \begin{bmatrix}
+        2 \\ 0 \\ 2 \\ 1
+    \end{bmatrix} = \frac{1}{\sqrt{7}}(2 + 0 + 4 + 1) = \sqrt{7}                                                                                                                                                                                                                                                                                                                     \\
+    \mathbf{u}_2                & = \mathbf{a}_2 - (\mathbf{q}_1^T \mathbf{a}_2)\mathbf{q}_1 = \begin{bmatrix} 2 \\ 0 \\ 2 \\ 1 \end{bmatrix} - \sqrt{7} \cdot \frac{1}{\sqrt{7}} \begin{bmatrix} 1 \\ 1 \\ 2 \\ 1 \end{bmatrix} = \begin{bmatrix} 2 \\ 0 \\ 2 \\ 1 \end{bmatrix} - \begin{bmatrix} 1 \\ 1 \\ 2 \\ 1 \end{bmatrix} = \begin{bmatrix} 1 \\ -1 \\ 0 \\ 0 \end{bmatrix} \\
+    \|\mathbf{u}_2\|_2          & = \sqrt{1^2 + (-1)^2 + 0^2 + 0^2}  = \sqrt{2}                                                                                                                                                                                                                                                                                                      \\
+    \mathbf{q}_2                & = \frac{\mathbf{u}_2}{\|\mathbf{u}_2\|_2} = \frac{1}{\sqrt{2}}\begin{bmatrix} 1 \\ -1 \\ 0 \\ 0 \end{bmatrix}
 \end{align*}
 
 \textbf{Step 3:} Compute $\mathbf{q}_3$
 \begin{align*}
-    \mathbf{q}_1^T \mathbf{a}_3 & = \frac{1}{\sqrt{7}} \begin{bmatrix} 1 & 1 & 2 & 1 \end{bmatrix} \begin{bmatrix} 0 \\ 1 \\ 1 \\ 1 \end{bmatrix} = \frac{1}{\sqrt{7}}(0 + 1 + 2 + 1) = \frac{4}{\sqrt{7}}                                                                                  \\
-    \mathbf{q}_2^T \mathbf{a}_3 & = \frac{1}{\sqrt{2}} \begin{bmatrix} 1 & -1 & 0 & 0 \end{bmatrix} \begin{bmatrix} 0 \\ 1 \\ 1 \\ 1 \end{bmatrix} = \frac{1}{\sqrt{2}}(0 - 1 + 0 + 0) = -\frac{1}{\sqrt{2}}                                                                                \\
-    \mathbf{u}_3                & = \mathbf{a}_3 - (\mathbf{q}_1^T \mathbf{a}_3)\mathbf{q}_1 - (\mathbf{q}_2^T \mathbf{a}_3)\mathbf{q}_2                                                                                                                                                    \\
-                                & = \begin{bmatrix} 0 \\ 1 \\ 1 \\ 1 \end{bmatrix} - \frac{4}{\sqrt{7}} \cdot \frac{1}{\sqrt{7}} \begin{bmatrix} 1 \\ 1 \\ 2 \\ 1 \end{bmatrix} - \left(-\frac{1}{\sqrt{2}}\right) \cdot \frac{1}{\sqrt{2}} \begin{bmatrix} 1 \\ -1 \\ 0 \\ 0 \end{bmatrix} \\
-                                & = \begin{bmatrix} 0 \\ 1 \\ 1 \\ 1 \end{bmatrix} - \frac{4}{7} \begin{bmatrix} 1 \\ 1 \\ 2 \\ 1 \end{bmatrix} + \frac{1}{2} \begin{bmatrix} 1 \\ -1 \\ 0 \\ 0 \end{bmatrix}                                                                               \\
-                                & = \begin{bmatrix} 0 \\ 1 \\ 1 \\ 1 \end{bmatrix} - \begin{bmatrix} 4/7 \\ 4/7 \\ 8/7 \\ 4/7 \end{bmatrix} + \begin{bmatrix} 1/2 \\ -1/2 \\ 0 \\ 0 \end{bmatrix}                                                                                           \\
-                                & = \begin{bmatrix} 0 - 4/7 + 1/2 \\ 1 - 4/7 - 1/2 \\ 1 - 8/7 + 0 \\ 1 - 4/7 + 0 \end{bmatrix} = \begin{bmatrix} -1/14 \\ -1/14 \\ -1/7 \\ 3/7 \end{bmatrix}
-\end{align*}
-
-\begin{align*}
-    \|\mathbf{u}_3\|_2 & = \sqrt{\left(-\frac{1}{14}\right)^2 + \left(-\frac{1}{14}\right)^2 + \left(-\frac{1}{7}\right)^2 + \left(\frac{3}{7}\right)^2}                                                                      \\
-                       & = \sqrt{\frac{1}{196} + \frac{1}{196} + \frac{1}{49} + \frac{9}{49}}                                                                                                                                 \\
-                       & = \sqrt{\frac{1 + 1 + 4 + 36}{196}} = \sqrt{\frac{42}{196}} = \sqrt{\frac{3}{14}} = \frac{\sqrt{42}}{14}                                                                                             \\
-    \mathbf{q}_3       & = \frac{\mathbf{u}_3}{\|\mathbf{u}_3\|_2} = \frac{14}{\sqrt{42}} \begin{bmatrix} -1/14 \\ -1/14 \\ -1/7 \\ 3/7 \end{bmatrix} = \frac{1}{\sqrt{42}} \begin{bmatrix} -1 \\ -1 \\ -2 \\ 6 \end{bmatrix}
+    \mathbf{q}_1^T\mathbf{a}_3 & = \frac{1}{\sqrt{7}}
+    \begin{bmatrix} 1 & 1 & 2 & 1 \end{bmatrix}
+    \begin{bmatrix} 0 \\ 1 \\ 1 \\ 1 \end{bmatrix}
+    = \frac{1}{\sqrt{7}}(0+1+2+1) = \frac{4}{\sqrt{7}},                                                                                                                                                                                                                            \\
+    \mathbf{q}_2^T\mathbf{a}_3 & = \frac{1}{\sqrt{2}}
+    \begin{bmatrix} 1 & -1 & 0 & 0 \end{bmatrix}
+    \begin{bmatrix} 0 \\ 1 \\ 1 \\ 1 \end{bmatrix}
+    = \frac{1}{\sqrt{2}}(0-1+0+0) = -\frac{1}{\sqrt{2}},                                                                                                                                                                                                                           \\
+    \mathbf{u}_3               & = \mathbf{a}_3 - (\mathbf{q}_1^T\mathbf{a}_3)\mathbf{q}_1 - (\mathbf{q}_2^T\mathbf{a}_3)\mathbf{q}_2
+    = \begin{bmatrix} 0 \\ 1 \\ 1 \\ 1 \end{bmatrix}
+    - \frac{4}{\sqrt{7}}\cdot\frac{1}{\sqrt{7}}\begin{bmatrix} 1 \\ 1 \\ 2 \\ 1 \end{bmatrix}
+    -\Big(-\frac{1}{\sqrt{2}}\Big)\cdot\frac{1}{\sqrt{2}}\begin{bmatrix} 1 \\ -1 \\ 0 \\ 0 \end{bmatrix}
+    = \begin{bmatrix} -1/14 \\ -1/14 \\ -1/7 \\ 3/7 \end{bmatrix}                                                                                                                                                                                                                  \\
+    \|\mathbf{u}_3\|_2         & = \sqrt{\left(-\frac{1}{14}\right)^2 + \left(-\frac{1}{14}\right)^2 + \left(-\frac{1}{7}\right)^2 + \left(\frac{3}{7}\right)^2}  = \frac{\sqrt{42}}{14}                                                                                           \\
+    \mathbf{q}_3               & = \frac{\mathbf{u}_3}{\|\mathbf{u}_3\|_2} = \frac{14}{\sqrt{42}} \begin{bmatrix} -1/14 \\ -1/14 \\ -1/7 \\ 3/7 \end{bmatrix}                                              = \frac{1}{\sqrt{42}} \begin{bmatrix} -1 \\ -1 \\ -2 \\ 6 \end{bmatrix}
 \end{align*}
 
 \textbf{Final QR factorization:}
-\begin{align*}
-    Q & = \begin{bmatrix}
-              \frac{1}{\sqrt{7}} & \frac{1}{\sqrt{2}}  & \frac{-1}{\sqrt{42}} \\
-              \frac{1}{\sqrt{7}} & \frac{-1}{\sqrt{2}} & \frac{-1}{\sqrt{42}} \\
-              \frac{2}{\sqrt{7}} & 0                   & \frac{-2}{\sqrt{42}} \\
-              \frac{1}{\sqrt{7}} & 0                   & \frac{6}{\sqrt{42}}
-          \end{bmatrix} \\
-    R & = \begin{bmatrix}
-              \sqrt{7} & \sqrt{7} & \frac{4}{\sqrt{7}}   \\
-              0        & \sqrt{2} & -\frac{1}{\sqrt{2}}  \\
-              0        & 0        & \frac{\sqrt{42}}{14}
-          \end{bmatrix}
-\end{align*}
+\[
+    Q  = \begin{bmatrix}
+        1/\sqrt{7} & 1/\sqrt{2}  & -1/\sqrt{42} \\
+        1/\sqrt{7} & -1/\sqrt{2} & -1/\sqrt{42} \\
+        2/\sqrt{7} & 0           & -2/\sqrt{42} \\
+        1/\sqrt{7} & 0           & 6/\sqrt{42}
+    \end{bmatrix}, \qquad
+    R  = \begin{bmatrix}
+        \sqrt{7} & \sqrt{7} & 4/\sqrt{7}   \\
+        0        & \sqrt{2} & -1/\sqrt{2}  \\
+        0        & 0        & \sqrt{42}/14
+    \end{bmatrix}
+\]
 
-\paragraph*{(b) Householder reflections}
+\paragraph{(b) Householder reflections}
+\begin{enumerate}
+    \item Eliminate first column below diagonal. Let $\mathbf{x} = \begin{bmatrix} 1 & 1 & 2 & 1 \end{bmatrix}^T$.
 
-\textbf{Step 1:} Eliminate first column below diagonal
-
-Let $\mathbf{x} = \begin{bmatrix} 1 \\ 1 \\ 2 \\ 1 \end{bmatrix}$. We want $H_1 \mathbf{x} = \begin{bmatrix} \|\mathbf{x}\|_2 \\ 0 \\ 0 \\ 0 \end{bmatrix} = \begin{bmatrix} \sqrt{7} \\ 0 \\ 0 \\ 0 \end{bmatrix}$.
-
-\begin{align*}
-    \mathbf{v}         & = \mathbf{x} - \|\mathbf{x}\|_2 \mathbf{e}_1 = \begin{bmatrix} 1 \\ 1 \\ 2 \\ 1 \end{bmatrix} - \sqrt{7} \begin{bmatrix} 1 \\ 0 \\ 0 \\ 0 \end{bmatrix} = \begin{bmatrix} 1 - \sqrt{7} \\ 1 \\ 2 \\ 1 \end{bmatrix} \\
-    \|\mathbf{v}\|_2^2 & = (1-\sqrt{7})^2 + 1^2 + 2^2 + 1^2 = 1 - 2\sqrt{7} + 7 + 1 + 4 + 1 = 14 - 2\sqrt{7}                                                                                                                                 \\
-    \mathbf{u}         & = \frac{\mathbf{v}}{\|\mathbf{v}\|_2}                                                                                                                                                                               \\
-    H_1                & = I - 2\mathbf{u}\mathbf{u}^T
-\end{align*}
-
-\begin{align*}
-    H_1 A & = \begin{bmatrix}
-                  \sqrt{7} & * & * \\
-                  0        & * & * \\
-                  0        & * & * \\
-                  0        & * & *
-              \end{bmatrix}
-\end{align*}
-
-\textbf{Step 2:} Apply Householder to eliminate second column below diagonal
-
-Consider the $3 \times 1$ subvector from rows 2-4 of column 2 after first transformation. Apply similar process to eliminate entries below $(2,2)$.
-
+          We want to find the Householder matrix $H_1\mathbf{x} = \|\mathbf{x}\|_2 \mathbf{e}_1$:
+          \begin{align*}
+              \mathbf{v}         & = \mathbf{x} - \|\mathbf{x}\|_2 \mathbf{e}_1 = \begin{bmatrix} 1 \\ 1 \\ 2 \\ 1 \end{bmatrix} - \sqrt{7} \begin{bmatrix} 1 \\ 0 \\ 0 \\ 0 \end{bmatrix} = \begin{bmatrix} 1 - \sqrt{7} \\ 1 \\ 2 \\ 1 \end{bmatrix} \\
+              \|\mathbf{v}\|_2^2 & = (1-\sqrt{7})^2 + 1^2 + 2^2 + 1^2  = 1 - 2\sqrt{7} + 7 + 1 + 4 + 1 = 14 - 2\sqrt{7}                                                                                                                                \\
+              \mathbf{u}         & = \frac{\mathbf{v}}{\|\mathbf{v}\|_2}                                                                                                                                                                               \\
+              H_1                & = I - 2\mathbf{u}\mathbf{u}^T                                                                                                                                                                                       \\
+              H_1 A              & = \begin{bmatrix}
+                                         \sqrt{7} & * & * \\
+                                         0        & * & * \\
+                                         0        & * & * \\
+                                         0        & * & *
+                                     \end{bmatrix}
+          \end{align*}
+    \item Apply Householder to eliminate second column below diagonal. Let $\mathbf{y}$ be the second column of:
+          \[
+              H_1 A = \begin{bmatrix} * & 2\sqrt{7} & * \\ 0 & -\sqrt{2} & * \\ 0 & \frac{1}{\sqrt{2}} & * \\ 0 & -\frac{1}{\sqrt{2}} & * \end{bmatrix}
+          \]
+          We want to find the Householder matrix $H_2\mathbf{y} = \|\mathbf{y}\|_2 \mathbf{e}_1$:
+          \begin{align*}
+              \mathbf{y}         & = \begin{bmatrix} 2\sqrt{7} \\ -\sqrt{2} \\ 1/\sqrt{2} \\ -1/\sqrt{2} \end{bmatrix}                                                                                                        \\
+              \|\mathbf{y}\|_2   & = 4\sqrt{2}                                                                                                                                                                                \\
+              \mathbf{w}         & = \mathbf{y} - \|\mathbf{y}\|_2 \mathbf{e}_1 = \begin{bmatrix} 2\sqrt{7} - 4\sqrt{2} \\ -\sqrt{2} \\ \frac{1}{\sqrt{2}} \\ -\frac{1}{\sqrt{2}} \end{bmatrix} \\
+              \|\mathbf{w}\|_2^2 & = 35 - 16\sqrt{14}                                                                                                                                                                         \\
+              \mathbf{u}_2       & = \frac{\mathbf{w}}{\|\mathbf{w}\|_2}                                                                                                                                                      \\
+              H_2                & = I - 2\mathbf{u}_2\mathbf{u}_2^T                                                                                                                                               \\
+              H_2 H_1 A          & = \begin{bmatrix}
+                                         \sqrt{7} & *        & * \\
+                                         0        & \sqrt{2} & * \\
+                                         0        & 0        & * \\
+                                         0        & 0        & *
+                                     \end{bmatrix}
+          \end{align*}
+\end{enumerate}
 After computing both Householder transformations, we get:
 \begin{align*}
     H_2 H_1 A & = R = \begin{bmatrix}
