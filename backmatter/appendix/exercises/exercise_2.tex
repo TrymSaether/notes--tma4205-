@@ -24,14 +24,14 @@ Compute centers and radii (row-form Gershgorin):
 \begin{minipage}{0.5\textwidth}
     For \(A\):
     \begin{align*}
-        a_{11} & = -2, \quad r_1 = |1| + |0| = 1 & \Rightarrow & D(-2,1)  \\
-        a_{22} & = 3, \quad r_2 = |1| + |0.5| = 1.5 & \Rightarrow & D(3,1.5) \\
+        a_{11} & = -2, \quad r_1 = |1| + |0| = 1     & \Rightarrow & D(-2,1)  \\
+        a_{22} & = 3, \quad r_2 = |1| + |0.5| = 1.5  & \Rightarrow & D(3,1.5) \\
         a_{33} & = 4, \quad r_3 = |0.5| + |-0.5| = 1 & \Rightarrow & D(4,1)
     \end{align*}
     Eigenvalues:
     \begin{align*}
-        \lambda_1 &\in D(-2,1)\\
-        \lambda_{2,3} &\in D(3,1.5) \cup D(4,1)
+        \lambda_1     & \in D(-2,1)              \\
+        \lambda_{2,3} & \in D(3,1.5) \cup D(4,1)
     \end{align*}
 \end{minipage}%
 \begin{minipage}{0.5\textwidth}
@@ -54,13 +54,13 @@ Compute centers and radii (row-form Gershgorin):
 \begin{minipage}{0.6\textwidth}
     For \(B\):
     \begin{align*}
-        b_{11} & = 2, \quad s_1 = |-1| + |0| = 1 & \Rightarrow & D(2,1) \\
+        b_{11} & = 2, \quad s_1 = |-1| + |0| = 1  & \Rightarrow & D(2,1) \\
         b_{22} & = 2, \quad s_2 = |-1| + |-1| = 2 & \Rightarrow & D(2,2) \\
-        b_{33} & = 1, \quad s_3 = |0| + |-1| = 1 & \Rightarrow & D(1,1)
+        b_{33} & = 1, \quad s_3 = |0| + |-1| = 1  & \Rightarrow & D(1,1)
     \end{align*}
     Eigenvalues:
     \begin{align*}
-        \lambda_{1,2,3} &\in D(2,2)
+        \lambda_{1,2,3} & \in D(2,2)
     \end{align*}
 \end{minipage}%
 \begin{minipage}{0.4\textwidth}
@@ -82,13 +82,13 @@ Compute centers and radii (row-form Gershgorin):
 \begin{minipage}{0.6\textwidth}
     For \(C\) (centers are complex; plot in complex plane):
     \begin{align*}
-        c_{11} & = 1, \quad t_1 = |0.5i| + |0.5i| = 1 & \Rightarrow & D(1,1)    \\
-        c_{22} & = i, \quad t_2 = |0.5| + |0.5| = 1 & \Rightarrow & D(i,1)    \\
+        c_{11} & = 1, \quad t_1 = |0.5i| + |0.5i| = 1      & \Rightarrow & D(1,1)    \\
+        c_{22} & = i, \quad t_2 = |0.5| + |0.5| = 1        & \Rightarrow & D(i,1)    \\
         c_{33} & = 1+2i, \quad t_3 = |-0.5i| + |-0.5i| = 1 & \Rightarrow & D(1+2i,1)
     \end{align*}
     Eigenvalues:
     \begin{align*}
-        \lambda_{1,2,3} &\in D(1,1) \cup D(i,1) \cup D(1+2i,1)
+        \lambda_{1,2,3} & \in D(1,1) \cup D(i,1) \cup D(1+2i,1)
     \end{align*}
 \end{minipage}%
 \begin{minipage}{0.4\textwidth}
@@ -107,7 +107,3 @@ Compute centers and radii (row-form Gershgorin):
         \end{tikzpicture}
     \end{center}
 \end{minipage}
-
-\subsection{Problem 2: 1D Poisson problem}
-
-\subsection{Problem 3: 1D-projection method on SPD matrix}
