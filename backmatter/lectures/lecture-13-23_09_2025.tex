@@ -48,48 +48,38 @@ Assume $A$ is diagonalizable:
     \qquad X = [\mathbf{x}_1, \ldots, \mathbf{x}_n] \quad (\text{eigenvectors})
 \]
 but $X$ is not orthogonal anymore.
-
-
 \begin{align*}
-    p(A)               & = Xp(\Lambda)X^{-1}                                                                                                          \\
-    \mathbf{r}_m       & = p_m(A)\mathbf{r}_0 = Xp_m(\Lambda)X^{-1}\mathbf{r}_0                                                                       \\
-    \|\mathbf{r}_m\|_2 & \leq \|X\|_2 \|X^{-1}\|_2 \max_{1 \leq i \leq n} |p_m(\lambda_i)| \|\mathbf{r}_0\|_2                                         \\
-                       & = \sqrt{\lambda_{\max}(A^H A) \cdot \lambda_{\min}((A^H A)^{-1})} \max_{1 \leq i \leq n} |p_m(\lambda_i)| \|\mathbf{r}_0\|_2 \\
-                       & = \kappa_2(X) \max_{1 \leq i \leq n} |p_m(\lambda_i)| \|\mathbf{r}_0\|_2
+    p(A)               & = Xp(\Lambda)X^{-1}                                                                                                                 \\
+    \mathbf{r}_m       & = p_m(A)\mathbf{r}_0 = Xp_m(\Lambda)X^{-1}\mathbf{r}_0                                                                              \\
+    \|\mathbf{r}_m\|_2 & \leq \|X\|_2 \|X^{-1}\|_2 \max_{1 \leq i \leq n} |p_m(\lambda_i)| \|\mathbf{r}_0\|_2                                                \\
+                       & = \sqrt{\lambda_{\max}(A^H A) \cdot \lambda_{\min}((A^H A)^{-1})} \max_{1 \leq i \leq n} |p_m(\lambda_i)| \|\mathbf{r}_0\|_2        \\
+                       & = \kappa_2(X) \max_{1 \leq i \leq n} |p_m(\lambda_i)| \|\mathbf{r}_0\|_2                                                            \\
+    \kappa_2(X)        & = \|X\|_2 \|X^{-1}\|_2 = \sqrt{\lambda_{\max}(A^H A)\cdot \lambda_{\min}((A^H A)^{-1})} = \frac{\sigma_{\max}(X)}{\sigma_{\min}(X)}
 \end{align*}
-where
-\[
-    \kappa_2(X) = \|X\|_2 \|X^{-1}\|_2 = \sqrt{\lambda_{\max}(A^H A)\cdot \lambda_{\min}((A^H A)^{-1})} = \frac{\sigma_{\max}(X)}{\sigma_{\min}(X)}
-\]
-is the \emph{condition number} of $X$ in the 2-norm.
 \begin{tikzpicture}[font=\small]
     % Im, Re axes
-    \draw[->] (-2.5, 0) -- (2.5, 0) node[right] {$\Re$};
-    \draw[->] (0, -2.5) -- (0, 2.5) node[above] {$\Im$};
+    \draw[->] (-2, 0) -- (2, 0) node[right] {$\Re$};
+    \draw[->] (0, -2) -- (0, 2) node[above] {$\Im$};
     % circle
     \draw[thick, fill=blue!20, opacity=0.5] (0, 0) circle (1);
     % w_g just outside the circle
     \filldraw[red] (1.1, 1.1) circle (1pt) node[below right] {$w_\gamma$};
 \end{tikzpicture}
-% Ellipise mapping
 \begin{tikzpicture}[font=\small]
     % Im, Re axes
     \draw[->] (-0.5, 0) -- (4, 0) node[right] {$\Re$};
     \draw[->] (0, -2) -- (0, 2) node[above] {$\Im$};
     % Ellipse
-    \draw[thick, fill=blue!20, opacity=0.5] (2, 0) ellipse (2 and 1);
-
+    \draw[thick, fill=blue!20, opacity=0.5] (2, 0) ellipse (1.8 and 1);
     % -1, 1 ticks
     \draw (-1, 0.1) -- (-1, -0.1) node[below] {$-1$};
     \draw (1, 0.1) -- (1, -0.1) node[below] {$1$};
-
     % gamma just outside the ellipse
-    \filldraw[red] (3, 0.5) circle (1pt) node[below right] {$\gamma$};
+    \filldraw[red] (3, 1.5) circle (1pt) node[below right] {$\gamma$};
 \end{tikzpicture}
-
 \begin{tikzpicture}[font=\small]
     % Im, Re axes
-    \draw[->] (-0.5, 0) -- (4, 0) node[right] {$\Re$};
+    \draw[->] (-1.5, 0) -- (4, 0) node[right] {$\Re$};
     \draw[->] (0, -2) -- (0, 2) node[above] {$\Im$};
 
     % Circle at (2,0) with radius 1
@@ -105,13 +95,13 @@ is the \emph{condition number} of $X$ in the 2-norm.
 \end{tikzpicture}
 
 Let $\lambda_i \in \mathrm{E}$ for $i = 1, \ldots, n$, where $\mathrm{E}$ is a closed ellipse, and $D_\rho := \{w \in \mathbb{C} : |w| = \rho\}$.
-
 We search for some $p^\star$ solving the min-max problem:
 \[
     \min_{\substack{p \in \mathcal{P}_m \\ p(0) = 1}} \max_{\lambda_i \in \mathrm{E}} |p(\lambda)|
 \]
 
 \subsubsection{Chebyshev polynomials in $\mathbb{C}$}
+
 let $z \in \mathbb{C}$:
 \begin{align*}
     C_m(z)     & = \cosh(m \cdot \rho), \quad \rho = \cosh^{-1}(z)                 \\
@@ -133,7 +123,7 @@ let $z \in \mathbb{C}$:
     Max is obtained when $z = \rho$.
 \end{lemma}
 
-\paragraph{Joukowsky mapping:}
+\subsubsection{Joukowsky mapping}
 \begin{align*}
     J(w)      & = \frac{1}{2}(w + w^{-1}), \quad w \in \mathbb{C}, \, w \neq 0 \\
     J(D_\rho) & = \mathrm{E}(0,1, \frac12(\rho + \rho^{-1}))
@@ -151,12 +141,13 @@ let $z \in \mathbb{C}$:
 \end{theorem}
 
 \begin{align*}
-    C_m(z)                                        & = \frac{1}{2}(w^m + w^{-m}), \quad z = \frac{1}{2}(w + w^{-1})                                                               \\
-    p^\star(z)                                    & = \frac{C_m(w)}{C_m(w_\gamma)}                                                                                               \\
-    \hat{C}_m(z)                                  & = \frac{C_m(\frac{z - c}{d})}{C_m(-\frac{c}{d})}, \quad \mathrm{E}(c,d,a), \quad \hat{C}_m(0) = 1                            \\
-    \max_{z \in \mathrm{E}(c,d,a)} |\hat{C}_m(z)| & = \frac{C_m(\frac{a}{d})}{|C_m(-\frac{c}{d})|}                                                                               \\
-    \mathbf{r}_m                                  & \leq \kappa_2(X) \eta^{(m)} \|\mathbf{r}_0\|_2 = \kappa_2(X) \frac{C_m(\frac{a}{d})}{|C_m(-\frac{c}{d})|} \|\mathbf{r}_0\|_2 \\
-    C_m(z)                                        & = \frac{1}{2}\left[\left(z + \sqrt{z^2 - 1}\right)^m + \left(z - \sqrt{z^2 - 1}\right)^m\right]                              \\
+    C_m(z)                                        & = \frac{1}{2}(w^m + w^{-m}), \quad z = \frac{1}{2}(w + w^{-1})                                    \\
+    p^\star(z)                                    & = \frac{C_m(w)}{C_m(w_\gamma)}                                                                    \\
+    \hat{C}_m(z)                                  & = \frac{C_m(\frac{z - c}{d})}{C_m(-\frac{c}{d})}, \quad \mathrm{E}(c,d,a), \quad \hat{C}_m(0) = 1 \\
+    \max_{z \in \mathrm{E}(c,d,a)} |\hat{C}_m(z)| & = \frac{C_m(\frac{a}{d})}{|C_m(-\frac{c}{d})|}                                                    \\
+    \mathbf{r}_m                                  & \leq \kappa_2(X) \varepsilon^{(m)} \|\mathbf{r}_0\|_2                                             \\
+                                                  & = \kappa_2(X) \frac{C_m(\frac{a}{d})}{|C_m(-\frac{c}{d})|} \|\mathbf{r}_0\|_2                     \\
+    C_m(z)                                        & = \frac{1}{2}\left[\left(z + \sqrt{z^2 - 1}\right)^m + \left(z - \sqrt{z^2 - 1}\right)^m\right]   \\
     \frac{C_m(\frac{a}{d})}{|C_m(-\frac{c}{d})|}  & \approx \left(\frac{a + \sqrt{a^2 - d^2}}{c + \sqrt{c^2 - d^2}}\right)^m
 \end{align*}
 
