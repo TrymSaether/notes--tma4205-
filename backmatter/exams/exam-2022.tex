@@ -1,0 +1,11 @@
+\section{H2022}
+
+\subsection{Problem 1}
+\begin{itemize}
+    \item Explain what is a projection method for the iterative solution of large linear systems of algebraic equations.
+    \item What is error projection?
+    \item What is residual projection?
+    \item What is a Krylov subspace method?
+\end{itemize}
+
+An iterative method for solving a linear system $A\mathbf{x} = \mathbf{b}$ by constructing a sequence of approximate solutions $\mathbf{x}_k \approx \mathbf{x}$, where each $\mathbf{x}_k$ lies in a subspace $\mathcal{K}_k$ of the solution space. The method involves projecting the residual $\mathbf{r}_k = \mathbf{b} - A\mathbf{x}_k$ onto a subspace $\mathcal{L}_k$ to ensure that the residual is orthogonal to this subspace, i.e., $\mathbf{r}_k \perp \mathcal{L}_k$. This leads to a system of equations that can be solved to find the next approximation $\mathbf{x}_{k+1}$.
