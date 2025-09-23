@@ -141,14 +141,17 @@ let $z \in \mathbb{C}$:
 \end{theorem}
 
 \begin{align*}
-    C_m(z)                                        & = \frac{1}{2}(w^m + w^{-m}), \quad z = \frac{1}{2}(w + w^{-1})                                    \\
-    p^\star(z)                                    & = \frac{C_m(w)}{C_m(w_\gamma)}                                                                    \\
-    \hat{C}_m(z)                                  & = \frac{C_m(\frac{z - c}{d})}{C_m(-\frac{c}{d})}, \quad \mathrm{E}(c,d,a), \quad \hat{C}_m(0) = 1 \\
-    \max_{z \in \mathrm{E}(c,d,a)} |\hat{C}_m(z)| & = \frac{C_m(\frac{a}{d})}{|C_m(-\frac{c}{d})|}                                                    \\
-    \mathbf{r}_m                                  & \leq \kappa_2(X) \varepsilon^{(m)} \|\mathbf{r}_0\|_2                                             \\
-                                                  & = \kappa_2(X) \frac{C_m(\frac{a}{d})}{|C_m(-\frac{c}{d})|} \|\mathbf{r}_0\|_2                     \\
-    C_m(z)                                        & = \frac{1}{2}\left[\left(z + \sqrt{z^2 - 1}\right)^m + \left(z - \sqrt{z^2 - 1}\right)^m\right]   \\
-    \frac{C_m(\frac{a}{d})}{|C_m(-\frac{c}{d})|}  & \approx \left(\frac{a + \sqrt{a^2 - d^2}}{c + \sqrt{c^2 - d^2}}\right)^m
+    C_m(z)                                        & = \frac{1}{2}(w^m + w^{-m}), \quad z = \frac{1}{2}(w + w^{-1})                                                          \\
+    p^\star(z)                                    & = \frac{C_m(w)}{C_m(w_\gamma)}                                                                                          \\
+    \hat{C}_m(z)                                  & = \frac{C_m(\frac{z - c}{d})}{C_m(-\frac{c}{d})},
+    \begin{cases}
+        \mathrm{E}(c,d,a), \\
+        \hat{C}_m(0) = 1
+    \end{cases}                                                                                                                                   \\
+    \max_{z \in \mathrm{E}(c,d,a)} |\hat{C}_m(z)| & = \frac{C_m(\frac{a}{d})}{|C_m(-\frac{c}{d})|}                                                                          \\
+    \mathbf{r}_m                                  & \leq \kappa_2(X) \varepsilon^{m} \|\mathbf{r}_0\|_2 = \kappa_2(X) \frac{C_m(\frac{a}{d})}{|C_m(-\frac{c}{d})|} \|\mathbf{r}_0\|_2                                           \\
+    C_m(z)                                        & = \frac{1}{2}\left[\left(z + \sqrt{z^2 - 1}\right)^m + \left(z - \sqrt{z^2 - 1}\right)^m\right]                         \\
+    \varepsilon^m                                 & = \frac{C_m(\frac{a}{d})}{|C_m(-\frac{c}{d})|} \approx \left(\frac{a + \sqrt{a^2 - d^2}}{c + \sqrt{c^2 - d^2}}\right)^m
 \end{align*}
 
 The ellipse enclosing the eigenvalues can not include $0$, because then $p(0) = 1$ can not be satisfied.
