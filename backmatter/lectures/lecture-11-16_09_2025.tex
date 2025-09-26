@@ -256,7 +256,7 @@ Then the CG algorithm is:
         \State $\alpha_j = \dfrac{\|\mathbf{r}_j\|_2^2}{\langle \mathbf{p}_j, A \mathbf{p}_j \rangle}$
         \State $\mathbf{x}_{j+1} = \mathbf{x}_j + \alpha_j \mathbf{p}_j$
         \State $\mathbf{r}_{j+1} = \mathbf{r}_j - \alpha_j A \mathbf{p}_j$
-        \State $\beta_j = \dfrac{\|\mathbf{r}_{j+1}\|_2^2}{\|\mathbf{r}_j\|_2^2}$
+        \State $\beta_{j+1} = \dfrac{\|\mathbf{r}_{j+1}\|_2^2}{\|\mathbf{r}_j\|_2^2}$
         \State $\mathbf{p}_{j+1} = \mathbf{r}_{j+1} + \beta_j \mathbf{p}_j$
         \If{$\|\mathbf{r}_{j+1}\|_2 < \text{tol}$} \textbf{Stop}
         \EndIf
