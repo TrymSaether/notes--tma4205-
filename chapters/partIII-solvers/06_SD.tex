@@ -1,6 +1,5 @@
-\section{Lecture 6: 03.09.2025}
+\section{Steepest Descent (SD)}
 
-\section*{Steepest Descent (SD)}
 Let $A = A^{\top} \succ 0$ (SPD). Given $\mathbf{x}_0$ with $\mathbf{r}_0 = \mathbf{b} - A\mathbf{x}_0$.
 \begin{align*}
     \mathcal{K}              & = \operatorname{span}\{\mathbf{r}\}                                                                                                                            \\
@@ -10,6 +9,7 @@ Let $A = A^{\top} \succ 0$ (SPD). Given $\mathbf{x}_0$ with $\mathbf{r}_0 = \mat
     \|\mathbf{d}_{k+1}\|_A   & \leq \|\mathbf{d}_k\|_A                                                                                                                                        \\
     \|\mathbf{d}_{k+1}\|_A^2 & = \|\mathbf{d}_k\|_A^2\left(1 - \frac{(\mathbf{r}_k^{\top} \mathbf{r}_k)^2}{\mathbf{r}_k^{\top} A \mathbf{r}_k \mathbf{r}_k^{\top} A^{-1} \mathbf{r}_k}\right)
 \end{align*}
+
 Using Kantorovich inequality: Let $B \in \mathbb{R}^{n \times n}$ be SPD then for all $\mathbf{x} \in \mathbb{R}^n$:
 \[
     \frac{\|\mathbf{x}\|_B^2 \|\mathbf{x}\|_{B^{-1}}^2}{\|\mathbf{x}\|_2^4} \leq \frac{1}{4}\cdot\frac{(\lambda_1 + \lambda_n)^2}{\lambda_1 \lambda_n}, \qquad \lambda_1 \geq \ldots \geq \lambda_n > 0
@@ -27,11 +27,11 @@ $(\overline{\lambda}, \overline{\lambda}^{-1})$ as a weighted discre center of g
 
 Then $(\bar\lambda, \bar{\lambda}^{-1})$ is below $\ell(\lambda)$:
 \[
-\bar\lambda^{-1} \leq \ell(\bar\lambda)
+    \bar\lambda^{-1} \leq \ell(\bar\lambda)
 \]
 which has maximum at $\lambda = \tfrac12(\lambda_1 + \lambda_n)$.
 \[
-\bar\lambda \bar\lambda^{-1} \leq \frac{(\lambda_1 + \lambda_n)^2}{4 \lambda_1 \lambda_n} = \bar\lambda\left(\frac{1}{\lambda_1} + \frac{1}{\lambda_n}\right)
+    \bar\lambda \bar\lambda^{-1} \leq \frac{(\lambda_1 + \lambda_n)^2}{4 \lambda_1 \lambda_n} = \bar\lambda\left(\frac{1}{\lambda_1} + \frac{1}{\lambda_n}\right)
 \]
 \begin{tikzpicture}
     \begin{axis}[
@@ -78,33 +78,34 @@ If $A$ has the eigenvalues $0 < \lambda_1 \leq \ldots \leq \lambda_n$, then:
                                                                                   & = \|\mathbf{d}_k\|_A^2\left(\frac{\lambda_n - \lambda_1}{\lambda_n + \lambda_1}\right)^2
 \end{align*}
 
-\section*{Example: Discrete Laplacian}
-\begin{align*}
-    A & =
-    \begin{bmatrix}
-        B  & -I &        &        & 0  \\
-        -I & B  & -I     &        &    \\
-           & -I & \ddots & \ddots &    \\
-           &    & \ddots & \ddots & -I \\
-        0  &    &        & -I     & B
-    \end{bmatrix} \in \mathbb{R}^{N^2 \times N^2},
-    \begin{bmatrix}
-        4  & -1 &        & 0 \\
-        -1 & 4  & -1     &   \\
-           & -1 & \ddots &   \\
-        0  &    &        & 4
-    \end{bmatrix} \in \mathbb{R}^{N \times N} \\
-\end{align*}
-Eigenvalues of $A$:
-\[
-    \lambda_{ij} = 4 - 2\left(\cos\left(\frac{i \pi}{N+1}\right) + \cos\left(\frac{j \pi}{N+1}\right)\right), \quad i, j = 1, \ldots, N
-\]
-\begin{align*}
-    \lambda_{\max}                                                          & = 4 \text{ if } N \text{ odd}                                                                                                                \\
-    \lambda_{\min}                                                          & = 4 - 4\cos\left(\frac{\pi}{N+1}\right)                                                                                                      \\
-    \frac{\lambda_{\max} - \lambda_{\min}}{\lambda_{\max} + \lambda_{\min}} & = \frac{4\cos\left(\frac{\pi}{N+1}\right)}{8 - 4\cos\left(\frac{\pi}{N+1}\right)} \approx 1 - \frac12\left(\frac{\pi}{N+1}\right)^2 + \ldots \\
-\end{align*}
-So for $N$ large, convergence is slow.
+\begin{example}{Discrete Laplacian in 2D}{}
+    \begin{align*}
+        A & =
+        \begin{bmatrix}
+            B  & -I &        &        & 0  \\
+            -I & B  & -I     &        &    \\
+               & -I & \ddots & \ddots &    \\
+               &    & \ddots & \ddots & -I \\
+            0  &    &        & -I     & B
+        \end{bmatrix} \in \mathbb{R}^{N^2 \times N^2},
+        \begin{bmatrix}
+            4  & -1 &        & 0 \\
+            -1 & 4  & -1     &   \\
+               & -1 & \ddots &   \\
+            0  &    &        & 4
+        \end{bmatrix} \in \mathbb{R}^{N \times N} \\
+    \end{align*}
+    Eigenvalues of $A$:
+    \[
+        \lambda_{ij} = 4 - 2\left(\cos\left(\frac{i \pi}{N+1}\right) + \cos\left(\frac{j \pi}{N+1}\right)\right), \quad i, j = 1, \ldots, N
+    \]
+    \begin{align*}
+        \lambda_{\max}                                                          & = 4 \text{ if } N \text{ odd}                                                                                                                \\
+        \lambda_{\min}                                                          & = 4 - 4\cos\left(\frac{\pi}{N+1}\right)                                                                                                      \\
+        \frac{\lambda_{\max} - \lambda_{\min}}{\lambda_{\max} + \lambda_{\min}} & = \frac{4\cos\left(\frac{\pi}{N+1}\right)}{8 - 4\cos\left(\frac{\pi}{N+1}\right)} \approx 1 - \frac12\left(\frac{\pi}{N+1}\right)^2 + \ldots \\
+    \end{align*}
+    So for $N$ large, convergence is slow.
+\end{example}
 
 \section*{Other 1D projection methods}
 Let $\mathcal{K} = \operatorname{span}\{\mathbf{v}\}$, $\mathcal{L} = \operatorname{span}\{\mathbf{w}\}$.
@@ -115,50 +116,27 @@ One step, starting from $\mathbf{x}_0$:
 \end{align*}
 if SD: $\mathbf{v} = \mathbf{w} = \mathbf{r}_0$.
 
-\subsection*{Minimim residual (MR)}
-$\mathbf{v} = \mathbf{r}_0$, $\mathbf{w} = A\mathbf{r}_0$.
-Converges if
-\[
-    \frac12\left(A + A^{\top}\right) \succ 0 \text{ (SPD)}
-\]
-This is the definition of $A$ being \textit{positive definite}.
-\begin{align*}
-    \|\mathbf{r}_{k+1}\|_2^2 & \leq \left(1 - \frac{\mu^2}{\sigma^2}\right) \|\mathbf{r}_k\|_2^2 \\
-    \mu                      & = \lambda_{\min}\left(\tfrac12(A + A^{\top})\right)               \\
-    \sigma                   & = \|A\|_2
-\end{align*}
-If we have the system $A\mathbf{x} = \mathbf{b}$ where $A$ is not positive definite, then we can solve the equivalent system:
-\[
-    (A^{\top} A) \mathbf{x} = A^{\top} \mathbf{b}
-\]
-and do SD.
-\begin{align*}
-    \mathbf{v} & = A^{\top} \mathbf{r}_0 \\
-    \mathbf{w} & = A\mathbf{r}_0
-\end{align*}
-residual norm, steepest descent.
 
-\section*{Block Methods}
-Block methods extend basic iterative techniques to handle systems where variables are grouped into blocks, improving convergence for certain problems.
+\begin{example}{}{}
+    If $A$ is SPD, with $\mathcal{L} = \mathcal{K} = \operatorname{span}\{r_k\}$, then:
+    \begin{align*}
+        x_{k+1} & = x_k + \alpha_k r_k, \quad \alpha_k  \in  \mathbb{R}             \\
+        r_{k+1} & = \mathbf{b} - A x_{k+1} = r_k - \alpha_k A r_k                   \\
+        r_{k+1} & \perp r_k \Rightarrow r_k^{\top} (r_k - \alpha_k A r_k) = 0 \quad
+        \Rightarrow \alpha_k = \frac{r_k^{\top} r_k}{r_k^{\top} A r_k}              \\
+        d_k     & = x_\star - x_k                                                   \\
+        r_k     & = \mathbf{b} - A x_k = A x_\star - A x_k = A d_k                  \\
+    \end{align*}
 
-\subsection*{Block Jacobi}
-For a matrix $A$ partitioned into blocks $A_{ij}$, $i,j=1,\dots,p$, and vectors $\mathbf{x}$ and $\mathbf{b}$ partitioned accordingly:
-\[
-    A = \begin{bmatrix} A_{11} & A_{12} & \cdots & A_{1p} \\ A_{21} & A_{22} & \cdots & A_{2p} \\ \vdots & \vdots & \ddots & \vdots \\ A_{p1} & A_{p2} & \cdots & A_{pp} \end{bmatrix}, \quad \mathbf{x} = \begin{bmatrix} \mathbf{x}_1 \\ \vdots \\ \mathbf{x}_p \end{bmatrix}, \quad \mathbf{b} = \begin{bmatrix} \mathbf{b}_1 \\ \vdots \\ \mathbf{b}_p \end{bmatrix},
-    \quad V_i = \begin{bmatrix} 0 \\ \vdots \\ I \\ \vdots \\ 0 \end{bmatrix} \text{ (identity at block } i\text{)}
-\]
-The block Jacobi iteration is:
-\begin{align*}
-    A_{ii} \tilde{\mathbf{x}}_i & = \mathbf{b}_i - \sum_{j \neq i} A_{ij} \mathbf{x}_j^{(k)}                                               \\
-    \mathbf{x}_i^{(k+1)}        & = A_{ii}^{-1} \left( \mathbf{b}_i - \sum_{j \neq i} A_{ij} \mathbf{x}_j^{(k)} \right), \quad i=1,\dots,p
-\end{align*}
-Convergence requires diagonal blocks to be invertible and the method to satisfy spectral radius conditions.
-
-
-\section*{Key Takeaways (Exam)}
-\begin{itemize}
-    \item What is a projection method.
-    \item How can we implement it.
-    \item The optimaly result $\mathcal{L} = \mathcal{K}$ and $\mathcal{L} = A\mathcal{K}$.
-    \item Derive one dimensional projection methods, and how to find convergence results.
-\end{itemize}
+    We want to estimate $\|d_{k+1}\|_A \leq C \|d_k\|_A$ for some $C < 1$.
+    \begin{align*}
+        r_{k+1}         & = \mathbf{b} - A x_{k+1} = A(x_\star - x_{k+1}) = A d_{k+1} = Ad_k - \alpha_k A r_k \\
+        d_{k+1}         & = d_{k+1}^{\top} A d_{k+1} = d_{k+1}^{\top} r_{k+1}                                 \\
+                        & = (d_k - \alpha_k r_k)^{\top} r_{k+1} = d_k^{\top} r_{k+1}                          \\
+                        & = d_k^{\top} (r_k - \alpha_k A r_k) = d_k^{\top} r_k - \alpha_k d_k^{\top} A r_k    \\
+                        & = d_k^{\top} A d_k - \alpha_k r_k^{\top} r_k                                        \\
+                        & = \|d_k\|_A^2 - \alpha_k \|r_k|^2                                                   \\
+                        & = \|d_k\|_A^2 - \frac{\|r_k|^4}{\|r_k\|_A^2}                                        \\
+        \|d_{k+1}\|_A^2 & = \|d_k\|_A^2\left(1 - \frac{\|r_k\|^4}{\|r_k\|_A^2 \|r_k\|_{A^{-1}}^2}\right)
+    \end{align*}
+\end{example}

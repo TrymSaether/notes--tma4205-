@@ -164,7 +164,7 @@ Let
 
 \subsubsection{1. Arnoldi Algorithm}
 \begin{algorithm}[htbp]
-    \begin{algorithmic}[0]
+    \begin{algorithmic}
         \Require
         \State $A \in \mathbb{R}^{n \times n}$
         \State $\mathbf{v}_1 = \frac{\mathbf{r}_0}{\|\mathbf{r}_0\|_2}$
@@ -221,8 +221,8 @@ since $H_m\mathbf{y}_m=\beta\mathbf{e}_1$. Hence
 
 Thus we get the FOM algorithm (Arnoldi performed incrementally; solve the small system at each step and check residual):
 
-\begin{algorithm}[H]
-    \begin{algorithmic}[0]
+\begin{algorithm}[htbp]
+    \begin{algorithmic}
         \Require
         \State $A \in \mathbb{R}^{n \times n}, \mathbf{b} \in \mathbb{R}^n, \mathbf{x}_0 \in \mathbb{R}^n, m_{\max} \in \mathbb{N}, \text{tol} > 0$
         \State $\mathbf{r}_0 = \mathbf{b} - A\mathbf{x}_0, \quad \beta = \|\mathbf{r}_0\|_2$

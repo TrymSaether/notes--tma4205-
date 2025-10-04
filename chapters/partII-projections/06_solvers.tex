@@ -49,10 +49,9 @@ Hence steepest descent converges linearly with contraction factor
   \rho = \frac{\kappa - 1}{\kappa + 1}, \qquad \kappa = \frac{\lambda_n}{\lambda_1}.
 \]
 
-\section{Conjugate Gradient (CG) for SPD Systems}
+\section{Conjugate Gradient (CG)}
 
-Conjugate Gradient (CG) solves $A\mathbf{x}=\mathbf{b}$ with $A=A^T\succ0$ by searching in $\mathbf{x}_0+\mathcal{K}_m(A,\mathbf{r}_0)$ while enforcing A-orthogonality (conjugacy) of directions.
-It is optimal in the $A$-norm over the Krylov space and requires only short recurrences.
+Conjugate Gradient (CG) solves $A\mathbf{x}=\mathbf{b}$ and requires that $A$ is SPD ($A=A^T\succ0$) by searching in $\mathbf{x}_0+\mathcal{K}_m(A,\mathbf{r}_0)$, where $\mathcal{K}_m(A,\mathbf{r}_0)=\operatorname{span}\{\mathbf{r}_0,A\mathbf{r}_0,\ldots,A^{m-1}\mathbf{r}_0\}$ is the Krylov space. The test space is $\mathcal{L}_m=\mathcal{K}_m$ (Galerkin condition). The residual $\mathbf{r}_m=\mathbf{b}-A\mathbf{x}_m$ is orthogonal to $\mathcal{K}_m$ and the directions $\mathbf{p}_k$ are $A$-orthogonal. CG uses short recurrences and only one matrix-vector product per step.
 
 \subsection{Derivation of CG}
 Let $\mathbf{r}_k=\mathbf{b}-A\mathbf{x}_k$ and directions $\mathbf{p}_k$. CG enforces
@@ -89,12 +88,6 @@ Let $\mathbf{e}_k=\mathbf{x}_\star-\mathbf{x}_k$. In the $A$-norm,
   \|\mathbf{e}_k\|_A=\min_{q\in\mathbb{P}_k,\;q(0)=1}\|q(A)\,\mathbf{e}_0\|_A\;\le\;2\left(\frac{\sqrt{\kappa}-1}{\sqrt{\kappa}+1}\right)^k\|\mathbf{e}_0\|_A,\quad \kappa=\frac{\lambda_{\max}(A)}{\lambda_{\min}(A)}.
 \]
 Spectrum clustering and preconditioning reduce $\kappa$ and improve convergence.
-
-\paragraph{Relation to Krylov and Lanczos.} CG is equivalent to Lanczos applied to $A$ in the energy inner product; the three-term recurrence arises from orthogonal polynomials relative to $A$.
-
-\paragraph{Preconditioning.} See Chapter~\ref{chap:preconditioning} for left/right preconditioned CG and effects on spectra.
-
-
 
 \section{Minimum Residual (MR)}
 For general $A$, choose $\mathbf{v}=\mathbf{r}_k$ and $\mathbf{w}=A\mathbf{r}_k$. The step size
@@ -133,7 +126,7 @@ and the update $\mathbf{x}_m=\mathbf{x}_0+V_m\mathbf{y}_m$. Using the Arnoldi re
   \end{algorithmic}
 \end{algorithm}
 
-\section{GMRES: Generalized Minimum Residual}
+\section{Generalized Minimum Residual (GMRES)}
 GMRES chooses $\mathbf{y}_m$ to minimize the residual 2-norm over $\mathbf{x}_0+\mathcal{K}_m$ (Petrov--Galerkin with $\mathcal{L}=A\mathcal{K}_m$). Using the Arnoldi relation,
 \[
   \norm{\mathbf{r}_m}_2 = \min_{\mathbf{y}\in\mathbb{R}^m} \norm{\beta\,\mathbf{e}_1 - \overline H_m\mathbf{y}}_2,\qquad \mathbf{x}_m=\mathbf{\,x}_0+V_m\mathbf{y}_m.

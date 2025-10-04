@@ -13,6 +13,7 @@
               \mathbf{r}_m                    & = p_m(A)\mathbf{r}_0
           \end{align*}
 \end{itemize}
+
 \subsubsection{CG (Conjugate Gradient Method)}
 $A$ is \emph{SPD}, with $\mathcal{L}_m = \mathcal{K}_m(A, \mathbf{r}_0)$.
 \[
@@ -30,19 +31,20 @@ We solve the min-max problem:
     \min_{\substack{p \in \mathcal{P}_m \\ p(0) = 1}} \max_{1 \leq i \leq n} |p(\lambda_i)|
 \]
 Using Chebyshev polynomials, we get the bound $[-1, 1] \to [\lambda_{\min}, \lambda_{\max}]$ with scale $p(0) = 1$.
+
 \subsection{GMRES}
 $\mathcal{L}_m = A\mathcal{K}_m$.
 \begin{align*}
-    \|\mathbf{r}_m\|_2 & = \min_{\mathbf{x} \in \mathbf{x}_0 + \mathcal{K}_m} \|\mathbf{b} - A\mathbf{x}\|_2
+    \|\mathbf{r}_m\|_2 & = \min_{\mathbf{x} \in \mathbf{x}_0 + \mathcal{K}_m} \|\mathbf{b} - A\mathbf{x}\|_2 \\
     \|\mathbf{r}_m\|_2 & \leq \|\mathbf{r}_{m-1}\|_2 \leq \ldots \leq \|\mathbf{r}_0\|_2
 \end{align*}
-For each $\|mathbf{r}_0\|_2$ it is possible to find an $A$ s.t.
+For each $\|\mathbf{r}_0\|_2$ it is possible to find an $A$ s.t.
 \[
     \|\mathbf{r}_m\|_2 = \|\mathbf{r}_{m-1}\|_2 = \ldots = \|\mathbf{r}_0\|_2
 \]
-$A$ may bot be diagonalizable.
+$A$ may not be diagonalizable.
 
-Assume $A$ is diagonalizable:
+Now assume $A$ is diagonalizable:
 \[
     A = X\Lambda X^{-1}, \qquad \Lambda = \text{diag}(\lambda_1, \ldots, \lambda_n), \quad (\text{eigenvalues})
     \qquad X = [\mathbf{x}_1, \ldots, \mathbf{x}_n] \quad (\text{eigenvectors})
@@ -56,6 +58,7 @@ but $X$ is not orthogonal anymore.
                        & = \kappa_2(X) \max_{1 \leq i \leq n} |p_m(\lambda_i)| \|\mathbf{r}_0\|_2                                                            \\
     \kappa_2(X)        & = \|X\|_2 \|X^{-1}\|_2 = \sqrt{\lambda_{\max}(A^H A)\cdot \lambda_{\min}((A^H A)^{-1})} = \frac{\sigma_{\max}(X)}{\sigma_{\min}(X)}
 \end{align*}
+
 \begin{tikzpicture}[font=\small]
     % Im, Re axes
     \draw[->] (-2, 0) -- (2, 0) node[right] {$\Re$};

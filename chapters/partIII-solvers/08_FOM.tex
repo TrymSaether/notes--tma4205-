@@ -1,0 +1,75 @@
+\section{Full Orthogonalization Method (FOM)}
+\begin{align*}
+    \mathcal{K}  & = \mathcal{K}_m(A, \mathbf{r}_0)                                            \\
+    \mathcal{L}  & = \mathcal{K}                                                               \\
+    \mathbf{x}_m & = \mathbf{x}_0 + V_m \left(V_m^\top A V_m\right)^{-1} V_m^\top \mathbf{r}_0 \\
+    V_m          & = [\mathbf{v}_1, \ldots, \mathbf{v}_m] \text{ with } V_m^\top V_m = I
+\end{align*}
+
+\begin{enumerate}
+    \item How to find an orthogonal basis for $\mathcal{K}_m$?
+    \item What is $V_m^\top A V_m$?
+    \item When to stop?
+          \[ \|\mathbf{r}_m\|_2 \leq \text{tol} \]
+\end{enumerate}
+\paragraph{1. Arnoldi algorithm}
+We can use the Arnoldi algorithm to compute an orthonormal basis for $\mathcal{K}_m(A, \mathbf{r}_0)$.
+But what do we get from the Arnoldi algorithm?
+\begin{align*}
+    V_{m+1}        & = [\mathbf{v}_1, \ldots, \mathbf{v}_{m+1}] \in \mathbb{R}^{n \times (m+1)}, \quad V_m = [\mathbf{v}_1, \ldots, \mathbf{v}_m] \in \mathbb{R}^{n \times m} \\
+    \overline{H}_m & = (h_{ij}) \in \mathbb{R}^{(m+1) \times m} \text{ upper Hessenberg matrix}, \qquad H_m := \overline{H}_m(1:m,1:m) \in \mathbb{R}^{m\times m}
+\end{align*}
+s.t.
+\begin{align*}
+    A V_m &= V_{m+1} \overline{H}_m = V_m H_m + h_{m+1,m} \mathbf{v}_{m+1}\mathbf{e}_m^\top\\
+    H_m   &= V_m^\top A V_m
+\end{align*}
+
+Using the Galerkin condition for FOM (take $\mathcal{L}_m =\mathcal{K}_m$) we obtain the small system
+\[
+    H_m \mathbf{y}_m = V_m^\top \mathbf{r}_0 = \beta \mathbf{e}_1, \qquad \beta=\|\mathbf{r}_0\|_2,
+\]
+so
+\[
+    \mathbf{x}_m = \mathbf{x}_0 + V_m \mathbf{y}_m, \qquad \mathbf{y}_m = H_m^{-1} (\beta \mathbf{e}_1).
+\]
+
+The residual can be computed cheaply from the Arnoldi relation:
+\begin{align*}
+    \mathbf{r}_m &= \mathbf{r}_0 - A V_m \mathbf{y}_m
+    = \beta \mathbf{v}_1 - V_{m+1}\overline{H}_m \mathbf{y}_m \\
+    &= \beta \mathbf{v}_1 - V_m H_m \mathbf{y}_m - h_{m+1,m}\mathbf{v}_{m+1} \mathbf{e}_m^\top \mathbf{y}_m
+    = -h_{m+1,m}\mathbf{v}_{m+1} \mathbf{e}_m^\top \mathbf{y}_m,
+\end{align*}
+since $H_m\mathbf{y}_m=\beta\mathbf{e}_1$. Hence
+\[
+    \|\mathbf{r}_m\|_2 = |h_{m+1,m}|\,|\mathbf{e}_m^\top \mathbf{y}_m|.
+\]
+
+Thus we get the FOM algorithm (Arnoldi performed incrementally; solve the small system at each step and check residual):
+
+\begin{algorithm}[htbp]
+    \begin{algorithmic}
+        \Require
+        \State $A \in \mathbb{R}^{n \times n}, \mathbf{b} \in \mathbb{R}^n, \mathbf{x}_0 \in \mathbb{R}^n, m_{\max} \in \mathbb{N}, \text{tol} > 0$
+        \State $\mathbf{r}_0 = \mathbf{b} - A\mathbf{x}_0, \quad \beta = \|\mathbf{r}_0\|_2$
+        \State $\mathbf{v}_1 = \mathbf{r}_0 / \beta$
+        \Ensure
+        \State $\mathbf{x}_j$ approximations, stop when converged or breakdown
+        \For{$j = 1, 2, \ldots, m_{\max}$}
+        \State Perform one Arnoldi step to compute $h_{1:j+1,j}$ and $\mathbf{v}_{j+1}$ (see Alg. \ref{alg:arnoldi-lecture})
+        \State Let $H_j = \overline{H}_j(1:j,1:j)$ and $V_j = [\mathbf{v}_1,\ldots,\mathbf{v}_j]$
+        \State Solve $H_j \mathbf{y}_j = \beta \mathbf{e}_1$
+        \State $\mathbf{x}_j = \mathbf{x}_0 + V_j \mathbf{y}_j$
+        \State $\mathbf{r}_j = -h_{j+1,j} \mathbf{v}_{j+1} \mathbf{e}_j^\top \mathbf{y}_j$
+        \If{$\|\mathbf{r}_j\|_2 \leq \text{tol}$}
+        \State Return $\mathbf{x}_j$
+        \EndIf
+        \If{$h_{j+1,j}=0$}
+        \State Breakdown: exact solution in $\mathcal{K}_j$ (stop)
+        \EndIf
+        \EndFor
+    \end{algorithmic}
+    \caption{Full Orthogonalization Method (FOM)}
+    \label{alg:fom}
+\end{algorithm}

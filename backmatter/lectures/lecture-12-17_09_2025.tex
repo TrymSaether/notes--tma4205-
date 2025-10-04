@@ -1,10 +1,4 @@
 \section{Lecture 12: 17.09.2025}
-
-\subsection{Convergence of CG and GMRES (Saad 6.11)}
-Let $A \in \R^{n \times n}$, $\mathbf{b}, \mathbf{x}_0 \in \R^n$, and $A \underbrace{\mathbf{x}_{\star}}_{\text{Exact solution}} = \mathbf{b}$ where $\mathbf{r}_0 = \mathbf{b} - A \mathbf{x}_0$ with the Krylov subspace:
-\[
-    \mathcal{K}_k(A, \mathbf{r}_0) = \text{span} \{\mathbf{r}_0, A \mathbf{r}_0, A^2 \mathbf{r}_0, \ldots, A^{k-1} \mathbf{r}_0\}.
-\]
 \paragraph{Projection idea:}
 Find $\mathbf{x}_m - \mathbf{x}_0 \in \mathcal{K}_m$, with $\mathbf{b} - A \mathbf{x}_m \perp \mathcal{L}_m$ for some subspace $\mathcal{L}_m$.
 \begin{itemize}

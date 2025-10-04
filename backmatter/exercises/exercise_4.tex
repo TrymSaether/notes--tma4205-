@@ -1,0 +1,16 @@
+\section{Exercise 4}
+
+\subsection{Problem 3}
+Assume that $A \in \mathbb{R}^{n \times n}$ is SPD and that we use the CG method for solving the system $Ax = b$. Assume moreover that the eigenvalues $\lambda_1, \ldots, \lambda_{n-1}$ are distributed in an interval $[\lambda_{\min}, \lambda_{\max}] \subset \mathbb{R}_{>0}$, while the eigenvalue $\lambda_n$ is “very different” from the others (that is, either much larger than $\lambda_{\max}$ or much closer than $\lambda_{\min}$ to 0).
+
+\medskip
+
+Find an estimate for the error reduction $\| \mathbf{x}_m - \mathbf{x}^\star \|_A / \| \mathbf{x}_0 - \mathbf{x}^\star \|_A$ after $m$ steps of the CG method. Here $\mathbf{x}^\star = A^{-1} b$ is the exact solution of the system. The estimate should only depend on $\lambda_{\max}, \lambda_{\min}, \lambda_n$, and $m$.
+
+\subsection*{Solution}
+We use the estimate:
+\[
+    \frac{\| \mathbf{x}_m - \mathbf{x}^\star \|_A}{\| \mathbf{x}_0 - \mathbf{x}^\star \|_A} \leq \max_{i = 1, \ldots, n} |r(\lambda_i)|
+\]
+for any polynomial $r$ with $\deg(r) \leq m$ and $r(0) = 1$.
+

@@ -1,0 +1,129 @@
+\section{Lecture 15: 25/09/2025}
+
+\subsection{The principles of preconditioning}
+Let $A \mathbf{x} = \mathbf{b}$, where $A \in \mathbb{R}^{n \times n}$ has slow convergence.
+
+We rewrite the system by choosing $M \in \mathbb{R}^{n \times n}$:
+\begin{align}
+    M^{-1} A \mathbf{x} & = M^{-1} \mathbf{b} \tag{LPC}\label{eq:lpc}                                                                       \\
+    A M^{-1} \mathbf{y} & = \mathbf{b}, \quad \mathbf{y} = M \mathbf{x} \text{ or } \mathbf{x} = M^{-1} \mathbf{y} \tag{RPC} \label{eq:rpc} \\
+\end{align}
+
+Apply \eqref{eq:rpc} to GMRES:
+\begin{algorithm}[H]
+    \caption{Right-preconditioned GMRES}
+    \begin{algorithmic}
+        \Require
+        \State $A, \mathbf{b}, \mathbf{x}_0$
+        \State $\mathbf{u}_0 = M \mathbf{x}_0$
+        \State $\mathbf{r}_0 = \mathbf{b} - A M^{-1} \mathbf{u}_0 = \mathbf{b} - A \mathbf{x}_0$
+        \State $\beta = \| \mathbf{r}_0 \|_2$
+        \State $\mathbf{v}_1 = \mathbf{r}_0 / \beta$
+        \For{$j = 1, 2, \ldots$ until convergence}
+        \State $\mathbf{w}_j = A M^{-1} \mathbf{v}_j$
+        \For{$i = 1, \ldots, j$}
+        \State $h_{ij} = \mathbf{w}_j^T \mathbf{v}_i$
+        \State $\mathbf{w}_j = \mathbf{w}_j - h_{ij} \mathbf{v}_i$
+        \EndFor
+        \State $h_{j+1,j} = \| \mathbf{w}_j \|_2$
+        \State $\mathbf{v}_{j+1} = \mathbf{w}_j / h_{j+1,j}$
+        \State Compute $\mathbf{y}_j$ that minimizes $\| H_j \mathbf{y} - \beta e_1 \|_2$
+        \State $\mathbf{x}_j = M^{-1} (\mathbf{u}_0 + V_j \mathbf{y}_j)$
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}
+
+Solve $\bar{H}_m \mathbf{y} = \beta \mathbf{e}_1$ in least squares sense.
+\begin{align*}
+    \mathbf{u}_m & = \mathbf{u}_0 + V_m \mathbf{y}_m                                                        \\
+    \mathbf{x}_m & = M^{-1} \mathbf{u}_0 + M^{-1} V_m \mathbf{y}_m = \mathbf{x}_0 + M^{-1} V_m \mathbf{y}_m
+\end{align*}
+We never use $\mathbf{u}_m$ explicitly.
+We need to compute:
+\begin{align*}
+    \mathbf{z}_j & = M^{-1} \mathbf{v}_j \\
+    \mathbf{v}_j & = A \mathbf{z}_j
+\end{align*}
+for each iteration $j$.
+
+The residual is the same as unconditioned GMRES:
+\[
+    \mathbf{r}_m = \mathbf{b} - A \mathbf{x}_m = \mathbf{b} - A M^{-1} \mathbf{u}_m = \mathbf{b} - A M^{-1} (\mathbf{u}_0 + V_m \mathbf{y}_m) = \mathbf{r}_0 - A M^{-1} V_m \mathbf{y}_m = \mathbf{r}_0 - W_m \mathbf{y}_m
+\]
+
+Using \eqref{eq:lpc} changes the residual.
+
+We want $M^{-1} \approx A^{-1}$ s.t. $M^{-1} A \approx I_n$.
+
+\subsection{Preconditioning the CG method}
+$A$ is SPD and $\tilde{A} = A M^{-1}$ also must be SPD, then $M$ is SPD, with $M = L L^T$.
+
+
+\begin{align*}
+    \tilde{A} & = A M^{-1}, \text{ or } \tilde{A} &= M^{-1} A \\
+    M^{-1}A \mathbf{x} & = M^{-1} \mathbf{b}\\
+    L^{-T}\underbrace{L^{-1} A L^{-T}}_{\tilde{A}} \underbrace{L^T \mathbf{x}}_{\tilde{\mathbf{x}}} & = L^{-T} \underbrace{L^{-1} \mathbf{b}}_{\tilde{\mathbf{b}}}
+\end{align*}
+Now $\tilde{A}$ is SPD:
+\[
+    \tilde{A} = L^{-1} A L^{-T} = (L^{-1} A L^{-T})^T = L^{-1} A^T L^{-T} = L^{-1} A L^{-T}, \quad \tilde{\mathbf{x}} = L^T \mathbf{x}, \quad \tilde{\mathbf{b}} = L^{-1} \mathbf{b}
+\]
+with residual
+\[
+    \tilde{\mathbf{r}} = \tilde{\mathbf{b}} - \tilde{A} \tilde{\mathbf{x}} = L^{-1} (\mathbf{b} - A \mathbf{x})
+\]
+
+CG on $\tilde{A} \tilde{\mathbf{x}} = \tilde{\mathbf{b}}$:
+\begin{algorithm}[H]
+    \caption{Preconditioned CG}
+    \begin{algorithmic}
+        \Require
+        \State $A, \mathbf{b}, \mathbf{x}_0$
+        \State $\tilde{\mathbf{r}}_0 = L^{-1} (\mathbf{b} - A \mathbf{x}_0)$
+        \State $\tilde{\mathbf{p}}_0 = \tilde{\mathbf{r}}_0$
+        \For{$j = 0, 1, 2, \ldots$ until convergence}
+        \State $\alpha_j = \frac{\tilde{\mathbf{r}}_j^T \tilde{\mathbf{r}}_j}{\tilde{\mathbf{p}}_j^T \tilde{A} \tilde{\mathbf{p}}_j} = \frac{\|\tilde{\mathbf{r}}_j\|_2^2}{\|\tilde{p}_j\|_A^2}$
+        \State $\mathbf{x}_{j+1} = \mathbf{x}_j + \alpha_j \tilde{\mathbf{p}}_j$
+        \State $\tilde{\mathbf{r}}_{j+1} = \tilde{\mathbf{r}}_j - \alpha_j \tilde{A} \tilde{\mathbf{p}}_j$
+        \State $\beta_j = \frac{\tilde{\mathbf{r}}_{j+1}^T \tilde{\mathbf{r}}_{j+1}}{\tilde{\mathbf{r}}_j^T \tilde{\mathbf{r}}_j} = \frac{\|\tilde{\mathbf{r}}_{j+1}\|_2^2}{\|\tilde{\mathbf{r}}_j\|_2^2}$
+        \State $\tilde{\mathbf{p}}_{j+1} = \tilde{\mathbf{r}}_{j+1} + \beta_j \tilde{\mathbf{p}}_j$
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}
+
+For $\alpha_j$ we have:
+\begin{align*}
+    \langle \tilde{\mathbf{r}}_j, \tilde{\mathbf{r}}_j \rangle & = \mathbf{r}_j^T \mathbf{r}_j = \langle L^{-1} \mathbf{r}_j, L^{-1} \mathbf{r}_j \rangle = \langle \mathbf{r}_j, L^{-T} L^{-1} \mathbf{r}_j \rangle = \langle \mathbf{r}_j, M^{-1} \mathbf{r}_j \rangle = \|\mathbf{r}_j\|_{M^{-1}}^2 \\
+    \langle \tilde{A} \tilde{\mathbf{p}}_j, \tilde{\mathbf{p}}_j \rangle & = \langle L^{-1} A L^{-T} \tilde{\mathbf{p}}_j, \tilde{\mathbf{p}}_j \rangle = \langle A \underbrace{L^{-T} \tilde{\mathbf{p}}_j}_{\mathbf{p}_j}, L^{-T} \tilde{\mathbf{p}}_j \rangle = \langle A \mathbf{p}_j, \mathbf{p}_j \rangle = \|\mathbf{p}_j\|_A^2
+\end{align*}
+
+We multiply $\tilde{\mathbf{x}}_j$ and $\tilde{\mathbf{p}}_j$ with $L^{-T}$, and $\tilde{\mathbf{r}}_j$ with $L$ to get:
+\begin{align*}
+    L^{-T} \tilde{\mathbf{x}}_{j+1} & = L^{-T} \tilde{\mathbf{x}}_j + \alpha_j L^{-T} \tilde{\mathbf{p}}_j = \mathbf{x}_j + \alpha_j \mathbf{p}_j \\
+    L \tilde{\mathbf{r}}_{j+1} & = L \tilde{\mathbf{r}}_j - \alpha_j L \tilde{A} \tilde{\mathbf{p}}_j = \mathbf{r}_j - \alpha_j A \mathbf{p}_j \\
+    L^{-T} \tilde{\mathbf{p}}_{j+1} & = L^{-T} \tilde{\mathbf{r}}_{j+1} + \beta_j L^{-T} \tilde{\mathbf{p}}_j = M^{-1} \mathbf{r}_{j+1} + \beta_j \mathbf{p}_j
+\end{align*}
+We have a new $\mathbf{p}_j$ and a new $\alpha_j$:
+\begin{algorithm}[H]
+    \caption{Preconditioned CG}
+    \begin{algorithmic}
+        \Require
+        \State $A, \mathbf{b}, \mathbf{x}_0$
+        \State $\mathbf{r}_0 = \mathbf{b} - A \mathbf{x}_0$
+        \State Solve $M \mathbf{z}_0 = \mathbf{r}_0$
+        \State $\mathbf{p}_0 = \mathbf{z}_0$
+        \For{$j = 0, 1, 2, \ldots$ until convergence}
+        \State $\alpha_j = \frac{\mathbf{r}_j^T \mathbf{z}_j}{\mathbf{p}_j^T A \mathbf{p}_j} = \frac{\langle \mathbf{r}_j, \mathbf{z}_j \rangle}{\|\mathbf{p}_j\|_A^2}$
+        \State $\mathbf{x}_{j+1} = \mathbf{x}_j + \alpha_j \mathbf{p}_j$
+        \State $\mathbf{r}_{j+1} = \mathbf{r}_j - \alpha_j A \mathbf{p}_j$
+        \State $\mathbf{z}_{j+1} = M^{-1} \mathbf{r}_{j+1}$ (solve $M \mathbf{z}_{j+1} = \mathbf{r}_{j+1}$)
+        \State $\beta_j = \frac{\mathbf{r}_{j+1}^T \mathbf{z}_{j+1}}{\mathbf{r}_j^T \mathbf{z}_j} = \frac{\langle \mathbf{r}_{j+1}, \mathbf{z}_{j+1} \rangle}{\langle \mathbf{r}_j, \mathbf{z}_j \rangle}$
+        \State $\mathbf{p}_{j+1} = \mathbf{z}_{j+1} + \beta_j \mathbf{p}_j$
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}
+
+Price: solve $M \mathbf{z}_j = \mathbf{r}_j$ for each iteration $j$, only store $\mathbf{z}_j$.
+
+\subsection{Choosing a preconditioner}
+We want $M \approx A$ s.t. $A M^{-1} \approx I_n$.

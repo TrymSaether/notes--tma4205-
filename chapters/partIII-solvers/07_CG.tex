@@ -1,0 +1,153 @@
+\subsection{Conjugate gradient (CG) method}
+\begin{proposition}{}{}
+    \begin{align*}
+        \mathbf{r}_j & = \mathbf{b} - A \mathbf{x}_j, \quad j = 0, 1, \dots, m                                \\
+        \mathbf{p}_j & = \frac{1}{\eta_j} (\mathbf{v}_j - \beta_j \mathbf{p}_{j-1}), \quad j = 1, 2, \dots, m
+    \end{align*}
+    Then:
+    \begin{enumerate}[label=(\alph*)]
+        \item $\langle \mathbf{r}_i, \mathbf{r}_j \rangle = 0$ for $i \neq j$ (residuals are orthogonal)
+        \item $\langle \mathbf{p}_i, A \mathbf{p}_j \rangle = 0$ for $i \neq j$ ($A$-orthogonal search directions)
+    \end{enumerate}
+\end{proposition}
+
+For a) The residual:
+\begin{align*}
+    \mathbf{r}_j & = \mathbf{b} - A \mathbf{x}_j                                                            \\
+                 & = -\beta_{j+1} \mathbf{e}_j^\top \mathbf{y}_j \mathbf{v}_{j+1}, \quad j = 1, 2, \dots, m \\
+                 & = \sigma \mathbf{v}_{j+1}, \quad \sigma = -\beta_{j+1} \mathbf{e}_j^\top \mathbf{y}_j
+\end{align*}
+Since $\mathbf{v}_j$ are orthogonal by construction, so are the residuals $\mathbf{r}_j$ for $j = 0, 1, \dots, m$.
+
+For b) We have
+\begin{align*}
+    P_m                                                          & = \begin{bmatrix}
+                                                                         \mathbf{p}_1 & \mathbf{p}_2 & \cdots & \mathbf{p}_m
+                                                                     \end{bmatrix} \\
+    P_m^\top A P_m                                               & = D \text{ (diagonal) }                               \\
+    U_m^{-\top}\overbrace{V_m^\top A V_m}^{T_m=L_m U_m} U_m^{-1} & = D                                                   \\
+    P_m^\top A P_m                                               & = U_m^{-\top} L_m U_m U_m^{-1} = U_m^{-\top} L_m = D
+\end{align*}
+
+Obviously, $P_m^\top A P_m$ is symmetric.
+\begin{itemize}
+    \item $U_m^{-\top}$ and $L_m$ are lower bidiagonal:
+          \[
+              U_m^{-\top} =
+              \begin{bmatrix}
+                  \frac{1}{\eta_1}               & 0                              & 0                & \cdots                             & 0                \\
+                  -\frac{\beta_2}{\eta_1 \eta_2} & \frac{1}{\eta_2}               & 0                & \cdots                             & 0                \\
+                  0                              & -\frac{\beta_3}{\eta_2 \eta_3} & \frac{1}{\eta_3} & \cdots                             & 0                \\
+                  \vdots                         & \vdots                         & \vdots           & \ddots                             & 0                \\
+                  0                              & 0                              & 0                & -\frac{\beta_m}{\eta_{m-1} \eta_m} & \frac{1}{\eta_m}
+              \end{bmatrix},
+              \quad
+              L_m =
+              \begin{bmatrix}
+                  1         & 0         & 0      & \cdots    & 0 \\
+                  \lambda_2 & 1         & 0      & \cdots    & 0 \\
+                  0         & \lambda_3 & 1      & \cdots    & 0 \\
+                  \vdots    & \vdots    & \vdots & \ddots    & 0 \\
+                  0         & 0         & 0      & \lambda_m & 1
+              \end{bmatrix}
+          \]
+    \item $U_m^{-\top} L_m$ is lower triangular:
+          \[
+              U_m^{-\top} L_m =
+              \begin{bmatrix}
+                  \frac{1}{\eta_1}               & 0                              & 0                & \cdots                             & 0                \\
+                  -\frac{\beta_2}{\eta_1 \eta_2} & \frac{1}{\eta_2}               & 0                & \cdots                             & 0                \\
+                  0                              & -\frac{\beta_3}{\eta_2 \eta_3} & \frac{1}{\eta_3} & \cdots                             & 0                \\
+                  \vdots                         & \vdots                         & \vdots           & \ddots                             & 0                \\
+                  0                              & 0                              & 0                & -\frac{\beta_m}{\eta_{m-1} \eta_m} & \frac{1}{\eta_m}
+              \end{bmatrix}
+          \]
+    \item So: A lower triangular symmetric matrix is diagonal.
+          \[
+              P_m^\top A P_m = U_m^{-\top} L_m = D
+          \]
+\end{itemize}
+
+\begin{align*}
+    \mathbf{x}_m & = \mathbf{x}_0 + V_m \left(V_m^\top A V_m\right)^{-1} V_m^\top \mathbf{r}_0        \\
+                 & = \mathbf{x}_0 + V_m T_m^{-1} \beta \mathbf{e}_1, \quad \beta = \|\mathbf{r}_0\|_2 \\
+                 & = \mathbf{x}_0 + P_m \mathbf{z}_m = \mathbf{x}_{m-1} + \zeta_m \mathbf{p}_m        \\
+    T_m          & = L_m U_m                                                                          \\
+    P_m          & = V_m U_m^{-1}                                                                     \\
+    \mathbf{z}_m & = L_m^{-1} \beta \mathbf{e}_1
+\end{align*}
+
+For each iteration $j$ with $\mathbf{r}_0 = \mathbf{b} - A\mathbf{x}_0 = \mathbf{p}_0$:
+\begin{align*}
+    \mathbf{x}_{j+1} & = \mathbf{x}_j + \alpha_j \mathbf{p}_j \Rightarrow \mathbf{r}_{j+1} = \mathbf{r}_j - \alpha_j A \mathbf{p}_j \\
+    \mathbf{p}_{j+1} & = \mathbf{r}_{j+1} + \beta_j \mathbf{p}_j
+\end{align*}
+We know that:
+\begin{align*}
+    \langle \mathbf{r}_{j+1}, \mathbf{r}_j \rangle & = 0 \Rightarrow \alpha_j = \frac{\langle \mathbf{r}_j, \mathbf{r}_j \rangle}{\langle A \mathbf{p}_j, \mathbf{p}_j \rangle} = \frac{\|\mathbf{r}_j\|_2^2}{\langle \mathbf{p}_j, A \mathbf{p}_j \rangle} \\
+    \langle \mathbf{r}_{j+1}, \mathbf{r}_j \rangle & = 0 \Rightarrow \beta_j = \frac{\langle \mathbf{r}_{j+1}, \mathbf{r}_{j+1} \rangle}{\langle \mathbf{r}_j, \mathbf{r}_j \rangle} = \frac{\|\mathbf{r}_{j+1}\|_2^2}{\|\mathbf{r}_j\|_2^2}
+\end{align*}
+
+Then the CG algorithm is:
+\begin{algorithm}[H]
+    \caption{Conjugate gradient (CG) method}
+    \begin{algorithmic}[0]
+        \Require $A, \mathbf{b}, \mathbf{x}_0, m$
+        \State $\mathbf{r}_0 = \mathbf{b} - A\mathbf{x}_0$
+        \State $\mathbf{p}_0 = \mathbf{r}_0$
+        \For{$j = 0, 1, \ldots, m-1$}
+        \State $\alpha_j = \dfrac{\|\mathbf{r}_j\|_2^2}{\langle \mathbf{p}_j, A \mathbf{p}_j \rangle}$
+        \State $\mathbf{x}_{j+1} = \mathbf{x}_j + \alpha_j \mathbf{p}_j$
+        \State $\mathbf{r}_{j+1} = \mathbf{r}_j - \alpha_j A \mathbf{p}_j$
+        \State $\beta_{j+1} = \dfrac{\|\mathbf{r}_{j+1}\|_2^2}{\|\mathbf{r}_j\|_2^2}$
+        \State $\mathbf{p}_{j+1} = \mathbf{r}_{j+1} + \beta_j \mathbf{p}_j$
+        \If{$\|\mathbf{r}_{j+1}\|_2 < \text{tol}$} \textbf{Stop}
+        \EndIf
+        \EndFor
+        \Return $\mathbf{x}_m$
+    \end{algorithmic}
+\end{algorithm}
+
+\subsubsection{Convergence of CG}
+$A$ is \emph{SPD}, with $\mathcal{L}_m = \mathcal{K}_m(A, \mathbf{r}_0)$.
+
+\[
+    \|\mathbf{x}_\star - \mathbf{x}_m\|_A = \min_{\mathbf{x} \in \mathbf{x}_0 + \mathcal{K}_m}\|\mathbf{x}_\star - \mathbf{x}\|_A
+\]
+
+Used that $A$ is diagonalizable, with orthogonal eigenvectors:
+
+\begin{align*}
+    A                                     & =V\Lambda V^T, \quad V^TV = I, \quad \Lambda = \text{diag}(\lambda_1, \ldots, \lambda_n)                                      \\
+    p(A)                                  & = Vp(\Lambda)V^T                                                                                                              \\
+    \|\mathbf{x}_\star - \mathbf{x}_m\|_A & = \sum_{i=1}^n \lambda_i p_m^2(\lambda_i) \lambda_i \xi_i^2, \quad \xi = V^T(\mathbf{x}_\star - \mathbf{x}_0)                 \\
+                                          & \leq \max_i p_m^2(\lambda_i) \sum_{i=1}^n \lambda_i \xi_i^2 = \max_i p_m^2(\lambda_i) \|\mathbf{x}_\star - \mathbf{x}_0\|_A^2
+\end{align*}
+
+We solve the min-max problem:
+\[
+    \min_{\substack{p \in \mathcal{P}_m \\ p(0) = 1}} \max_{1 \leq i \leq n} |p(\lambda_i)|
+\]
+Using Chebyshev polynomials, we get the bound $[-1, 1] \to [\lambda_{\min}, \lambda_{\max}]$ with scale $p(0) = 1$.
+
+
+\paragraph{Complexity.}
+For every iteration $j$ we need to compute:
+\begin{enumerate}
+    \item One matrix-vector product $A\mathbf{p}_j$ (if $A$ is sparse, $\mathcal{O}(Nz(A))$) ($Nz(A)$ = number of nonzeros elements in $A$)
+    \item 3 vector updates (axpy), $\mathcal{O}(n)$
+    \item 2 inner products, $\mathcal{O}(n)$
+\end{enumerate}
+\textbf{Total:} $m\cdot \mathcal{O}(Nz(A) + n) = \mathcal{O}(m \cdot Nz(A) + m \cdot n)$ for $m$ iterations.
+\paragraph{Memory.}
+We need to store $(\mathbf{x}_j, \mathbf{r}_j, \mathbf{p}_j)$, i.e., $3n$ entries, and $A$ (if sparse, $\mathcal{O}(Nz(A))$).
+
+\paragraph{Relation to Orthogonal polynomials.}
+\begin{align*}
+    \langle f, g \rangle & = \int_a^b w(x) f(x) g(x) \, dx , \quad w(x) > 0 \text{ (weight function)}    \\
+    p_0(x)               & = 1                                                                           \\
+    p_1(x)               & = x                                                                           \\
+    p_n(x)               & = (x - a_n) p_{n-1}(x) - b_n p_{n-2}(x), \quad n \geq 2                       \\
+    a_n                  & = \frac{\langle x p_{n-1}, p_{n-1} \rangle}{\langle p_{n-1}, p_{n-1} \rangle} \\
+    b_n                  & = \frac{\langle x p_{n-2}, p_{n-2} \rangle}{\langle p_{n-2}, p_{n-2} \rangle}
+\end{align*}
