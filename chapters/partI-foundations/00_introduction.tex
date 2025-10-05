@@ -1,5 +1,6 @@
-\chapter{Introduction}
-
+\documentclass[../../main.tex]{subfiles}
+\begin{document}
+\chapter{Introduction}\label{ch:introduction}
 This course covers algorithms for solving linear systems $Ax = b$, eigenvalue problems, and matrix factorizations on computers with finite precision arithmetic.
 
 We study three main categories of \emph{problems}:
@@ -16,3 +17,5 @@ The material follows Saad (2003) with focus on methods used in practice for larg
 
 \section{Large Sparse Problems}
 We focus on matrices that are large ($n\gtrsim 10^4$) and sparse. Let $N_z(A)$ denote the number of nonzeros. Storage and matrix--vector products scale with $O(N_z(A))$, whereas dense factorizations cost $O(n^3)$ flops and $O(n^2)$ memory. Consequently, iterative methods driven by sparse matrix--vector products are central to modern scientific computing.
+
+\end{document}

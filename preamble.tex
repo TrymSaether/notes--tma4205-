@@ -1,0 +1,188 @@
+% =============================
+% PREAMBLE — LuaLaTeX (lean, NO/only)
+% =============================
+
+% Quiet harmless warnings (optional)
+\usepackage{silence}
+\WarningFilter{latex}{Command \showhyphens has changed}
+\WarningFilter{latexfont}{Font shape}
+
+% --- Language & fonts ---
+\usepackage[english,shorthands=off]{babel}
+\usepackage{fontspec}
+\usepackage{amsmath,amsthm,mathtools}
+\mathtoolsset{showonlyrefs,centercolon}
+\usepackage[mathrm=sym,  warnings-off={mathtools-colon, mathtools-overbracket}]{unicode-math}
+
+% Text fonts
+\setmainfont{Fira Sans}
+\setsansfont{IBM Plex Sans Condensed}
+\setmonofont{Fira Code}
+\setmathfont{Fira Math}
+\setmathfont{STIX Two Math}[range={\mathscr,\mathbb,\mathfrak,\mathcal,\setminus,\Re,\Im,\triangleright,\top,\ddots,\vdots,\star,\bigcup},Scale=MatchUppercase]
+
+% --- Typography & lists ---
+\usepackage[final]{microtype}
+\UseMicrotypeSet[protrusion]{basicmath}
+\microtypesetup{tracking=true,expansion=true}
+\usepackage[table]{xcolor} % table colors without separate colortbl
+\usepackage{enumitem}
+\setlist{nosep}
+\usepackage[autostyle]{csquotes}
+
+% --- Structure & graphics ---
+\usepackage{subfiles}                    % fast per-chapter compilation
+\usepackage{booktabs,tabularx,array,multirow}
+\usepackage{siunitx}
+\sisetup{detect-all,group-minimum-digits=4,output-decimal-marker=.}
+\usepackage{float}
+\usepackage{subcaption}
+
+% --- Layout, colors, boxes ---
+\input{includes/colors}
+\usepackage[most]{tcolorbox}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage[headheight=15pt,margin=2.5cm,includeheadfoot]{geometry}
+\usepackage{parskip}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\nouppercase{\leftmark}}
+\fancyhead[R]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% --- Links & refs (keep order) ---
+\usepackage[colorlinks,plainpages=false]{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=thm-color,
+    citecolor=thm-color,
+    urlcolor=cyan,
+    filecolor=magenta
+}
+\usepackage[capitalize,nameinlink,noabbrev]{cleveref}
+
+% --- Your split macros (formatting vs notation) ---
+\input{includes/commands}   % formatting/convenience macros
+\input{includes/notation}   % semantic symbols/sets/operators
+
+% --- Theorem environments ---
+\tcbset{
+    base theorem style/.style={
+            enhanced, breakable, sharp corners,
+            fonttitle=\bfseries,
+            before skip=10pt, after skip=10pt,
+            separator sign=.
+        },
+}
+
+\newtcbtheorem[number within=chapter]{definition}{Definition}{%
+    enhanced jigsaw,
+    colback=def-color!10, colframe=def-color!80!black, coltitle=black,
+    fonttitle=\bfseries,
+    attach boxed title to top left={xshift=10pt,yshift=-\tcboxedtitleheight/2},
+    boxed title style={colback=def-color!10,colframe=def-color!80!black,height=16pt,valign=center,bean arc},
+    label separator={}, top=8pt,bottom=2pt,left=4pt,right=4pt,boxrule=1pt
+}{def:}
+
+\newtcbtheorem[use counter from=definition]{theorem}{Theorem}{%
+    enhanced jigsaw,
+    colback=thm-color!10, colframe=thm-color!80!black, coltitle=black,
+    fonttitle=\bfseries,
+    attach boxed title to top left={xshift=10pt,yshift=-\tcboxedtitleheight/2},
+    boxed title style={colback=thm-color!10,colframe=thm-color!80!black,height=16pt,valign=center,bean arc},
+    label separator={}, top=8pt,bottom=2pt,left=4pt,right=4pt,boxrule=1pt
+}{thm:}
+
+\newtcbtheorem{lemma}{Lemma}{%
+    enhanced jigsaw,
+    frame hidden, boxrule=0pt,
+    colback=lem-color!10, colframe=lem-color!10,
+    fonttitle=\sffamily\bfseries,
+    attach boxed title to top left={yshift=-\tcboxedtitleheight},
+    boxed title style={boxrule=0pt,boxsep=2pt,interior code={\fill[lem-color, smooth]
+                    (interior.north west)--(interior.south west)--([xshift=-2mm]interior.south east)--
+                    ([xshift=2mm]interior.north east)--cycle;}},
+    label separator={}, borderline north={1pt}{0pt}{lem-color},
+    before upper={\hspace{\tcboxedtitlewidth}},
+    sharp corners, top=2pt,bottom=2pt,left=4pt,right=4pt
+}{lem}
+
+\newtcbtheorem{example}{Example}{%
+    base theorem style,
+    colback=white, colframe=white,
+    borderline west={1.5pt}{0pt}{exm-color},
+    left=8pt, coltitle=exm-color, boxsep=2pt, top=0pt, bottom=0pt
+}{ex}
+
+\NewTColorBox{solution}{ O{} }{%
+    enhanced, colback=white, colframe=white,
+    borderline east={1.5pt}{0pt}{rem-color},
+    left=8pt,right=4pt,top=4pt,bottom=4pt,
+    before skip=10pt,after skip=10pt,breakable,sharp corners,boxrule=0pt,frame hidden,parbox=false,
+    overlay={\node[rotate=-90, anchor=south west,font=\tiny\bfseries]
+            at ([yshift=3pt, xshift=-2pt]frame.north east) {\MakeUppercase{Løsning}};}
+}
+
+\newtcbtheorem{remark}{Remark}{%
+    base theorem style, colback=white, colframe=white,
+    borderline west={1.5pt}{0pt}{rem-color},
+    left=8pt, top=0pt, bottom=0pt, boxsep=2pt, coltitle=black
+}{rem}
+
+\newtcbtheorem{proposition}{Proposition}{%
+    enhanced jigsaw,
+    colback=prop-color!10, colframe=prop-color!80!black,
+    fonttitle=\bfseries,
+    attach boxed title to top left={yshift=-\tcboxedtitleheight},
+    boxed title style={boxrule=0pt,boxsep=2.5pt,colback=prop-color!80!black,
+            colframe=prop-color!80!black,sharp corners=uphill},
+    label separator={}, top=\tcboxedtitleheight,bottom=2pt,left=2pt,right=2pt,
+    before skip=10pt,after skip=10pt,breakable
+}{prop}
+
+\newtcbtheorem{corollary}{Corollary}{%
+    enhanced jigsaw,
+    colback=cor-color!10, colframe=cor-color!80!black, boxrule=0pt,
+    fonttitle=\sffamily\bfseries, coltitle=black,
+    label separator={},
+    description font=\normalfont\sffamily, description delimiters={(}{)},
+    attach title to upper, after title={.\ },
+    frame hidden, borderline west={2pt}{0pt}{cor-color},
+    sharp corners, top=2pt,bottom=2pt,left=5pt,right=5pt,
+    before skip=10pt,after skip=10pt,breakable
+}{cor}
+
+\newtcbtheorem{summary}{Summary}{%
+    enhanced jigsaw,
+    colback=ntnu-yellow!10, colframe=ntnu-yellow!80!black,
+    coltitle=black, fonttitle=\bfseries,
+    attach boxed title to top left={xshift=10pt,yshift=-\tcboxedtitleheight/2},
+    boxed title style={colback=ntnu-yellow!10,colframe=ntnu-yellow!80!black,height=16pt,bean arc},
+    label separator={}, sharp corners, top=6pt,bottom=2pt,left=2pt,right=2pt,
+    before skip=10pt,after skip=10pt,breakable
+}{sum}
+
+\renewenvironment{proof}[1][\proofname]{%
+    \begin{tcolorbox}[blanker,borderline west={2pt}{0pt}{thm-color},
+            before skip=10pt, after skip=10pt, left=8pt, breakable]%
+        \textbf{#1}. }{\,\hfill\qedsymbol\end{tcolorbox}}
+
+% --- TikZ / pgfplots ---
+\usepackage{standalone}
+\usepackage{pgfplots,tikz}
+\pgfplotsset{
+    compat=newest,
+    tick label style={/pgf/number format/fixed},
+    scaled ticks=false
+}
+\usetikzlibrary{
+    arrows.meta,calc,positioning,backgrounds,patterns,decorations.pathreplacing,
+    3d
+}
+\tikzset{>=Latex} % nice arrowheads
+
+\pgfplotsset{compat=newest}

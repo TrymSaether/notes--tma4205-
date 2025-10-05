@@ -1,0 +1,23 @@
+% ==============================
+% COMMANDS — formatting & convenience (non-semantic)
+% ==============================
+
+% Mathtools paired delimiters (with starred auto-size)
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+\DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
+\DeclarePairedDelimiter{\set}{\lbrace}{\rbrace}
+
+% Inner product with comma spacing
+\DeclarePairedDelimiterX{\inner}[2]{\langle}{\rangle}{#1,\,#2}
+
+% Derivatives (clear, flexible)
+\NewDocumentCommand{\dv}{o m}{\frac{d\,#1}{d #2}}            % \dv[f]{x}
+\NewDocumentCommand{\dvn}{m o m}{\frac{d^{#1}\,#2}{d #3^{#1}}} % \dvn{2}[f]{x}
+\NewDocumentCommand{\pdv}{o m}{\frac{\partial\,#1}{\partial #2}}
+\NewDocumentCommand{\pdvn}{m o m}{\frac{\partial^{#1}\,#2}{\partial #3^{#1}}}
+
+% Common text shortcuts (optional; comment out if you prefer)
+\newcommand{\ie}{i.e.\ }
+\newcommand{\eg}{e.g.\ }
+\newcommand{\aka}{aka.\ }
+\newcommand{\st}{\text{s.t.}\ }

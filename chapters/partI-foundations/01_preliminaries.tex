@@ -1,5 +1,7 @@
-\chapter{Preliminaries}
-\label{chap:preliminaries}
+\documentclass[../../main.tex]{subfiles}
+\begin{document}
+
+\chapter{Preliminaries}\label{chap:preliminaries}
 
 \section{Notation and Conventions}
 \label{sec:notation-conventions}
@@ -220,8 +222,8 @@ This eigenvalue corresponds to a nonnegative eigenvector, and in the case of irr
 
 The dominant eigenvalue $\rho(A)$ often represents the long-term growth rate or stability of the system described by $A$.
 
-\subsection{Kantorovich Inequality}
-\label{subsec:kantorovich-inequality}
+\subsection{Kantorovich Inequality}\label{subsec:kantorovich-inequality}
+
 Kantorovich inequality provides bounds on the relationship between different norms induced by a symmetric positive definite matrix.
 \begin{theorem}{Kantorovich Inequality}{kantorovich}
     Let $B \in \mathbb{R}^{n \times n}$ be SPD with eigenvalues $0 < \lambda_1 \leq \cdots \leq \lambda_n.$
@@ -1239,3 +1241,4 @@ Convergence: subdiagonal entries $\to 0$, eigenvalues shift to diagonal.
     Schur form provides stable triangularization; Jordan blocks can be inferred from $T$ but with care.
 \end{remark}
 
+\end{document}

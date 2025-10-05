@@ -1,15 +1,15 @@
-\documentclass[a4paper,10pt]{book}
-\input{tex/preamble}
-\input{tex/macros}
+\documentclass[a4paper,10pt,oneside]{book}
+\input{preamble}
 
 \begin{document}
 \frontmatter
-\include{frontmatter/titlepage}
+\input{frontmatter/titlepage}
 \tableofcontents
+
 \mainmatter
-\include{chapters/partI-foundations}
-\include{chapters/partII-projections}
-\include{chapters/partIII-solvers}
+\subfile{chapters/partI-foundations}
+\subfile{chapters/partII-projections}
+\subfile{chapters/partIII-solvers}
 %\include{backmatter/lectures}
 %\include{backmatter/exercises}
 \end{document}
