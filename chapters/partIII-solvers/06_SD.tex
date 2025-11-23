@@ -1,8 +1,102 @@
 \documentclass[../../main.tex]{subfiles}
 \begin{document}
-\chapter{Steepest Descent}\label{ch:SD}
+\chapter{Steepest Descent}\label{ch:steepest-descent}
+\section{Notation}
+We wish to solve the linear system
+\[
+    A \mathbf{x} = \mathbf{b}, \quad A \in \mathbb{R}^{n \times n}, \quad \mathbf{x}, \mathbf{b} \in \mathbb{R}^n
+\]
 
-Let $A$ be SPD, with a given $\mathbf{x}_0$ and the residual $\mathbf{r}_0 = \mathbf{b} - A\mathbf{x}_0$, then
+\subsection{Quadratic form}
+The quadratic form is just a scalar, quadratic function $f: \mathbb{R}^n \to \mathbb{R}$ that maps a vector $\mathbf{x}$ to a scalar:
+\begin{equation}\label{eq:quadratic-form}
+    f(\mathbf{x}) = \frac12 \mathbf{x}^{\top} A \mathbf{x} - \mathbf{b}^{\top} \mathbf{x} + c
+\end{equation}
+where $c$ is just a constant.
+
+\paragraph{Gradient}
+Now we want to observe how the function $f$ changes as we change $\mathbf{x}$, i.e. we want to compute the gradient $\nabla f(\mathbf{x})$.
+\begin{align}
+    \nabla f(\mathbf{x}) & = \begin{bmatrix}
+                                 \frac{\partial}{\partial x_1} f(\mathbf{x}) \\
+                                 \vdots                                      \\
+                                 \frac{\partial}{\partial x_n} f(\mathbf{x})
+                             \end{bmatrix}                        \\
+                         & = \begin{bmatrix}
+                                 \frac12 (2 a_{11} x_1 + a_{12} x_2 + \ldots + a_{1n} x_n) - b_1 \\
+                                 \vdots                                                          \\
+                                 \frac12 (a_{n1} x_1 + a_{n2} x_2 + \ldots + 2 a_{nn} x_n) - b_n
+                             \end{bmatrix}    \\
+                         & = \frac12 (A + A^{\top}) \mathbf{x} - \mathbf{b} \label{eq:gradient}
+\end{align}
+
+Now, if we assume that $A$ is symmetric ($A = A^{\top}$), then \eqref{eq:gradient} simplifies to
+\begin{equation}
+    \nabla f(\mathbf{x}) = A \mathbf{x} - \mathbf{b}
+\end{equation}
+Now, under the assumption that $A$ also is positive definite ($A \succ 0$), the quadratic form \eqref{eq:quadratic-form} is strictly convex and has a unique minimizer $\mathbf{x}_{\star}$.
+\begin{equation}
+    \nabla f(\mathbf{x}_{\star}) = A \mathbf{x}_{\star} - \mathbf{b} = 0 \implies A \mathbf{x}_{\star} = \mathbf{b}
+\end{equation}
+
+
+\textbf{Case 1:} Suppose $A$ is \emph{SPD}, then the quadratic form \eqref{eq:quadratic-form} is strictly convex and has a unique minimizer $\mathbf{x}_{\star}$ which is equivalent to the solution of the linear system \eqref{eq:linear-system}.
+
+\textbf{Case 2:} Suppose $A$ is \emph{symmetric} (be it positive definite or not).
+Let $\mathbf{x}$ be a point that satisfies \eqref{eq:linear-system} and minimizes the quadratic form \eqref{eq:quadratic-form}.
+Now we introduce the error term $\mathbf{e}$ s.t.
+\begin{align}
+    f(\mathbf{x} + \mathbf{e}) & = \dfrac12 (\mathbf{x} + \mathbf{e})^{\top} A (\mathbf{x} + \mathbf{e}) - \mathbf{b}^{\top} (\mathbf{x} + \mathbf{e}) + c                                                                                                                   \\
+                               & = \overbrace{\dfrac12 \mathbf{x}^{\top} A \mathbf{x} - \mathbf{b}^{\top} \mathbf{x} + c}^{f(\mathbf{x})} +  \dfrac12 \mathbf{e}^{\top} A \mathbf{e} + \mathbf{e}^{\top}\overbrace{A\mathbf{x}}^{\mathbf{b}}  - \mathbf{b}^{\top} \mathbf{e} \\
+                               & = f(\mathbf{x}) + \dfrac12 \mathbf{e}^{\top} A \mathbf{e} + \mathbf{e}^{\top} \mathbf{b} - \mathbf{b}^{\top} \mathbf{e}                                                                                                                     \\
+                               & = f(\mathbf{x}) + \dfrac12 \mathbf{e}^{\top} A \mathbf{e}
+\end{align}
+If $A$ is positive definite, then $\mathbf{e}^{\top} A \mathbf{e} > 0$ for all $\mathbf{e} \neq 0$, and therefore $\mathbf{x}$ is the unique minimizer of $f$.
+
+Now if $A$ is not SPD, then the equation \eqref{eq:gradient} hints that we try to find the solution of the system $\frac12 (A + A^{\top}) \mathbf{x} = \mathbf{b}$ instead, which we will discuss later.
+
+Throughout the first section, we will use the following $2\times 2$ SPD example to illustrate and explain the concepts and methods we introduce.
+
+\begin{example}{SPD problem}{spd-problem}
+    \[
+        A =
+        \begin{bmatrix}
+            3 & 2 \\
+            2 & 6
+        \end{bmatrix}, \quad \mathbf{b} =
+        \begin{bmatrix}
+            2 \\
+            -8
+        \end{bmatrix},
+        \quad
+        c = 0.
+    \]
+    The corresponding quadratic form is
+    \[
+        f(\mathbf{x}) = \frac12 \mathbf{x}^{\top} A \mathbf{x} - \mathbf{b}^{\top} \mathbf{x} = \frac12 (3x_1^2 + 2x_1 x_2 + 6x_2^2) - (2x_1 - 8x_2).
+    \]
+    The solution/minimizer is
+    \[
+        \mathbf{x}_{\star} =
+        \begin{bmatrix}
+            2 \\
+            -2
+        \end{bmatrix}.
+    \]
+\end{example}
+
+If we plot the corresponding quadratic form of this problem, we get the following surface plot:
+
+\begin{figure}[H]
+    \centering
+    \input{figures/CH_06/quadratic-form.tikz}
+    \caption{\textbf{(a)} We see the surface plot of the quadratic form $f$ curving upwards, indicating that it is convex and therefore has a minimum.
+        \textbf{(b)} Same plot seen from above, with gradient vectors added. The gradient vectors point in the direction of steepest ascent, and we see that they point away from the minimizer (red cross).}
+    \label{fig:quadratic-form}
+\end{figure}
+
+
+Let $A$ be SPD, with a given initial guess $\mathbf{x}_0$, and residual $\mathbf{r}_0 = \mathbf{b} - A \mathbf{x}_0$.
 
 \begin{align*}
     \mathcal{L}              & = \mathcal{K} = \operatorname{span}\{\mathbf{r}\}                                                                                                              \\
@@ -86,23 +180,23 @@ if SD: $\mathbf{v} = \mathbf{w} = \mathbf{r}_0$.
 \begin{example}{}{}
     If $A$ is SPD, with $\mathcal{L} = \mathcal{K} = \operatorname{span}\{\mathbf{r}_k\}$, then:
     \begin{align*}
-        \mathbf{x}_{k+1} & = \mathbf{x}_k + \alpha_k \mathbf{r}_k, \quad \alpha_k  \in  \mathbb{R}             \\
-        \mathbf{r}_{k+1} & = \mathbf{b} - A \mathbf{x}_{k+1} = \mathbf{r}_k - \alpha_k A \mathbf{r}_k                   \\
+        \mathbf{x}_{k+1} & = \mathbf{x}_k + \alpha_k \mathbf{r}_k, \quad \alpha_k  \in  \mathbb{R}                               \\
+        \mathbf{r}_{k+1} & = \mathbf{b} - A \mathbf{x}_{k+1} = \mathbf{r}_k - \alpha_k A \mathbf{r}_k                            \\
         \mathbf{r}_{k+1} & \perp \mathbf{r}_k \Rightarrow \mathbf{r}_k^{\top} (\mathbf{r}_k - \alpha_k A \mathbf{r}_k) = 0 \quad
-        \Rightarrow \alpha_k = \frac{\mathbf{r}_k^{\top} \mathbf{r}_k}{\mathbf{r}_k^{\top} A \mathbf{r}_k}              \\
-        \mathbf{d}_k     & = \mathbf{x}_\star - \mathbf{x}_k                                                   \\
+        \Rightarrow \alpha_k = \frac{\mathbf{r}_k^{\top} \mathbf{r}_k}{\mathbf{r}_k^{\top} A \mathbf{r}_k}                       \\
+        \mathbf{d}_k     & = \mathbf{x}_\star - \mathbf{x}_k                                                                     \\
         \mathbf{r}_k     & = \mathbf{b} - A \mathbf{x}_k = A \mathbf{x}_\star - A \mathbf{x}_k = A \mathbf{d}_k                  \\
     \end{align*}
 
     We want to estimate $\|d_{k+1}\|_A \leq C \|d_k\|_A$ for some $C < 1$.
     \begin{align*}
-        \mathbf{r}_{k+1}         & = \mathbf{b} - A \mathbf{x}_{k+1} = A(\mathbf{x}_\star - \mathbf{x}_{k+1}) = A \mathbf{d}_{k+1} = A \mathbf{d}_k - \alpha_k A \mathbf{r}_k \\
-        \mathbf{d}_{k+1}         & = \mathbf{d}_{k+1}^{\top} A \mathbf{d}_{k+1} = \mathbf{d}_{k+1}^{\top} \mathbf{r}_{k+1}                                 \\
-                        & = (\mathbf{d}_k - \alpha_k \mathbf{r}_k)^{\top} \mathbf{r}_{k+1} = \mathbf{d}_k^{\top} \mathbf{r}_{k+1}                          \\
-                        & = \mathbf{d}_k^{\top} (\mathbf{r}_k - \alpha_k A \mathbf{r}_k) = \mathbf{d}_k^{\top} \mathbf{r}_k - \alpha_k \mathbf{d}_k^{\top} A \mathbf{r}_k    \\
-                        & = \mathbf{d}_k^{\top} A \mathbf{d}_k - \alpha_k \mathbf{r}_k^{\top} \mathbf{r}_k                                        \\
-                        & = \|\mathbf{d}_k\|_A^2 - \alpha_k \|\mathbf{r}_k\|^2                                                   \\
-                        & = \|\mathbf{d}_k\|_A^2 - \frac{\|\mathbf{r}_k\|^4}{\|\mathbf{r}_k\|_A^2}                                        \\
+        \mathbf{r}_{k+1}         & = \mathbf{b} - A \mathbf{x}_{k+1} = A(\mathbf{x}_\star - \mathbf{x}_{k+1}) = A \mathbf{d}_{k+1} = A \mathbf{d}_k - \alpha_k A \mathbf{r}_k      \\
+        \mathbf{d}_{k+1}         & = \mathbf{d}_{k+1}^{\top} A \mathbf{d}_{k+1} = \mathbf{d}_{k+1}^{\top} \mathbf{r}_{k+1}                                                         \\
+                                 & = (\mathbf{d}_k - \alpha_k \mathbf{r}_k)^{\top} \mathbf{r}_{k+1} = \mathbf{d}_k^{\top} \mathbf{r}_{k+1}                                         \\
+                                 & = \mathbf{d}_k^{\top} (\mathbf{r}_k - \alpha_k A \mathbf{r}_k) = \mathbf{d}_k^{\top} \mathbf{r}_k - \alpha_k \mathbf{d}_k^{\top} A \mathbf{r}_k \\
+                                 & = \mathbf{d}_k^{\top} A \mathbf{d}_k - \alpha_k \mathbf{r}_k^{\top} \mathbf{r}_k                                                                \\
+                                 & = \|\mathbf{d}_k\|_A^2 - \alpha_k \|\mathbf{r}_k\|^2                                                                                            \\
+                                 & = \|\mathbf{d}_k\|_A^2 - \frac{\|\mathbf{r}_k\|^4}{\|\mathbf{r}_k\|_A^2}                                                                        \\
         \|\mathbf{d}_{k+1}\|_A^2 & = \|\mathbf{d}_k\|_A^2\left(1 - \frac{\|\mathbf{r}_k\|^4}{\|\mathbf{r}_k\|_A^2 \|\mathbf{r}_k\|_{A^{-1}}^2}\right)
     \end{align*}
 \end{example}

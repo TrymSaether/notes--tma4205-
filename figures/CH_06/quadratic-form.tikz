@@ -1,0 +1,67 @@
+\begin{tikzpicture}
+    \begin{groupplot}[
+            group style={group size=2 by 1, horizontal sep=1.5cm},
+            width=0.48\textwidth,
+            height=6cm,
+            colormap/cool,
+            xmin=-6, xmax=6,
+            ymin=-4, ymax=4,
+        ]
+        \nextgroupplot[
+            view={20}{30},
+            xlabel={$x_1$},
+            ylabel={$x_2$},
+            zlabel={$f(\mathbf{x})$},
+            grid=major,
+        ]
+        \addplot3[
+            surf,
+            domain=-6:6,
+            domain y=-4:4,
+            samples=30,
+        ]
+        {0.5 * (3 * x^2 + 4 * x * y + 6 * y^2) - (2 * x - 8 * y)};
+        \addplot3[
+            mark=x,
+            only marks,
+            color=red,
+            mark size=3pt
+        ]
+        coordinates {(2, -2, -10)};
+        \nextgroupplot[
+            xlabel={$x_1$},
+            ylabel={$x_2$},
+            view={0}{90},
+            grid=major,
+        ]
+        \addplot3[
+            contour filled={number=30,labels=false},
+            samples=60,
+            domain=-6:6,
+            domain y=-4:4,
+        ]
+        {0.5 * (3 * x^2 + 4 * x * y + 6 * y^2) - (2 * x - 8 * y)};
+        % Gradient
+        \addplot3[
+            quiver={
+                    u={3*x + 2*y - 2},
+                    v={2*x + 6*y + 8},
+                    w={0},
+                    scale arrows=0.1,
+                    every arrow/.append style={-Stealth, line width=0.5pt, color=black}
+                },
+            domain=-6:6,
+            domain y=-4:4,
+            samples=12,
+        ]
+        {0};
+        % Mark the minimizer
+        \addplot3[
+            mark=x,
+            only marks,
+            color=red,
+            mark size=3pt
+        ]
+        coordinates {(2, -2, -10)};
+    \end{groupplot}
+\end{tikzpicture}

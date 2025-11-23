@@ -1,31 +1,31 @@
-\begin{tikzpicture}[scale=1.3]
-  % axes
-  \draw[->] (-3.0,0) -- (3.2,0) node[right] {Re$(z)$};
-  \draw[->] (0,-2.5) -- (0,2.7) node[above] {Im$(z)$};
+\begin{tikzpicture}[scale=2.0]
+  % Axes
+  \draw[->,thick] (-2,0) -- (2.5,0) node[right] {$\Re(z)$};
+  \draw[->,thick] (0,-2) -- (0,2.5) node[above] {$\Im(z)$};
 
-  % centers (diagonal entries)
-  \coordinate (a11) at (1.0,0.5);
-  \coordinate (a22) at (-0.6,-1.0);
-  \coordinate (a33) at (0.6,1.6);
+  % Define diagonal entries (centers of discs)
+  \coordinate (a11) at (1,0.5);
+  \coordinate (a22) at (-0.5,1);
+  \coordinate (a33) at (0.5,-1.2);
 
-  % discs
-  \draw[blue, fill=blue!12] (a11) circle (0.85);
-  \draw[red,  fill=red!12]  (a22) circle (1.20);
-  \draw[green!60!black, fill=green!12] (a33) circle (0.65);
+  % Draw Gershgorin discs with different colors
+  \filldraw[blue!20, draw=blue!80, thick] (a11) circle (0.8);
+  \filldraw[red!20, draw=red!80, thick] (a22) circle (1);
+  \filldraw[green!30, draw=green!70, thick] (a33) circle (0.7);
 
-  % centers and labels
-  \fill (a11) circle (1.2pt) node[below right] {$a_{11}$};
-  \fill (a22) circle (1.2pt) node[above left] {$a_{22}$};
-  \fill (a33) circle (1.2pt) node[below left] {$a_{33}$};
+  % Draw radii with labels
+  \draw[black, dashed] (a11) -- ++(0.8,0) node[black, midway, above] {$R_1$};
+  \draw[black, dashed] (a22) -- ++(-1,0) node[black,midway, above] {$R_2$};
+  \draw[black, dashed] (a33) -- ++(0.7,0) node[black,midway, below] {$R_3$};
 
-  % sample eigenvalues
-  \fill (0.7,0.25) circle (1.2pt) node[above] {$\lambda_1$};
-  \fill (-1.1,-0.8) circle (1.2pt) node[right] {$\lambda_2$};
-  \fill (0.3,1.25) circle (1.2pt) node[left] {$\lambda_3$};
+  % Mark centers (diagonal entries)
+  \filldraw[blue!80] (a11) circle (1pt) node[above,black] {$a_{11}$};
+  \filldraw[red!80] (a22) circle (1pt) node[above,black] {$a_{22}$};
+  \filldraw[green!70] (a33) circle (1pt) node[left, black] {$a_{33}$};
 
-  % radii indicators
-  \draw[blue, dashed] (a11) -- ++(0.85,0) node[midway, above, font=\tiny] {$R_1$};
-  \draw[red, dashed] (a22) -- ++(-1.2,0) node[midway, above, font=\tiny] {$R_2$};
-  \draw[green!60!black, dashed] (a33) -- ++(0.65,0) node[midway, above, font=\tiny] {$R_3$};
+  % Mark some eigenvalues inside the region
+  \filldraw[black] (0.7,0.3) circle (1pt) node[right] {$\lambda_1$};
+  \filldraw[black] (-0.3,0.8) circle (1pt) node[left] {$\lambda_2$};
+  \filldraw[black] (0.6,-0.9) circle (1pt) node[right] {$\lambda_3$};
+
 \end{tikzpicture}
-

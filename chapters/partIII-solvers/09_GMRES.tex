@@ -1,4 +1,4 @@
-\section{Generalized Minimum Residual Method (GMRES)}
+\chapter{Generalized Minimum Residual Method (GMRES)}
 Let $\mathcal{K} = \mathcal{K}_m(A, \mathbf{r}_0)$, and $\mathcal{L}_m = A\mathcal{K}$.
 \begin{align*}
     \mathbf{r}_m                     & = \mathbf{b} - A\mathbf{x}_m                                                                                                                                                                    \\
@@ -17,7 +17,7 @@ Want to solve the overdetermined system ($m < n$):
 \]
 We solve this least squares problem using QR factorization of $\overline{H}_m$ with Givens rotations.
 
-\subsection{QR Factorization Approach}
+\section{QR Factorization Approach}
 Since $\overline{H}_m \in \mathbb{R}^{(m+1) \times m}$ is upper Hessenberg, we can efficiently compute its QR factorization using Givens rotations. Let
 \[
     \overline{H}_m = Q_{m+1} R_m
@@ -212,20 +212,20 @@ Then
     \end{algorithmic}
 \end{algorithm}
 
-\subsection{Convergence of GMRES}
+\section{Convergence of GMRES}
 We want to estimate the convergence of GMRES. We have:
 \begin{itemize}
     \item $\mathbf{x}_\star$ exact solution of $A\mathbf{x} = \mathbf{b}$.
     \item $\mathbf{x}_m$ numerical solution after $m$ iterations with some \emph{krylov-space method}.
           \begin{align*}
-              \mathbf{r}_m &= \mathbf{b} - A\mathbf{x}_m \tag{residual error} \\
+              \mathbf{r}_m                    & = \mathbf{b} - A\mathbf{x}_m \tag{residual error} \\
               \mathbf{x}_\star - \mathbf{x}_m & = p_m(A)(\mathbf{x}_\star - \mathbf{x}_0)
               \quad
               \begin{cases}
-                p_m \in \mathbb{P}_m\\
-                p_m(0) = 1
-                \end{cases} \\
-              \mathbf{b} - A\mathbf{x}_m      & = p_m(A)(\mathbf{b} - A\mathbf{x}_0)                                                  \\
+                  p_m \in \mathbb{P}_m \\
+                  p_m(0) = 1
+              \end{cases}                                                                \\
+              \mathbf{b} - A\mathbf{x}_m      & = p_m(A)(\mathbf{b} - A\mathbf{x}_0)              \\
               \mathbf{r}_m                    & = p_m(A)\mathbf{r}_0
           \end{align*}
 \end{itemize}
@@ -338,16 +338,16 @@ let $z \in \mathbb{C}$:
 \end{theorem}
 
 \begin{align*}
-    C_m(z)                                        & = \frac{1}{2}(w^m + w^{-m}), \quad z = \frac{1}{2}(w + w^{-1})                                                          \\
-    p^\star(z)                                    & = \frac{C_m(w)}{C_m(w_\gamma)}                                                                                          \\
+    C_m(z)                                        & = \frac{1}{2}(w^m + w^{-m}), \quad z = \frac{1}{2}(w + w^{-1})                                                                    \\
+    p^\star(z)                                    & = \frac{C_m(w)}{C_m(w_\gamma)}                                                                                                    \\
     \hat{C}_m(z)                                  & = \frac{C_m(\frac{z - c}{d})}{C_m(-\frac{c}{d})},
     \begin{cases}
         \mathrm{E}(c,d,a), \\
         \hat{C}_m(0) = 1
-    \end{cases}                                                                                                                                   \\
-    \max_{z \in \mathrm{E}(c,d,a)} |\hat{C}_m(z)| & = \frac{C_m(\frac{a}{d})}{|C_m(-\frac{c}{d})|}                                                                          \\
-    \mathbf{r}_m                                  & \leq \kappa_2(X) \varepsilon^{m} \|\mathbf{r}_0\|_2 = \kappa_2(X) \frac{C_m(\frac{a}{d})}{|C_m(-\frac{c}{d})|} \|\mathbf{r}_0\|_2                                           \\
-    C_m(z)                                        & = \frac{1}{2}\left[\left(z + \sqrt{z^2 - 1}\right)^m + \left(z - \sqrt{z^2 - 1}\right)^m\right]                         \\
+    \end{cases}                                                                                                                                                                \\
+    \max_{z \in \mathrm{E}(c,d,a)} |\hat{C}_m(z)| & = \frac{C_m(\frac{a}{d})}{|C_m(-\frac{c}{d})|}                                                                                    \\
+    \mathbf{r}_m                                  & \leq \kappa_2(X) \varepsilon^{m} \|\mathbf{r}_0\|_2 = \kappa_2(X) \frac{C_m(\frac{a}{d})}{|C_m(-\frac{c}{d})|} \|\mathbf{r}_0\|_2 \\
+    C_m(z)                                        & = \frac{1}{2}\left[\left(z + \sqrt{z^2 - 1}\right)^m + \left(z - \sqrt{z^2 - 1}\right)^m\right]                                   \\
     \varepsilon^m                                 & = \frac{C_m(\frac{a}{d})}{|C_m(-\frac{c}{d})|} \approx \left(\frac{a + \sqrt{a^2 - d^2}}{c + \sqrt{c^2 - d^2}}\right)^m
 \end{align*}
 

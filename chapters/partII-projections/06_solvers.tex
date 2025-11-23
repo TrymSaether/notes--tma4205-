@@ -1,3 +1,5 @@
+\documentclass[../../main.tex]{subfiles}
+\begin{document}
 \chapter{Iterative Solvers}
 \label{chap:projection-methods}
 
@@ -170,3 +172,5 @@ Convergence requires appropriate spectral radius conditions and invertible diago
 
 \section{Restarted GMRES and Memory}
 Full GMRES stores $V_{m+1}$ and $\overline H_m$, with $O(nm)$ memory and $O(m^2)$ orthogonalization. Restarted GMRES($m$) limits the basis size by periodically resetting the Krylov space with $\mathbf{r}\leftarrow\mathbf{r}_m$ and repeating. Restarts control memory and cost but can slow convergence; preconditioning is often essential.
+
+\end{document}

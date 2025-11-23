@@ -1,11 +1,12 @@
 \documentclass[../../main.tex]{subfiles}
 
 \begin{document}
+
 \chapter{Projections}\label{chap:projections}
 
 Projection operators provide a mathematical framework for decomposing vectors into components along different subspaces, which is essential for understanding least squares problems, orthogonal decompositions, and many iterative methods.
 
-\section{Notation and Setup}
+\section{Notation and Setup}\label{sec:projections-notation}
 \begin{description}[style=nextline, labelwidth=5cm, leftmargin=5.5cm, font=\normalfont\bfseries]
     \item[Linear system.] Solve \(A\mathbf{x}=\mathbf{b}\) with \(A \in \mathbb{R}^{n\times n}\), \(\mathbf{x},\mathbf{b} \in \mathbb{R}^n\). The exact solution is \(\mathbf{x}^{\ast}  = A^{-1}\mathbf{b}\) (when \(A\) is nonsingular).
     \item[Initial guess.] \(\mathbf{x}_0 \in \mathbb{R}^n\).
@@ -48,7 +49,7 @@ Projection operators provide a mathematical framework for decomposing vectors in
           \end{itemize}
 \end{description}
 
-\section{Projection Operator}
+\section{Projection Operator}\label{sec:projection-operator}
 A projection finds the \emph{closest point/shadow} of a vector onto a subspace. This operation decomposes any vector into two parts: one lying within the target subspace and another orthogonal to it.
 
 \begin{definition}{Projection Operator}{projection-operator}
@@ -67,7 +68,7 @@ The operator $P$ is called an \emph{orthogonal projection} if it is additionally
 
 The idempotent property captures the essential characteristic of projections: applying the projection twice gives the same result as applying it once. Geometrically, once a vector is projected onto a subspace, further projections leave it unchanged.
 
-\subsection{Properties of Projections}
+\subsection{Properties of Projections}\label{subsec:properties-of-projections}
 Let $P$ be a projection operator on an inner product space $V$. Then:
 \begin{enumerate}
     \item $\text{Range}(P) = \{v  \in  V : P\mathbf{v} = v\}$ (the range consists of fixed points)
@@ -91,7 +92,7 @@ Let $P$ be a projection operator on an inner product space $V$. Then:
     \label{fig:orthogonal-projection}
 \end{figure}
 
-\section{Reduced Systems}
+\section{Reduced Systems}\label{sec:reduced-systems}
 In iterative methods for solving linear systems, we often work with reduced systems $H$, that capture the essential features of the original problem \eqref{eq:linear-system} within a lower-dimensional subspace.
 
 \begin{proposition}{Galerkin with SPD $A$}{galerkin-spd}
@@ -107,7 +108,7 @@ In iterative methods for solving linear systems, we often work with reduced syst
 
 These conditions underpin the optimality results: Galerkin ($\mathcal{L}=\mathcal{K}$) yields best approximation in the $A$-norm when $A\succ0$, while $\mathcal{L}=A\mathcal{K}$ yields residual 2-norm minimization.
 
-\section{Matrix Representation of Projections}
+\section{Matrix Representation of Projections}\label{sec:matrix-representation-of-projections}
 
 In finite-dimensional spaces, projections can be represented as matrices with specific structural properties.
 
@@ -135,7 +136,7 @@ The geometric interpretation is crucial: $P$ maps every vector to its closest po
     where $I_k$ is the $k \times k$ identity matrix.
 \end{example}
 
-\section{Oblique Projections}
+\section{Oblique Projections}\label{sec:oblique-projections}
 
 Not all useful projections are orthogonal. An \emph{oblique} projection maps onto a target subspace along a (non-orthogonal) complementary subspace.
 

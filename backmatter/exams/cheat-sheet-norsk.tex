@@ -1,0 +1,423 @@
+\documentclass[10pt,a4paper, landscape]{article}
+\input{preamble}
+% Multicolumn cheat sheet
+\usepackage{multicol}
+% Landscape
+\usepackage{lscape}
+
+% No fancy header/footer, margins, etc.
+\pagestyle{empty}
+\geometry{top=1cm, bottom=1cm, left=1cm, right=1cm}
+\setlength\columnsep{0.25cm}
+% Make section titles smaller
+\usepackage{sectsty}
+\sectionfont{\normalsize\bfseries}
+\subsectionfont{\small\bfseries}
+
+\begin{document}
+% Smaller font size
+\footnotesize
+\begin{multicols}{4}
+    \textbf{Egenverdier \& egenvektorer.}
+
+    \[
+        A \mathbf{x} = \lambda \mathbf{x},\quad \mathbf{x} \ne 0,\ \lambda \in \C.
+    \]
+    Spektrum: $\sigma(A) = \{\lambda \in \C : \det(A - \lambda I) = 0\}$.
+
+    \textbf{Jordan-form.}
+    $A$ er lik en Jordan-matrise $J$: $A = P J P^{-1}$ hvor
+    \[
+        J = \operatorname{diag}(J_1,\dots,J_s),\quad
+        J_i =
+        \begin{bmatrix}
+            \lambda_i & 1      &        & 0         \\
+                      & \ddots & \ddots &           \\
+                      &        & \ddots & 1         \\
+            0         &        &        & \lambda_i
+        \end{bmatrix}.
+    \]
+
+    \textbf{Normal, Hermitisk, ortogonal, unitær, skeiv-symmetrisk.}
+    \begin{itemize}[leftmargin=*]
+        \item Normal: $A^* A = A A^*$.
+        \item Hermitisk: $A^* = A$ (real-tilfelle: symmetrisk).
+        \item Skeiv-symmetrisk: $A^T = -A$.
+        \item Ortogonal: $Q^T Q = I$ (reell versjon av unitær).
+        \item Unitær: $U^* U = I$.
+    \end{itemize}
+
+    \textbf{Positiv definit, diagonal dominans.}
+    \begin{itemize}[leftmargin=*]
+        \item Positiv definit: $\mathbf{x}^* A \mathbf{x} > 0$ for alle $\mathbf{x} \ne 0$.
+        \item Streng diagonal dominans (rader):
+              \[
+                  |a_{ii}| > \sum_{j \ne i} |a_{ij}| \quad\forall i.
+              \]
+    \end{itemize}
+
+    \textbf{Vektor-normer, matrise-/operator-normer.}
+    \begin{itemize}[leftmargin=*]
+        \item Vektornorm: $\norm{\cdot}: \C^n \to \R$ med positivitet, homogenitet, trekantulikhet.
+        \item Indusert matrise-norm:
+              \[
+                  \norm{A} = \max_{\mathbf{x} \ne 0} \frac{\norm{A\mathbf{x}}}{\norm{\mathbf{x}}}.
+              \]
+        \item Eksempler: $\norm{\mathbf{x}}_1,\, \norm{\mathbf{x}}_2,\, \norm{\mathbf{x}}_\infty$.
+    \end{itemize}
+
+    \textbf{Indre produkt \& normer.}
+    \begin{itemize}[leftmargin=*]
+        \item Indre produkt: $\ip{\cdot}{\cdot}$ seskvilinært, Hermitisk, positivt.
+        \item Indusert norm: $\norm{\mathbf{x}} = \sqrt{\ip{\mathbf{x}}{\mathbf{x}}}$.
+    \end{itemize}
+
+    \textbf{Rank, nullitet, kernel, range.}
+    \begin{itemize}[leftmargin=*]
+        \item Kernel: $\kernel(A) = \{\mathbf{x}: A\mathbf{x} = 0\}$.
+        \item Range: $\range(A) = \{A\mathbf{x}: \mathbf{x} \in \C^n\}$.
+        \item Rang: $\operatorname{rank}(A) = \dim \range(A)$.
+        \item Rank-nullity: $\operatorname{rank}(A) + \dim\kernel(A) = n$.
+    \end{itemize}
+
+    \textbf{Eksistens \& entydighet for $A\mathbf{x}=\mathbf{b}$.}
+    \begin{itemize}[leftmargin=*]
+        \item Entydig løsning for alle $\mathbf{b}$ iff $A$ er inverterbar $\iff \det(A) \ne 0$.
+        \item Løsning for gitt $\mathbf{b}$ finnes iff $\mathbf{b} \in \range(A)$.
+    \end{itemize}
+
+    \textbf{Similaritets-transformasjoner.}
+    $A,B$ er like hvis $\exists$ invertibel $P$ slik at $B = P^{-1} A P$.
+    Like matriser har samme egenverdier og karakteristisk polynom.
+
+    \textbf{Faste punkt iterasjoner for $A\mathbf{x}=\mathbf{b}$.}
+    Skriv $\mathbf{x} = M \mathbf{x} + \mathbf{c}$ og iterer
+    \[
+        \mathbf{x}_{k+1} = M \mathbf{x}_k + \mathbf{c}.
+    \]
+    Konvergens for alle startverdier skjer hvis og bare hvis $\rho(M) < 1$.
+
+    \textbf{Spektralradius.}
+    \[
+        \rho(A) = \max_{\lambda \in \sigma(A)} |\lambda|.
+    \]
+
+    \textbf{Gershgorin-teoremet.}
+    Raddsirkler
+    \[
+        D_i = \left\{ z \in \C : |z - a_{ii}| \le \nolinebreak \sum_{j \ne i} |a_{ij}| \right\}.
+    \]
+    Da gjelder $\sigma(A) \subset \bigcup_{i=1}^n D_i$. Hvis en sammenhengende komponent inneholder nøyaktig $k$ skiver, inneholder den nøyaktig $k$ egenverdier (med multipliciteter).
+
+    \section*{Perturbasjon \& kondisjon}
+
+    \textbf{Kondisjonstall for inverterbar matrise.}
+    For en indusert norm:
+    \[
+        \cond(A) = \norm{A} \, \norm{A^{-1}}.
+    \]
+
+    \textbf{Perturbasjon for lineære systemer.}
+    $(A + \Delta A)(x + \Delta x) = b + \Delta b$.
+    For små perturbasjoner:
+    \[
+        \frac{\norm{\Delta \mathbf{x}}}{\norm{\mathbf{x}}}
+        \lesssim
+        \cond(A)\left(\frac{\norm{\Delta A}}{\norm{A}} + \frac{\norm{\Delta \mathbf{b}}}{\norm{\mathbf{b}}}\right).
+    \]
+
+    \textbf{Egenverdi-perturbasjon.}
+    \begin{itemize}[leftmargin=*]
+        \item For normal/Hermitisk $A$: $|\tilde\lambda_i - \lambda_i| \le \norm{E}_2$ for $A+E$.
+        \item Bauer-Fike: hvis $A = V \Lambda V^{-1}$ og $\mu$ er egenverdi til $A+E$, så finnes $i$ med
+              \[
+                  |\mu - \lambda_i| \le \cond(V) \, \norm{E}.
+              \]
+    \end{itemize}
+
+    \section*{Projeksjonsmetoder \& optimalitet}
+
+    Lineært system $A x = b$. Velg trial-rom $\mathcal{V}_k$ og test-rom $\mathcal{W}_k$.
+
+    \textbf{Projeksjonsmetode.}
+    \[
+        \mathbf{x}_k \in \mathbf{x}_0 + \mathcal{V}_k,\qquad
+        \mathbf{r}_k = \mathbf{b} - A \mathbf{x}_k \perp \mathcal{W}_k.
+    \]
+
+    \textbf{Feil vs residual projeksjon.}
+    La $\mathbf{e}_k = \mathbf{x} - \mathbf{x}_k$, $\mathbf{r}_k = A \mathbf{e}_k$.
+    \begin{itemize}[leftmargin=*]
+        \item Feilprojeksjon: $\mathbf{e}_k \perp \mathcal{W}_k$.
+        \item Residualprojeksjon: $\mathbf{r}_k \perp \mathcal{W}_k$.
+    \end{itemize}
+
+    \textbf{Galerkin-optimalitet, SPD-tilfelle.}
+    Anta $A$ SPD og $\mathcal{W}_k = \mathcal{V}_k$. Da gjelder
+    \begin{align*}
+        \norm{\mathbf{x} - \mathbf{x}_k}_A
+                            & =
+        \min_{\mathbf{y} \in \mathbf{x}_0 + \mathcal{V}_k} \norm{\mathbf{x} - \mathbf{y}}_A, \\
+        \norm{\mathbf{v}}_A & := \sqrt{\mathbf{v}^T A \mathbf{v}}.
+    \end{align*}
+
+    \textbf{Residualminimering.}
+    Hvis
+    \[
+        \mathbf{x}_k = \arg\min_{\mathbf{y} \in \mathbf{x}_0 + \mathcal{V}_k} \norm{\mathbf{b} - A \mathbf{y}},
+    \]
+    så er
+    \[
+        \norm{\mathbf{r}_k} = \min_{\mathbf{y} \in \mathbf{x}_0 + \mathcal{V}_k} \norm{\mathbf{b} - A \mathbf{y}}.
+    \]
+    GMRES er et sentralt eksempel på residualminimerende Krylov-metode.
+
+    \section*{Størst nedstigning \& minimal residual}
+
+    \textbf{Størst nedstigning (SPD $A$).}
+    Løs $Ax=b$ ved å minimere
+    \[
+        \varphi(\mathbf{x}) = \tfrac12 \mathbf{x}^\top A \mathbf{x} - \mathbf{b}^T \mathbf{x}.
+    \]
+    Gradient $\mathbf{g}_k = \nabla \varphi(\mathbf{x}_k) = A \mathbf{x}_k - \mathbf{b} = -\mathbf{r}_k$.
+    Oppdatering
+    \begin{align*}
+        \mathbf{x}_{k+1} & = \mathbf{x}_k - \alpha_k \mathbf{g}_k,                                                                                                  \\
+        \alpha_k         & = \frac{\mathbf{g}_k^T \mathbf{g}_k}{\mathbf{g}_k^T A \mathbf{g}_k} = \frac{\mathbf{r}_k^T \mathbf{r}_k}{\mathbf{r}_k^T A \mathbf{r}_k}.
+    \end{align*}
+    Størst nedstigning gir alltid energireduksjon per steg, men kan være treg hvis egenverdiene er spredt.
+
+    \textbf{Én-stegs minimal residual.}
+    Velg $\mathbf{x}_{k+1} = \mathbf{x}_k + \alpha \mathbf{v}_k$ med $\alpha$ som minimerer residualnormen:
+    \[
+        \alpha_k = \operatorname*{argmin}_{\alpha \in \R} \norm{\mathbf{r}_k - \alpha A \mathbf{v}_k}_2.
+    \]
+    Slike steg er mer robuste for ikke-SPD problemer og er ideen bak GMRES-oppdateringer.
+
+    \section*{Krylov-metoder}
+
+    \textbf{Krylovrom.}
+    \[
+        \Kk_k(A,\mathbf{r}_0) = \operatorname{span}\{\mathbf{r}_0, A\mathbf{r}_0, \dots, A^{k-1}\mathbf{r}_0\}.
+    \]
+    Intuisjon: man bygger approksimasjoner fra effekten av polynomer i $A$ på initial residual.
+
+    \textbf{FOM.}
+    Full Orthogonalization Method:
+    \begin{align*}
+        \mathbf{x}_k & \in \mathbf{x}_0 + \Kk_k(A,\mathbf{r}_0), \\
+        \mathbf{r}_k & \perp \Kk_k(A,\mathbf{r}_0).
+    \end{align*}
+    Galerkin-betingelse i 2-normen.
+
+    \textbf{GMRES.}
+    \begin{align*}
+        \mathbf{x}_k          & \in \mathbf{x}_0 + \Kk_k(A,\mathbf{r}_0),                                               \\
+        \norm{\mathbf{r}_k}_2 & = \min_{y \in \mathbf{x}_0 + \Kk_k(A,\mathbf{r}_0)} \norm{\mathbf{b} - A \mathbf{y}}_2.
+    \end{align*}
+
+    \textbf{Arnoldi-prosess.}
+    Bygg ortonormal basis $\mathbf{v}_1,\dots,\mathbf{v}_k$ for $\Kk_k$:
+    \[
+        A V_k = V_{k+1} \bar H_k,
+    \]
+    hvor $\bar H_k$ er en $(k+1)\times k$ øvre Hessenberg.
+
+    \textbf{Lanczos (symmetrisk $A$).}
+    Bygg ortonormal basis $q_1,\dots,q_k$ med tre-term rekurranse:
+    \[
+        A Q_k = Q_k T_k + \beta_k q_{k+1} e_k^T,
+    \]
+    med tridiagonal $T_k$.
+
+    \textbf{Conjugate Gradient (SPD $A$).}
+    CG tilsvarer Lanczos for SPD med Galerkin-betingelse. Egenskaper:
+    \begin{itemize}[leftmargin=*]
+        \item $\mathbf{x}_k \in \mathbf{x}_0 + \Kk_k(A,\mathbf{r}_0)$.
+        \item $\mathbf{r}_k \perp \Kk_k(A,\mathbf{r}_0)$.
+        \item Feilene $\mathbf{e}_k$ er $A$-ortogonale.
+    \end{itemize}
+
+    \section*{Konvergens: GMRES \& CG}
+
+    \textbf{GMRES residual-polynom-bound.}
+    \begin{align*}
+        \mathbf{r}_k & = p_k(A) \mathbf{r}_0, \quad p_k \in \mathcal{P}_k,\ p_k(0)=1.
+    \end{align*}
+    Dermed
+    \begin{align*}
+        \norm{\mathbf{r}_k} & = \min_{\substack{p \in \mathcal{P}_k \\ p(0)=1}} \norm{p(A)\mathbf{r}_0} \le
+        \min_{\substack{p \in \mathcal{P}_k                         \\ p(0)=1}} \max_{\lambda\in\sigma(A)} |p(\lambda)|\,\norm{\mathbf{r}_0}.
+    \end{align*}
+
+    \textbf{CG-feilgrense, SPD.}
+    La $\kappa = \lambda_{\max}(A)/\lambda_{\min}(A)$. Da
+    \[
+        \norm{\mathbf{x}_k - \mathbf{x}}_A \le 2\left(\frac{\sqrt{\kappa}-1}{\sqrt{\kappa}+1}\right)^k \norm{\mathbf{x}_0 - \mathbf{x}}_A.
+    \]
+
+    \section*{GMRES (least squares)}
+
+    Arnoldi:
+    \[
+        A V_k = V_{k+1} \bar H_k.
+    \]
+    Skriv $\mathbf{x}_k = \mathbf{x}_0 + V_k \mathbf{y}_k$, $\mathbf{r}_0 = \beta \mathbf{v}_1$. Residual:
+    \[
+        \mathbf{r}_k = \mathbf{b} - A \mathbf{x}_k = V_{k+1}\left(\beta \mathbf{e}_1 - \bar H_k \mathbf{y}_k\right).
+    \]
+    Så
+    \[
+        \mathbf{y}_k = \arg\min_{y \in \R^k} \norm{\beta \mathbf{e}_1 - \bar H_k y}_2.
+    \]
+
+    \section*{Preconditioning}
+
+    Mål: transformer $A x = b$ til et system med bedre kondisjon.
+
+    \textbf{Venstre preconditioning.}
+    Velg $M \approx A$ enkel å invertere:
+    \[
+        M^{-1} A \mathbf{x} = M^{-1} \mathbf{b}.
+    \]
+
+    \textbf{Høyre preconditioning.}
+    Løs $A M^{-1} y = \mathbf{b}$, så $\mathbf{x} = M^{-1} y$.
+
+    \textbf{Symmetrisk preconditioning (SPD).}
+    \[
+        M^{-1/2} A M^{-1/2} z = M^{-1/2} \mathbf{b},\quad \mathbf{x} = M^{-1/2} z.
+    \]
+
+    En god preconditioner klustrer egenverdier og reduserer effektivt kondisjonstallet, og akselererer dermed Krylov-metoder.
+
+    \section*{Multigrid}
+
+    \textbf{Rom \& operatorer.}
+    Fin-gitter: $A_h \mathbf{x}_h = \mathbf{b}_h$, grov-gitter: $A_H \mathbf{x}_H = \mathbf{b}_H$.
+    \begin{itemize}[leftmargin=*]
+        \item Prolongasjon $P_H^h$: grov til fin.
+        \item Restriksjon $R_h^H$: fin til grov.
+        \item Smoother $S$: demper høyfrekvent feil.
+    \end{itemize}
+
+    \textbf{To-gitter korreksjon.}
+    Gitt tilnærmet $\mathbf{x}_h$ med residual $\mathbf{r}_h = \mathbf{b}_h - A_h \mathbf{x}_h$:
+    \begin{itemize}[leftmargin=*]
+        \item Pre-smooth: $\mathbf{x}_h^{(1)} = S^{\nu_1}(\mathbf{x}_h)$.
+        \item Restrikt residual: $\mathbf{r}_H = R_h^H \mathbf{r}_h$.
+        \item Løs grovt problem: $A_H \mathbf{e}_H = \mathbf{r}_H$.
+        \item Prolonger og korriger: $\mathbf{x}_h^{(2)} = \mathbf{x}_h^{(1)} + P_H^h \mathbf{e}_H$.
+        \item Post-smooth: $\mathbf{x}_h^{\text{new}} = S^{\nu_2}(\mathbf{x}_h^{(2)})$.
+    \end{itemize}
+
+    \section*{Householder/Givens, QR \& Schur}
+
+    \textbf{Householder-reflektor.}
+    Gitt $\mathbf{x} \in \R^n$, velg $\mathbf{v} = \mathbf{x} \pm \norm{\mathbf{x}}_2 \mathbf{e}_1$,
+    \[
+        H = I - 2 \frac{\mathbf{v} \mathbf{v}^T}{\mathbf{v}^T \mathbf{v}}.
+    \]
+    Da er $H$ ortogonal og $H\mathbf{x} = \pm \norm{\mathbf{x}}_2 \mathbf{e}_1$. Brukes for å nullstille elementer under diagonal.
+
+    \textbf{Givens-rotasjon.}
+    For indekser $i,j$ definer
+    \[
+        G =
+        \begin{bmatrix}
+            1 &    &   &   \\
+              & c  &   & s \\
+              &    & I &   \\
+              & -s &   & c
+        \end{bmatrix}, \quad c^2 + s^2 = 1.
+    \]
+    Virker kun på komponentene $i,j$ og nuller en av dem.
+
+    \textbf{QR-faktorisering.}
+    \begin{align*}
+        A & = Q R, \quad Q \text{ ortogonal eller unitær},\ R \text{ øvre triangulær}.
+    \end{align*}
+    Bygges via Gram-Schmidt, Householder eller Givens.
+
+    \textbf{Schur-faktorisering.}
+    For $A \in \C^{n\times n}$:
+    \begin{align*}
+        A & = Q T Q^*, \quad Q \text{ unitær},\ T \text{ øvre triangulær},
+    \end{align*}
+    med egenverdier på diagonalen. Real Schur bruker 1×1 og 2×2 blokker for komplekse par.
+
+    \section*{Usymmetriske egenverdimetoder}
+
+    \textbf{Power-metoden.}
+    \[
+        \mathbf{x}_{k+1} = \frac{A \mathbf{x}_k}{\norm{A \mathbf{x}_k}},
+    \]
+    konvergerer mot egenvektor til største modulus-eigenverdi hvis den er enkel og dominant.
+
+    \textbf{Inverse iteration.}
+    Gitt shift $\sigma$:
+    \[
+        (A - \sigma I) \mathbf{y}_k = \mathbf{x}_k,\quad \mathbf{x}_{k+1} = \frac{\mathbf{y}_k}{\norm{\mathbf{y}_k}}.
+    \]
+    Konvergerer mot egenvektor til egenverdi nærmest $\sigma$.
+
+    \textbf{Shifted inverse \& Rayleigh quotient iteration.}
+    Oppdaterer shift ved Rayleigh-kvotient for raskere konvergens nær en egenpar.
+
+    \textbf{Ortogonal iterasjon.}
+    Anvend power-idéen på flere vektorer, ortonormaliser, og få tilnærmede invariant-underrom.
+
+    \textbf{QR-iterasjon.}
+    Start $A_0 = A$, gjenta
+    \[
+        A_k = Q_k R_k,\quad A_{k+1} = R_k Q_k.
+    \]
+    Da tenderer $A_k$ mot Schur-form og egenverdier dukker opp på diagonalen.
+
+    \textbf{Single-shift QR.}
+    Bruk shift $\mu_k$ og gjør QR på $A_k - \mu_k I$:
+    \[
+        A_k - \mu_k I = Q_k R_k,\quad A_{k+1} = R_k Q_k + \mu_k I.
+    \]
+
+    \textbf{Implicit Q-teorem (Hessenberg QR).}
+    For unreduced Hessenberg-matriser med samme karakteristiske polynom og samme første kolonne i Q, bestemmes de etterfølgende Q-kolonnene opp til faseskift; dette rettferdiggjør effektive implisitte algoritmer.
+
+    \section*{SVD}
+
+    \textbf{SVD.}
+    For $A \in \R^{m\times n}$ finnes ortogonale $U\in\R^{m\times m}$, $V\in\R^{n\times n}$ og diagonal
+    \[
+        \Sigma = \operatorname{diag}(\sigma_1,\dots,\sigma_r,0,\dots)
+    \]
+    med $\sigma_1 \ge \dots \ge \sigma_r > 0$ slik at
+    \[
+        A = U \Sigma V^T.
+    \]
+
+    \textbf{Redusert SVD.}
+    Hvis $\operatorname{rank}(A)=r$:
+    \[
+        A = U_r \Sigma_r V_r^T,
+    \]
+    med kompakt lagring av de ikke-null singulærverdiene.
+
+    \textbf{Beste rang-k approksimasjon.}
+    For $k<r$:
+    \[
+        A_k = U_k \Sigma_k V_k^T
+    \]
+    er den beste rang-k approksimasjonen i både 2-norm og Frobenius-norm:
+    \[
+        \norm{A - A_k}_2 = \sigma_{k+1},\quad \norm{A - A_k}_F^2 = \sum_{i>k} \sigma_i^2.
+    \]
+
+    \textbf{Golub-Kahan SVD-algoritme.}
+    \begin{itemize}[leftmargin=*]
+        \item Bidiagonaliser: reduser $A$ til bidiagonal $B$ med Householder-reflektorer: $A = U_1 B V_1^T$.
+        \item Beregn SVD av $B$ med spesialiserte QR-operasjoner: $B = \tilde U \Sigma \tilde V^T$.
+        \item Sammenstill: $A = (U_1 \tilde U)\,\Sigma\,(V_1 \tilde V)^T$.
+    \end{itemize}
+
+\end{multicols}
+\end{document}

@@ -1,5 +1,8 @@
-\documentclass[a4paper,10pt,oneside]{book}
+\documentclass[a4paper,10pt]{book}
 \input{preamble}
+% Numbering
+\numberwithin{equation}{chapter}
+
 
 \begin{document}
 \frontmatter
@@ -10,6 +13,8 @@
 \subfile{chapters/partI-foundations}
 \subfile{chapters/partII-projections}
 \subfile{chapters/partIII-solvers}
-%\include{backmatter/lectures}
-%\include{backmatter/exercises}
+
+\backmatter
+\appendix
+\input{backmatter/backmatter}
 \end{document}

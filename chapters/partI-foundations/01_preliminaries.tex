@@ -3,8 +3,7 @@
 
 \chapter{Preliminaries}\label{chap:preliminaries}
 
-\section{Notation and Conventions}
-\label{sec:notation-conventions}
+\section{Notation and Conventions}\label{sec:notation-conventions}
 
 We work over the field $\mathbb{K}\in\{\mathbb{R},\mathbb{C}\}$. Statements that require $\mathbb{C}$ are indicated explicitly.
 
@@ -49,11 +48,9 @@ Other common notation:
 
 These conventions are used throughout the text; any deviation will be stated where it occurs.
 
-\section{Matrices}
-\label{sec:matrices}
+\section{Matrices}\label{sec:matrices}
 
-\subsection{Eigenvalues and Eigenvectors}
-\label{subsec:eigs}
+\subsection{Eigenvalues and Eigenvectors}\label{subsec:eigs}
 Let $A\in\mathbb{C}^{n\times n}$. A scalar $\lambda\in\mathbb{C}$ and nonzero vector $\mathbf{v}\in\mathbb{C}^n$ satisfy
 \[
     A\mathbf{v}=\lambda\mathbf{v}\qquad\text{(right eigenpair)}.
@@ -318,7 +315,6 @@ Their positive inverse property makes them particularly well-suited for iterativ
     This matrix satisfies the M-matrix conditions: the diagonal entries are positive, off-diagonal entries are nonpositive, and the matrix is positive definite (hence $A^{-1} > 0$). This structure ensures that the discrete maximum principle holds for the corresponding difference equations.
 \end{example}
 
-
 \subsection{Unitary Matrices}
 
 A matrix $Q \in \mathbb{C}^{n \times n}$ is \emph{unitary} if $Q^H Q = I_n$, where $I_n$ is the $n \times n$ identity matrix. The columns of $Q$ form an orthonormal set, meaning they are mutually orthogonal and each has unit norm.
@@ -331,50 +327,51 @@ Let $Q = [q_1, q_2, \ldots, q_n]$. Then the orthonormality condition is:
     \end{cases}
 \end{equation}
 
-\subsubsection{Examples of Unitary Matrices}
+\begin{example}{Examples of Unitary Matrices}{unitary-examples}
 
-\begin{enumerate}
-    \item \textbf{Identity matrix}: $I_n$ is trivially unitary.
+    \begin{enumerate}
+        \item \textbf{Identity matrix}: $I_n$ is trivially unitary.
 
-    \item \textbf{2D rotation matrices} (real orthogonal):
-          \begin{equation}
-              R(\theta) = \begin{bmatrix}
-                  \cos(\theta) & -\sin(\theta) \\
-                  \sin(\theta) & \cos(\theta)
-              \end{bmatrix}
-          \end{equation}
-          Verification: $R(\theta)^T R(\theta) = I_2$ since $\cos^2(\theta) + \sin^2(\theta) = 1$.
+        \item \textbf{2D rotation matrices} (real orthogonal):
+              \begin{equation}
+                  R(\theta) = \begin{bmatrix}
+                      \cos(\theta) & -\sin(\theta) \\
+                      \sin(\theta) & \cos(\theta)
+                  \end{bmatrix}
+              \end{equation}
+              Verification: $R(\theta)^T R(\theta) = I_2$ since $\cos^2(\theta) + \sin^2(\theta) = 1$.
 
-    \item \textbf{Givens rotation}: $G(i,j,\theta)$ rotates components $i$ and $j$ by angle $\theta$:
-          \begin{equation}
-              G(i,j,\theta) = \begin{bmatrix}
-                  I_{i-1} &   &    &         \\
-                          & c & -s &         \\
-                          & s & c  &         \\
-                          &   &    & I_{n-j}
-              \end{bmatrix}
-          \end{equation}
-          where $c = \cos(\theta)$, $s = \sin(\theta)$, and the $2 \times 2$ rotation block appears at positions $(i,i)$ through $(j,j)$.
+        \item \textbf{Givens rotation}: $G(i,j,\theta)$ rotates components $i$ and $j$ by angle $\theta$:
+              \begin{equation}
+                  G(i,j,\theta) = \begin{bmatrix}
+                      I_{i-1} &   &    &         \\
+                              & c & -s &         \\
+                              & s & c  &         \\
+                              &   &    & I_{n-j}
+                  \end{bmatrix}
+              \end{equation}
+              where $c = \cos(\theta)$, $s = \sin(\theta)$, and the $2 \times 2$ rotation block appears at positions $(i,i)$ through $(j,j)$.
 
-    \item \textbf{Householder reflector}: Given a unit vector $v \in \mathbb{C}^n$ with $\|v\|_2 = 1$:
-          \begin{equation}
-              P = I_n - 2 v v^H
-          \end{equation}
-          This matrix satisfies $P = P^H = P^{-1}$ (it is Hermitian and unitary).
+        \item \textbf{Householder reflector}: Given a unit vector $v \in \mathbb{C}^n$ with $\|v\|_2 = 1$:
+              \begin{equation}
+                  P = I_n - 2 v v^H
+              \end{equation}
+              This matrix satisfies $P = P^H = P^{-1}$ (it is Hermitian and unitary).
 
-          \textbf{Verification of unitarity:}
-          \begin{align}
-              P^H P & = (I_n - 2 v v^H)^2               \\
-                    & = I_n - 4 v v^H + 4 v (v^H v) v^H \\
-                    & = I_n - 4 v v^H + 4 v v^H = I_n
-          \end{align}
+              \textbf{Verification of unitarity:}
+              \begin{align}
+                  P^H P & = (I_n - 2 v v^H)^2               \\
+                        & = I_n - 4 v v^H + 4 v (v^H v) v^H \\
+                        & = I_n - 4 v v^H + 4 v v^H = I_n
+              \end{align}
 
-          \textbf{Geometric interpretation:} For any vector $\mathbf{x}$:
-          \begin{equation}
-              P \mathbf{x} = \mathbf{x} - 2 (v^H \mathbf{x}) v = \mathbf{x} - 2 (\mathbf{x}, v) v
-          \end{equation}
-          This reflects $\mathbf{x}$ across the hyperplane orthogonal to $v$.
-\end{enumerate}
+              \textbf{Geometric interpretation:} For any vector $\mathbf{x}$:
+              \begin{equation}
+                  P \mathbf{x} = \mathbf{x} - 2 (v^H \mathbf{x}) v = \mathbf{x} - 2 (\mathbf{x}, v) v
+              \end{equation}
+              This reflects $\mathbf{x}$ across the hyperplane orthogonal to $v$.
+    \end{enumerate}
+\end{example}
 
 \subsubsection{Properties of Unitary Matrices}
 
@@ -391,475 +388,7 @@ Let $Q = [q_1, q_2, \ldots, q_n]$. Then the orthonormality condition is:
     \item \textbf{QR decomposition}: Any matrix $A$ can be factored as $A = QR$ where $Q$ is unitary and $R$ is upper triangular.
 \end{itemize}
 
-\section{Orthogonal Vectors and Subspaces}
-\label{sec:orthogonal-subspaces}
-
-Orthogonality is one of the most important concepts in numerical linear algebra. It provides both theoretical insight and computational stability, making it essential for developing robust algorithms.
-
-Let $V$ be an inner product space with inner product $\langle \cdot, \cdot \rangle$ and induced norm $\|\cdot\| = \sqrt{\langle \cdot, \cdot \rangle}$. The notion of orthogonality generalizes the familiar concept of perpendicularity from Euclidean geometry.
-
-\begin{definition}{Orthogonal and Orthonormal Sets}{orthogonal-sets}
-    A set of vectors $\{v_1, v_2, \ldots, v_n\} \subset V$ is \emph{orthogonal} if
-    \[
-        \langle v_i, v_j \rangle = 0 \quad \text{for all } i \neq j.
-    \]
-
-    The set is \emph{orthonormal} if it is orthogonal and each vector has unit norm:
-    \[
-        \langle v_i, v_j \rangle = \delta_{ij} \quad \text{for all } i, j \in \{1, 2, \ldots, n\},
-    \]
-    where $\delta_{ij}$ is the Kronecker delta.
-\end{definition}
-
-Orthonormal sets are particularly valuable because they form an ideal basis: coordinates can be computed easily using inner products, and the basis transformation matrix is orthogonal (or unitary), which preserves lengths and angles.
-
-\subsection{QR Decomposition}
-The QR decomposition is a fundamental matrix factorization that uses orthogonal (or unitary) matrices to decompose a given matrix into a product of an orthogonal matrix and an upper triangular matrix.
-
-
-$A\in\mathbb{C}^{m\times n}$ with $m\ge n$ as
-\[
-    A = QR,
-\]
-where $Q\in\mathbb{C}^{m\times m}$ is unitary and $R\in\mathbb{C}^{m\times n}$ is upper triangular.
-When $A$ has full column rank one commonly uses the thin factorization (meaning $m\ge n$, i.e. $A$ might not be square):
-\[
-    A = Q_{\mathrm{thin}} R,\qquad Q_{\mathrm{thin}}\in\mathbb{C}^{m\times n},\;Q_{\mathrm{thin}}^H Q_{\mathrm{thin}}=I_n,\;R\in\mathbb{C}^{n\times n}\ \text{upper triangular},
-\]
-which is unique up to multiplication of $Q_{\mathrm{thin}}$ on the right by a diagonal unitary (in the real case, by signs). The QR factorization is widely used in:
-\begin{itemize}
-    \item Solving least squares problems: $\min_x \|Ax - b\|_2$
-    \item Computing matrix eigenvalues (QR algorithm)
-    \item Orthogonalizing vectors (Gram-Schmidt process)
-    \item Numerical solution of linear systems
-\end{itemize}
-
-\subsection{Gram-Schmidt Process}
-The Gram-Schmidt process (GS) goal is to construct an orthonormal basis from a given set of linearly independent vectors.
-GS transforms any linearly independent set of vectors into an orthonormal set spanning the same subspace.
-
-\begin{theorem}{Gram-Schmidt Theorem}{gram-schmidt-theorem}
-    Let $\{v_1, v_2, \ldots, v_n\}$ be linearly independent vectors in an inner product space $V$. Then there exists a unique orthonormal set $\{q_1, q_2, \ldots, q_n\}$ such that
-    \[
-        \text{span}\{v_1, \ldots, v_k\} = \text{span}\{q_1, \ldots, q_k\} \quad \text{for } k = 1, 2, \ldots, n.
-    \]
-    Moreover, each $q_k$ can be written as a linear combination of $v_1, \ldots, v_k$.
-\end{theorem}
-
-The construction proceeds iteratively: at each step, we remove the components of the current vector that lie in the span of the previously computed orthonormal vectors, then normalize the result.
-
-The orthonormal vectors are defined recursively:
-\begin{align}
-    q_1 & = \frac{v_1}{\|v_1\|},                                 \\
-    q_k & = \frac{u_k}{\|u_k\|}, \quad k = 2, 3, \ldots, n,      \\
-    u_k & = v_k - \sum_{j=1}^{k-1} \langle v_k, q_j \rangle q_j.
-\end{align}
-
-The key insight is that $u_k$ represents the component of $v_k$ orthogonal to the subspace spanned by $\{q_1, \ldots, q_{k-1}\}$.
-
-\begin{algorithm}[H]
-    \caption{Gram-Schmidt}
-    \begin{algorithmic}
-        \Require Linearly independent vectors $v_1, v_2, \ldots, v_n \in \mathbb{R}^m$
-        \Ensure Orthonormal vectors $q_1, q_2, \ldots, q_n \in \mathbb{R}^m$
-        \State $q_1 \leftarrow \frac{v_1}{\|v_1\|}$
-        \For{$k = 2, \ldots, n$}
-        \State $u_k \leftarrow v_k$
-        \For{$j = 1, \ldots, k-1$}
-        \State $u_k \leftarrow u_k - \langle v_k, q_j \rangle q_j$ \Comment{Project out $q_j$ component}
-        \EndFor
-        \State $q_k \leftarrow \frac{u_k}{\|u_k\|}$ \Comment{Normalize}
-        \EndFor
-    \end{algorithmic}
-\end{algorithm}
-
-\subsubsection{QR Decomposition via Gram-Schmidt}
-\label{sec:qr-gram-schmidt}
-Let's illustrate the classical Gram-Schmidt process by computing a (thin) QR decomposition of
-\[
-    A = \begin{bmatrix} 1 & 1 \\ 1 & 0 \\ 0 & 1 \end{bmatrix},
-    \qquad a_1 = \begin{bmatrix} 1 \\ 1 \\ 0 \end{bmatrix},\quad a_2 = \begin{bmatrix} 1 \\ 0 \\ 1 \end{bmatrix}.
-\]
-We seek orthonormal columns $q_1, q_2$ and an upper triangular matrix $R \in \mathbb{R}^{2 \times 2}$ such that $A = \widetilde{Q} R$.
-
-\paragraph{Step-by-step computation:}
-\begin{enumerate}
-    \item Normalize the first column:
-          \begin{align*}
-              r_{11} & = \|a_1\| = \sqrt{1^2 + 1^2 + 0^2} = \sqrt{2},                                       \\
-              q_1    & = \frac{a_1}{r_{11}} = \frac{1}{\sqrt{2}} \begin{bmatrix} 1 \\ 1 \\ 0 \end{bmatrix}.
-          \end{align*}
-
-    \item Orthogonalize and normalize the second column:
-          \begin{align*}
-              r_{12} & = q_1^\top a_2 = \frac{1}{\sqrt{2}} (1 \cdot 1 + 1 \cdot 0 + 0 \cdot 1) = \frac{1}{\sqrt{2}},                                                                                                                            \\
-              u_2    & = a_2 - r_{12} q_1 = \begin{bmatrix} 1 \\ 0 \\ 1 \end{bmatrix} - \frac{1}{\sqrt{2}} \cdot \frac{1}{\sqrt{2}} \begin{bmatrix} 1 \\ 1 \\ 0 \end{bmatrix} = \begin{bmatrix} \frac{1}{2} \\ -\frac{1}{2} \\ 1 \end{bmatrix}, \\
-              r_{22} & = \|u_2\| = \sqrt{\frac{1}{4} + \frac{1}{4} + 1} = \frac{\sqrt{6}}{2},                                                                                                                                                   \\
-              q_2    & = \frac{u_2}{r_{22}} = \frac{1}{\sqrt{6}} \begin{bmatrix} 1 \\ -1 \\ 2 \end{bmatrix}.
-          \end{align*}
-\end{enumerate}
-
-\paragraph{Resulting QR factors:}
-\[
-    \widetilde{Q} = \begin{bmatrix}
-        \frac{1}{\sqrt{2}} & \frac{1}{\sqrt{6}}  \\
-        \frac{1}{\sqrt{2}} & -\frac{1}{\sqrt{6}} \\
-        0                  & \frac{2}{\sqrt{6}}
-    \end{bmatrix}, \qquad
-    R = \begin{bmatrix}
-        \sqrt{2} & \frac{1}{\sqrt{2}} \\
-        0        & \frac{\sqrt{6}}{2}
-    \end{bmatrix}.
-\]
-
-It is straightforward to verify that $\widetilde{Q}^\top \widetilde{Q} = I_2$ and $A = \widetilde{Q} R$.
-
-\begin{remark}{Instability of Classical Gram-Schmidt}{classical-gram-schmidt}
-    In the classical algorithm, rounding errors can cause significant loss of orthogonality, especially when the input vectors are nearly linearly dependent.
-    The computed vectors may be far from orthogonal, undermining the algorithm's purpose.
-\end{remark}
-
-This motivates the modified Gram-Schmidt algorithm, which reorders the computations to improve stability.
-
-\subsection{Modified Gram-Schmidt Process}
-The modified Gram-Schmidt algorithm (MGS) is significantly better numerical stability by performing orthogonalization sequentially against the already computed orthonormal vectors.
-This reduces the accumulation of rounding errors and better preserves orthogonality in finite precision arithmetic.
-\begin{algorithm}[H]
-    \caption{Modified Gram-Schmidt}
-    \begin{algorithmic}
-        \Require Linearly independent vectors $v_1, v_2, \ldots, v_n \in \mathbb{R}^m$
-        \Ensure Orthonormal vectors $q_1, q_2, \ldots, q_n \in \mathbb{R}^m$
-        \For{$k = 1, \ldots, n$}
-        \State $q_k \leftarrow v_k$
-        \For{$j = 1, \ldots, k-1$}
-        \State $r_{jk} \leftarrow \langle q_k, q_j \rangle$ \Comment{Compute projection coefficient}
-        \State $q_k \leftarrow q_k - r_{jk} q_j$ \Comment{Remove $q_j$ component immediately}
-        \EndFor
-        \State $r_{kk} \leftarrow \|q_k\|$
-        \State $q_k \leftarrow \frac{q_k}{r_{kk}}$ \Comment{Normalize}
-        \EndFor
-    \end{algorithmic}
-\end{algorithm}
-
-The key difference is that each orthogonalization step is performed immediately against the current (partially orthogonalized) vector, rather than against the original input vectors.
-
-\subsubsection{QR Decomposition via Modified Gram-Schmidt}
-
-Let's work through the modified Gram-Schmidt (MGS) process for the same example as in Section~\ref{sec:qr-gram-schmidt}:
-\[
-    A = \begin{bmatrix} 1 & 1 \\ 1 & 0 \\ 0 & 1 \end{bmatrix},
-    \qquad a_1 = \begin{bmatrix} 1 \\ 1 \\ 0 \end{bmatrix},\quad a_2 = \begin{bmatrix} 1 \\ 0 \\ 1 \end{bmatrix}.
-\]
-We seek orthonormal columns $q_1, q_2$ and an upper triangular matrix $R \in \mathbb{R}^{2 \times 2}$ such that $A = \widetilde{Q} R$.
-
-\paragraph{Step-by-step computation:}
-\begin{enumerate}
-    \item \textbf{Initialize:} Set $v_1 = a_1$, $v_2 = a_2$.
-    \item \textbf{First vector:}
-          \begin{align*}
-              r_{11} & = \|v_1\| = \sqrt{1^2 + 1^2 + 0^2} = \sqrt{2},                                       \\
-              q_1    & = \frac{v_1}{r_{11}} = \frac{1}{\sqrt{2}} \begin{bmatrix} 1 \\ 1 \\ 0 \end{bmatrix}.
-          \end{align*}
-    \item \textbf{Orthogonalize $v_2$ against $q_1$:}
-          \begin{align*}
-              r_{12} & = q_1^\top v_2 = \frac{1}{\sqrt{2}} (1 \cdot 1 + 1 \cdot 0 + 0 \cdot 1) = \frac{1}{\sqrt{2}},                                                                                                                            \\
-              v_2'   & = v_2 - r_{12} q_1 = \begin{bmatrix} 1 \\ 0 \\ 1 \end{bmatrix} - \frac{1}{\sqrt{2}} \cdot \frac{1}{\sqrt{2}} \begin{bmatrix} 1 \\ 1 \\ 0 \end{bmatrix} = \begin{bmatrix} \frac{1}{2} \\ -\frac{1}{2} \\ 1 \end{bmatrix}.
-          \end{align*}
-    \item \textbf{Normalize $v_2'$ to get $q_2$:}
-          \begin{align*}
-              r_{22} & = \|v_2'\| = \sqrt{\left(\frac{1}{2}\right)^2 + \left(-\frac{1}{2}\right)^2 + 1^2} = \frac{\sqrt{6}}{2}, \\
-              q_2    & = \frac{v_2'}{r_{22}} = \frac{1}{\sqrt{6}} \begin{bmatrix} 1 \\ -1 \\ 2 \end{bmatrix}.
-          \end{align*}
-\end{enumerate}
-
-\paragraph{Resulting QR factors:}
-\[
-    \widetilde{Q} = \begin{bmatrix}
-        \frac{1}{\sqrt{2}} & \frac{1}{\sqrt{6}}  \\
-        \frac{1}{\sqrt{2}} & -\frac{1}{\sqrt{6}} \\
-        0                  & \frac{2}{\sqrt{6}}
-    \end{bmatrix}, \qquad
-    R = \begin{bmatrix}
-        \sqrt{2} & \frac{1}{\sqrt{2}} \\
-        0        & \frac{\sqrt{6}}{2}
-    \end{bmatrix}.
-\]
-
-As with classical Gram-Schmidt, $\widetilde{Q}^\top \widetilde{Q} = I_2$ and $A = \widetilde{Q} R$. However, the MGS process is more robust in finite precision arithmetic, better preserving orthogonality.
-
-\begin{remark}{Comparison with Classical Gram-Schmidt}{mgs-vs-cgs}
-    The numerical results of classical and modified Gram-Schmidt are identical in exact arithmetic, but MGS is much more stable in finite precision. In practice, MGS better preserves orthogonality, especially for nearly linearly dependent columns.
-\end{remark}
-
-While Gram-Schmidt methods provide intuitive insight into orthogonalization, Householder reflections offer a more robust approach for practical computations.
-These transformations are based on geometric reflections and provide better numerical stability.
-
-\subsection{QR Decomposition}
-The QR decomposition is a fundamental matrix factorization that expresses any matrix $A \in \mathbb{C}^{m \times n}$ (with $m \geq n$) as the product $A = QR$, where $Q \in \mathbb{C}^{m \times m}$ is unitary and $R \in \mathbb{C}^{m \times n}$ is upper triangular. When $A$ has full column rank, this decomposition is unique up to signs.
-
-The QR decomposition has numerous applications including:
-\begin{itemize}
-    \item Solving least squares problems: $\min_x \|Ax - b\|_2$
-    \item Computing matrix eigenvalues (QR algorithm)
-    \item Orthogonalizing vectors (Gram-Schmidt process)
-    \item Numerical solution of linear systems
-\end{itemize}
-
-There are several algorithms for computing the QR decomposition, with Householder reflections being the most numerically stable and widely used in practice.
-
-\subsubsection{Householder Reflections for QR}
-The key idea is to use a sequence of Householder reflectors to systematically introduce zeros below the diagonal of $A$. For column $k$, we construct a Householder matrix $P_k$ that zeros out entries $k+1, k+2, \ldots, m$ in that column, while preserving the upper triangular structure already achieved in previous columns.
-
-The complete factorization is:
-\begin{equation}
-    P_n P_{n-1} \cdots P_2 P_1 A = R
-\end{equation}
-where each $P_k$ is a Householder reflector. Since each $P_k$ is unitary, we have:
-\begin{equation}
-    A = \underbrace{P_1^H P_2^H \cdots P_n^H}_{Q} R
-\end{equation}
-
-\subsubsection{Algorithm}
-
-Given a vector $\mathbf{x} \in \mathbb{C}^m$, we construct a Householder reflector $P$ such that $Px = \pm\|\mathbf{x}\|_2 e_1$.
-
-\textbf{Construction of Householder vector:}
-\begin{align}
-    \sigma     & = \begin{cases}
-                       -1 & \text{if } \Re(x_1) > 0    \\
-                       1  & \text{if } \Re(x_1) \leq 0
-                   \end{cases}          \\
-    \mathbf{u} & = \mathbf{x} - \sigma \|\mathbf{x}\|_2 e_1 \\
-    v          & = \frac{\mathbf{u}}{\|\mathbf{u}\|_2}
-\end{align}
-
-The sign choice prevents cancellation when $|x_1| \approx \|\mathbf{x}\|_2$.
-
-\textbf{Result:} $P \mathbf{x} = (I - 2vv^H)\mathbf{x} = -\sigma \|\mathbf{x}\|_2 e_1$
-
-\subsubsection{Full QR Algorithm}
-
-For $k = 1, 2, \ldots, n$:
-\begin{enumerate}
-    \item Extract subcolumn: $\mathbf{x} = A_{k:m,k}$
-    \item Construct Householder vector $v_k$ as above
-    \item Apply reflection: $A_{k:m,k:n} \leftarrow A_{k:m,k:n} - 2v_k(v_k^H A_{k:m,k:n})$
-    \item Store $v_k$ in $A_{k+1:m,k}$ (below diagonal)
-\end{enumerate}
-
-\paragraph{Complexity:}
-The total computational cost is: $2mn^2 - \frac{2}{3}n^3$ flops for $m \times n$ matrix.
-
-\subsubsection{Worked Example}
-
-Consider $A = \begin{bmatrix} 1 & 1 \\ 1 & 2 \\ 1 & 3 \end{bmatrix}$.
-
-\textbf{Step 1 — First column:}
-\begin{itemize}
-    \item $\mathbf{x} = [1, 1, 1]^T$, $\|\mathbf{x}\|_2 = \sqrt{3}$
-    \item $\sigma = -1$ (since $x_1 = 1 > 0$)
-    \item $\mathbf{u} = [1, 1, 1]^T + \sqrt{3}[1, 0, 0]^T = [1+\sqrt{3}, 1, 1]^T$
-    \item $v_1 = \mathbf{u}/\|\mathbf{u}\|_2$
-    \item $P_1 A = \begin{bmatrix} -\sqrt{3} & -2\sqrt{3} \\ 0 & \star \\ 0 & \star \end{bmatrix}$
-\end{itemize}
-
-\textbf{Step 2 — Second column (rows 2:3):}
-Apply similar process to zero out the $(3,2)$ entry.
-
-\textbf{Result:} $R = P_2 P_1 A$ is upper triangular, and $Q = P_1^T P_2^T$.
-
-\subsubsection{Implementation Notes}
-
-\begin{itemize}
-    \item \textbf{Never form $P$ explicitly}: Use the update $A \leftarrow A - 2v(v^H A)$
-    \item \textbf{In-place storage}: Store Householder vectors below the diagonal
-    \item \textbf{Numerical stability}: The algorithm is backward stable with excellent numerical properties
-\end{itemize}
-
-\subsection{Householder Reflections}
-Householder reflections are a powerful tool for orthogonal transformations in numerical linear algebra. They are particularly useful for QR decomposition due to their numerical stability and efficiency.
-
-\begin{definition}{Householder reflection}{def:householder}
-    Let $\mathbf{u} \in \mathbb{R}^n$ be a unit vector. The Householder matrix is
-    \[
-        H \;=\; I - 2uu^\top,
-    \]
-    which represents the reflection across the hyperplane orthogonal to $\mathbf{u}$.
-\end{definition}
-
-Geometrically, $H$ sends $\mathbf{u} \mapsto -\mathbf{u}$ and fixes every vector orthogonal to $\mathbf{u}$.
-
-\begin{figure}[htb]
-    \centering
-    \input{figures/CH_01/householder.tikz}
-    \caption{Householder reflection of $\mathbf{x}$ across the hyperplane orthogonal to $\mathbf{u}$. The projection $\pi_u(\mathbf{x})$ is in grey and the reflected vector $Hx$ is in blue.}
-    \label{fig:householder-reflection}
-\end{figure}
-
-\begin{proposition}{Basic properties}{prop:householder-props}
-    Let $H=I-2uu^\top$ with $\|\mathbf{u}\|=1$. Then
-    \begin{enumerate}
-        \item $H^\top=H$ (symmetric),
-        \item $H^\top H=I$ (orthogonal),
-        \item $H^{-1}=H$ (involutory),
-        \item $H\mathbf{u} = -\mathbf{u}$ and $H\mathbf{v} = \mathbf{v}$ for all $\mathbf{v} \perp \mathbf{u}$,
-        \item $\det(H)=-1$.
-    \end{enumerate}
-\end{proposition}
-\begin{proof}
-    \begin{enumerate}
-        \item is immediate.
-        \item Expand $(I-2uu^\top)^2=I-4uu^\top+4u(\mathbf{u}^\top \mathbf{u})\mathbf{u}^\top=I$.
-        \item Follows from 1. and 2.
-        \item $H\mathbf{u}=\mathbf{u}-2\mathbf{u}(\mathbf{u}^\top \mathbf{u})=\mathbf{u}-2\mathbf{u}=-\mathbf{u}$.
-              If $\mathbf{v}\perp \mathbf{u}$, then $H\mathbf{v}=\mathbf{v}-2\mathbf{u}(\mathbf{u}^\top \mathbf{v})=\mathbf{v}$.
-        \item $\det(H)=\det(I-2uu^\top)=\det(I)\det(I-2u^\top u)=1\cdot(1-2)=-1$.
-    \end{enumerate}
-\end{proof}
-
-\subsubsection{Constructing a Householder reflector}
-
-\begin{theorem}{Vector annihilation}{thm:householder-construct}
-    For any nonzero $\mathbf{x}\in\mathbb{R}^n$, there is a Householder matrix $H$ such that
-    \[
-        Hx = \sigma e_1,\qquad \sigma=\pm\|\mathbf{x}\|.
-    \]
-    A numerically stable choice is $\displaystyle \sigma = -\operatorname{sign}(x_1)\,\|\mathbf{x}\|$ (with $\operatorname{sign}(0)=1$).
-    Define $\mathbf{v}=\mathbf{x}-\sigma e_1$, $\mathbf{u}=\mathbf{v}/\|\mathbf{v}\|$, and set $H=I-2uu^\top$.
-\end{theorem}
-
-\begin{proof}
-    Let $\mathbf{v}=\mathbf{x}-\sigma e_1$ and $\mathbf{u}=\frac{\mathbf{v}}{\|\mathbf{v}\|}$.
-
-    Then $Hx=\mathbf{x}-2u(\mathbf{u}^\top \mathbf{x}) = \mathbf{x} - \frac{2v(\mathbf{v}^\top \mathbf{x})}{\|\mathbf{v}\|^2}$.
-
-    Now $\mathbf{v}^\top \mathbf{x} = \mathbf{x}^\top \mathbf{x} - \sigma x_1 = \|\mathbf{x}\|^2 - \sigma x_1$ and $\|\mathbf{v}\|^2 = (\mathbf{x}-\sigma e_1)^\top(\mathbf{x}-\sigma e_1)=2(\|\mathbf{x}\|^2-\sigma x_1)$.
-
-    Hence $\dfrac{2v(\mathbf{v}^\top \mathbf{x})}{\|\mathbf{v}\|^2}=\mathbf{v}$ and $Hx=\mathbf{x}-\mathbf{v}=\sigma e_1$.
-
-    The sign choice $\sigma=-\operatorname{sign}(x_1)\|\mathbf{x}\|$ maximizes $\|\mathbf{v}\|$ and avoids cancellation when $\mathbf{x}\approx \sigma e_1$.
-\end{proof}
-
-
-\begin{algorithm}[H]
-    \caption{Householder vector (stable sign)}
-    \begin{algorithmic}[1]
-        \Require $\mathbf{x}\in\mathbb{R}^n$, $\mathbf{x}\neq 0$
-        \Ensure $\mathbf{u}$ with $\|\mathbf{u}\|=1$ such that $(I-2uu^\top)\mathbf{x}=\sigma e_1$, where $\sigma=-\operatorname{sign}(x_1)\|\mathbf{x}\|$
-        \State $\alpha \gets \|\mathbf{x}\|$
-        \State $\sigma \gets -\operatorname{sign}(x_1)\,\alpha$ \Comment{take $\operatorname{sign}(0)=1$}
-        \State $\mathbf{v} \gets \mathbf{x}-\sigma e_1$
-        \State $\mathbf{u} \gets \mathbf{v}/\|\mathbf{v}\|$
-        \State \Return $\mathbf{u}$
-    \end{algorithmic}
-\end{algorithm}
-
-\subsubsection{QR decomposition via Householder reflections}
-
-\begin{theorem}{Householder QR}{thm:householder-qr}
-    Let $A\in\mathbb{R}^{m\times n}$ with $m\ge n$. There exist Householder matrices $H_1,\dots,H_n$ such that
-    \[
-        R \;=\; H_n\cdots H_2 H_1 A
-    \]
-    is upper triangular, and with $Q=(H_n\cdots H_1)^\top$ we have $A=QR$.
-\end{theorem}
-
-Algorithmically, process columns $k=1,\dots,n$: apply a Householder reflection to zero out entries $k+1{:}m$ in column $k$, leaving previously formed zeros undisturbed.
-
-\begin{algorithm}[H]
-  \caption{QR Decomposition via Householder Reflections (full \(Q\))}
-  \begin{algorithmic}[1]
-    \Require $A \in \mathbb{R}^{m \times n}$ with $m \ge n$
-    \Ensure $Q \in \mathbb{R}^{m \times m}$ (orthogonal), $R \in \mathbb{R}^{m \times n}$ (upper-trapezoidal) s.t. $A = QR$
-    \State $Q \gets I_m$
-    \For{$k = 1,2,\ldots,n$}
-      \State $\mathbf{x} \gets A_{k:m,\,k}$
-      \If{$\mathbf{x} \ne \mathbf{0}$}
-        \State $\alpha \gets \|\mathbf{x}\|_2$
-        \State $\sigma \gets -\operatorname{sign}(x_1)\,\alpha$ \Comment{$\operatorname{sign}(0)=1$}
-        \State $\mathbf{v} \gets \mathbf{x} - \sigma\,\mathbf{e}_1$
-        \State $\beta \gets \|\mathbf{v}\|_2$
-        \If{$\beta > 0$}
-          \State $\mathbf{u} \gets \mathbf{v}/\beta$
-          \State $H_k \gets I_{m-k+1} - 2\,\mathbf{u}\mathbf{u}^\top$ \Comment{Reflector}
-          \State $A_{k:m,\,k:n} \gets H_k\,A_{k:m,\,k:n}$
-          \State $Q_{k:m,\,:} \gets H_k\,Q_{k:m,\,:}$
-        \EndIf
-      \EndIf
-    \EndFor
-    \State $R \gets A$ \Comment{$A \implies$ upper-trapezoidal}
-    \State $Q \gets Q^\top$ \Comment{$Q\gets H_n\cdots H_1 \implies Q=H_1\cdots H_n$}
-  \end{algorithmic}
-\end{algorithm}
-
-\begin{remark}{Stability and cost}{rem:householder-advantages}
-    Householder QR is backward stable; the computed $\widehat{Q}$ is orthogonal to machine precision, and $\widehat{R}$ is the exact $R$ of a nearby $A+\Delta A$ with small relative $\|\Delta A\|$. The flop count is
-    \[
-        2mn^2 - \tfrac{2}{3}n^3\quad (m\ge n),
-    \]
-    and blocked implementations use cache-efficient matrix–matrix updates.
-\end{remark}
-
-\begin{example}{A $3\times 2$ example}{householder-qr}
-    Let $A=\begin{bmatrix}1&1\\1&0\\0&1\end{bmatrix}$.
-
-    \emph{Step 1.}
-    \begin{align*}
-        a_1 & =(1,1,0)^\top, \quad \|a_1\|=\sqrt2,\quad \sigma_1=-\sqrt2 \\
-        v_1 & =a_1-\sigma_1 e_1=(1+\sqrt2,\,1,\,0)^\top                  \\
-        u_1 & =\frac{v_1}{\|v_1\|}
-    \end{align*}
-    Then
-    \[
-        H_1=I-2u_1u_1^\top
-        =\begin{bmatrix}
-            -\tfrac{1}{\sqrt2} & -\tfrac{1}{\sqrt2} & 0 \\
-            -\tfrac{1}{\sqrt2} & \tfrac{1}{\sqrt2}  & 0 \\
-            0                  & 0                  & 1
-        \end{bmatrix},
-        \qquad
-        A^{(1)}=H_1A=
-        \begin{bmatrix}
-            -\sqrt2 & -\tfrac{1}{\sqrt2} \\
-            0       & -\tfrac{1}{\sqrt2} \\
-            0       & 1
-        \end{bmatrix}.
-    \]
-    \emph{Step 2.} Take the subvector $\mathbf{x}=\bigl(-\tfrac{1}{\sqrt2},\,1\bigr)^\top$, $\|\mathbf{x}\|=\sqrt{\tfrac32}=\tfrac{\sqrt6}{2}$, $\sigma_2=\tfrac{\sqrt6}{2}$.
-    Build a $2\times2$ reflector and embed:
-    \[
-        H_2=
-        \begin{bmatrix}
-            1 & 0                      & 0                      \\
-            0 & -\tfrac{1}{\sqrt3}     & \tfrac{\sqrt2}{\sqrt3} \\
-            0 & \tfrac{\sqrt2}{\sqrt3} & \tfrac{1}{\sqrt3}
-        \end{bmatrix}.
-    \]
-    Then
-    \[
-        R=H_2A^{(1)}=
-        \begin{bmatrix}
-            -\sqrt2 & -\tfrac{1}{\sqrt2} \\
-            0       & \tfrac{\sqrt6}{2}  \\
-            0       & 0
-        \end{bmatrix},
-        \qquad
-        Q=H_1H_2.
-    \]
-    The thin factor is
-    \[
-        \widetilde{Q}=\begin{bmatrix}
-            -\tfrac{1}{\sqrt2} & \tfrac{1}{\sqrt6}  \\
-            -\tfrac{1}{\sqrt2} & -\tfrac{1}{\sqrt6} \\
-            0                  & \tfrac{2}{\sqrt6}
-        \end{bmatrix},
-        \quad
-        \text{so }A=\widetilde{Q}R.
-    \]
-\end{example}
-
-\section{Canonical Forms and Matrix Structure}
-
+\section{Canonical Forms and Matrix Structure}\label{sec:canonical-forms}
 Canonical forms provide standardized representations that reveal the essential structure of mathematical objects. In numerical linear algebra, they serve both theoretical and computational purposes, offering insight into matrix properties and serving as targets for numerical algorithms.
 
 \begin{definition}{Canonical Form}{canonical-form}
@@ -868,7 +397,7 @@ Canonical forms provide standardized representations that reveal the essential s
 
 Understanding canonical forms helps us recognize when two apparently different matrices share the same fundamental properties and provides roadmaps for developing efficient algorithms.
 
-\subsection{Similarity of Matrices}
+\subsection{Similarity of Matrices}\label{subsec:similarity-of-matrices}
 
 Two matrices $A, B \in \mathbb{C}^{n \times n}$ are \emph{similar} if there exists an invertible matrix $X$ such that
 \[
@@ -907,8 +436,7 @@ Similarity defines an equivalence relation on the set of square matrices, partit
 
 Canonical forms are essentially unique representatives of similarity equivalence classes, chosen according to specific rules (e.g., diagonal form for diagonalizable matrices, Jordan form for general matrices).
 
-\subsection{Affine Spaces and Affine Maps}
-\label{sec:affine-spaces}
+\subsection{Affine Spaces and Affine Maps}\label{sec:affine-spaces}
 
 \begin{definition}{Affine subspace}{affine-subspace}
     Let $\mathbb{K}\in\{\mathbb{R},\mathbb{C}\}$. An \emph{affine subspace} of $\mathbb{K}^n$ is a translate of a linear subspace.
@@ -944,9 +472,7 @@ Let $f(\mathbf{x})=A\mathbf{x}+\mathbf{b}$ be an affine map. Then
     \item The composition of two affine maps is affine.
 \end{enumerate}
 
-
-\subsection{Matrix Polynomials}
-\label{sec:polynomials}
+\subsection{Matrix Polynomials}\label{sec:polynomials}
 
 A polynomial $p(t)=\sum_{k=0}^d c_k t^k\in\mathbb{K}[t]$ acts on a matrix $A\in\mathbb{K}^{n\times n}$ by
 \[
@@ -996,8 +522,7 @@ Knowledge of $\mu_A$ determines the smallest polynomial algebra containing $A$.
     \]
 \end{example}
 
-\subsection{Jordan Canonical Form}
-
+\subsection{Jordan Canonical Form}\label{subsec:jordan-canonical-form}
 Jordan form reveals the fine structure of linear transformations, particularly the behavior of eigenspaces and generalized eigenspaces.
 
 A Jordan block of size $k$ with eigenvalue $\lambda$ is the $k \times k$ matrix
@@ -1033,7 +558,7 @@ The Jordan form provides complete information about the eigenvalue structure and
     Despite its theoretical importance, Jordan form is numerically unstable to compute. The structure is highly sensitive to perturbations: arbitrarily small changes in matrix entries can dramatically alter the Jordan block structure. This makes Jordan form unsuitable for practical numerical computation, though it remains valuable for theoretical analysis.
 \end{remark}
 
-\subsection{Schur Decomposition}
+\subsection{Schur Decomposition}\label{subsec:schur-decomposition}
 
 The Schur decomposition provides a numerically stable similarity transformation that triangularizes a matrix while preserving its spectrum.
 
@@ -1088,8 +613,7 @@ The Schur form $T$ satisfies:
     \item Small $\Delta A$ implies small $\Delta T$ (backward stability)
 \end{enumerate}
 
-\subsubsection{QR Algorithm}
-
+\subsubsection{Computing the Schur Decomposition via the QR Algorithm}\label{subsec:qr-schur}
 The QR algorithm computes the Schur decomposition iteratively:
 \begin{algorithm}[ht]
     \caption{Basic QR Algorithm for Schur Decomposition}
@@ -1105,15 +629,32 @@ The QR algorithm computes the Schur decomposition iteratively:
     \end{algorithmic}
 \end{algorithm}
 
-\paragraph{Visualization.} A Householder reflector $P=I-2uu^\top$ flips the component of a vector parallel to $u$ and leaves the orthogonal component unchanged. The figure illustrates $x=\pi_u(x)+(x-\pi_u(x))$ and $Px=-\pi_u(x)+(x-\pi_u(x))$.
+\paragraph{Visualization.}
+A Householder reflector $P=I-2uu^\top$ flips the component of a vector parallel to $u$ and leaves the orthogonal component unchanged. The figure illustrates $x=\pi_u(x)+(x-\pi_u(x))$ and $Px=-\pi_u(x)+(x-\pi_u(x))$.
 \begin{figure}[H]
     \centering
     \input{figures/CH_01/householder-reflection.tikz}
     \caption{Householder reflection across the hyperplane orthogonal to $u$.}
 \end{figure}
 
-\subsubsection{QR via Givens Rotations}
-\label{subsec:givens-qr}
+\paragraph{Applications of the Schur Form}
+
+\begin{itemize}
+    \item Eigenvalue computation: $\lambda_i = t_{ii}$
+    \item Matrix functions: $f(A) = Q f(T) Q^H$
+    \item Stability analysis via triangular structure
+    \item Pseudospectral computations
+\end{itemize}
+
+\begin{example}{}
+    For $A = \begin{bmatrix} 1 & 2 \\ -1 & 4 \end{bmatrix}$, eigenvalues $\lambda = \frac{5 \pm \sqrt{17}}{2}$. Schur form has these on diagonal with unitary $Q$.
+\end{example}
+
+\begin{remark}{Comparison of Jordan and Schur Forms}{jordan-vs-schur}
+    Jordan form reveals block structure but is numerically unstable due to sensitivity to perturbations. The
+    Schur form provides stable triangularization; Jordan blocks can be inferred from $T$ but with care.
+\end{remark}
+\subsubsection{Givens Rotations}\label{subsec:givens-rotations}
 Givens rotations annihilate single entries by acting on two rows at a time. For indices $i<j$ and scalars $c,s$ with $c^2+s^2=1$, define
 \[
     G(i,j;c,s)=\begin{bmatrix}
@@ -1154,91 +695,73 @@ Givens is attractive for sparse and structured problems because each rotation af
     \end{itemize}
 \end{remark}
 
-\section{Diagonal Dominance and Gershgorin Discs}
-\label{sec:gershgorin}
+\section{Gershgorin's Theorem and Diagonal Dominance}\label{sec:gershgorin}
 
-\subsection{Diagonal Dominance and Nonsingularity}
-\begin{definition}{Strict Diagonal Dominance}{strict-dd}
-    A matrix $A=(a_{ij})\in\mathbb{C}^{n\times n}$ is \emph{strictly diagonally dominant by rows} if
+Gershgorin's theorem provides a simple geometric method to localize eigenvalues using only the matrix entries, without computing them explicitly. It reveals a fundamental connection between diagonal dominance and spectral properties, with important consequences for stability and nonsingularity.
+
+\subsection{Gershgorin Discs}\label{subsec:gershgorin-discs}
+
+For a matrix $A=(a_{ij})\in\mathbb{C}^{n\times n}$, define the \emph{off-diagonal row sum}
+\[
+    R_i = \sum_{j\ne i}|a_{ij}|.
+\]
+The \emph{Gershgorin disc} centered at the diagonal entry $a_{ii}$ is
+\[
+    D_i = \{ z\in\mathbb{C} : |z-a_{ii}|\le R_i\}.
+\]
+
+\begin{theorem}{Gershgorin Circle Theorem}{gershgorin}
+    Every eigenvalue of $A$ lies in at least one Gershgorin disc:
     \[
-        |a_{ii}| > \sum_{\substack{j=1\\ j\ne i}}^n |a_{ij}|,\qquad i=1,\dots,n.
+        \sigma(A)\subseteq \bigcup_{i=1}^n D_i.
     \]
-\end{definition}
-
-\begin{theorem}{Levy--Desplanques}{levy-desplanques}
-    If $A$ is strictly diagonally dominant by rows, then $A$ is nonsingular.
+    Moreover, if $k$ discs form a connected component that is disjoint from the remaining $n-k$ discs, then exactly $k$ eigenvalues (counting multiplicities) lie in that component.
 \end{theorem}
 
-\begin{definition}{Irreducible Matrix}{irreducible}
-    $A\in\mathbb{C}^{n\times n}$ is \emph{irreducible} if there is no permutation $P$ such that $PAP^T$ is block upper triangular with a zero block below the diagonal. Equivalently, the directed graph of $A$ is strongly connected.
-\end{definition}
-
-\begin{theorem}{Varga's criterion}{varga}
-    If $A$ is irreducible and diagonally dominant with at least one strict inequality, then $A$ is nonsingular.
-\end{theorem}
-
-These criteria are useful for discretizations of elliptic PDEs (e.g., Poisson), where stencil couplings yield (often irreducible) diagonally dominant matrices.
-
-\subsection{Gershgorin Circle Theorem}
-\begin{definition}{Gershgorin row discs}{gershgorin-discs}
-    For $A=(a_{ij})\in\mathbb{C}^{n\times n}$, define radii $R_i=\sum_{j\ne i}|a_{ij}|$. The \emph{row discs} are
+\begin{proof}[Proof]
+    Let $\lambda$ be an eigenvalue with eigenvector $\mathbf{v}$. Choose index $m$ where $|v_m|=\|\mathbf{v}\|_\infty$. The $m$-th component of $A\mathbf{v}=\lambda\mathbf{v}$ gives
     \[
-        D(a_{ii},R_i)=\{ z\in\mathbb{C} : |z-a_{ii}|\le R_i\}.
+        \lambda v_m = a_{mm}v_m + \sum_{j\ne m} a_{mj} v_j.
     \]
-\end{definition}
-
-\begin{theorem}{Gershgorin}{gershgorin}
-    The spectrum satisfies
+    Rearranging:
     \[
-        \sigma(A)\subseteq \bigcup_{i=1}^n D(a_{ii},R_i).
+        |\lambda-a_{mm}|\cdot|v_m| = \left|\sum_{j\ne m} a_{mj} v_j\right| \le \sum_{j\ne m}|a_{mj}|\,|v_j| \le R_m\,|v_m|,
     \]
-\end{theorem}
+    hence $\lambda \in D_m$.
+
+    The separation property follows by continuity: consider the homotopy $A(t)=D+tH$ where $D=\operatorname{diag}(a_{11},\dots,a_{nn})$ and $H=A-D$. At $t=0$, eigenvalues are $\{a_{ii}\}$; at $t=1$, they reach $\sigma(A)$. Eigenvalues vary continuously with $t$, and isolated disc components trap eigenvalues by topological degree arguments.
+\end{proof}
 
 \begin{figure}[H]
     \centering
     \input{figures/CH_01/gershgorin-discs.tikz}
-    \caption{Gershgorin row discs $D(a_{ii},R_i)$ enclosing the spectrum $\sigma(A)$ in the complex plane.}
+    \caption{Gershgorin discs $D_i$ in the complex plane. Each eigenvalue must lie within at least one disc. Isolated disc clusters contain a number of eigenvalues equal to the number of discs in the cluster.}
     \label{fig:gershgorin-discs}
 \end{figure}
 
-\begin{proof}[Proof sketch]
-    Let $A\mathbf{v}=\lambda \mathbf{v}$, choose $m$ with $|v_m|=\|\mathbf{v}\|_\infty$. From the $m$th equation,
-    \[
-        (\lambda-a_{mm})v_m=\sum_{j\ne m} a_{mj} v_j, \quad \Rightarrow\quad |
-        \lambda-a_{mm}|\le \sum_{j\ne m}|a_{mj}|\,\frac{|v_j|}{|v_m|}\le R_m.
-    \]
+\paragraph{Irreducible matrices.}
+A matrix $A$ is \emph{irreducible} if its directed graph is strongly connected, or equivalently, no permutation reduces $A$ to block upper-triangular form with a zero block below the diagonal. For irreducible matrices, if any eigenvalue lies on the boundary of one disc, it must lie on the boundary of \emph{all} discs—a strong global constraint.
+
+\subsection{Diagonal Dominance and Nonsingularity}\label{subsec:diagonal-dominance}
+
+A matrix $A$ is \emph{strictly diagonally dominant by rows} if
+\[
+    |a_{ii}| > R_i \qquad \text{for all } i=1,\dots,n.
+\]
+Geometrically, this means each Gershgorin disc $D_i$ excludes the origin.
+
+\paragraph{Levy–Desplanques theorem.} If $A$ is strictly diagonally dominant, then $A$ is nonsingular.
+
+\begin{proof}[Proof]
+    Since $0\notin D_i$ for any $i$, Gershgorin's theorem implies $0\notin\sigma(A)$.
 \end{proof}
 
-\begin{theorem}{Separation}{gershgorin-separation}
-    If the union of discs can be partitioned into two disjoint groups $S_1, S_2$, then $A$ has as many eigenvalues (counting multiplicities) in $S_k$ as the number of discs in $S_k$.
-\end{theorem}
+\paragraph{Varga's criterion (irreducible case).} If $A$ is irreducible and weakly diagonally dominant ($|a_{ii}|\ge R_i$ for all $i$) with strict inequality for at least one row, then $A$ is nonsingular.
 
-\begin{theorem}{Boundary for irreducible matrices}{gershgorin-irreducible}
-    If $A$ is irreducible and an eigenvalue lies on the boundary of one disc, then it lies on the boundary of all discs.
-\end{theorem}
+\begin{proof}[Proof sketch]
+    If $0$ were an eigenvalue, irreducibility forces $0$ to lie on the boundary of all discs. But at least one disc strictly excludes the origin, a contradiction.
+\end{proof}
 
-\begin{remark}{Homotopy and continuity}{gershgorin-homotopy}
-    Consider $A(t)=D+tH$ with $D=\operatorname{diag}(a_{11},\dots,a_{nn})$ and $H=A-D$. Eigenvalues vary continuously with $t$, and Gershgorin discs track their locations from $\{a_{ii}\}$ at $t=0$ to $\sigma(A)$ at $t=1$; this provides intuition for perturbations.
-\end{remark}
-
-Convergence: subdiagonal entries $\to 0$, eigenvalues shift to diagonal.
-
-\paragraph{Applications of the Schur Form}
-
-\begin{itemize}
-    \item Eigenvalue computation: $\lambda_i = t_{ii}$
-    \item Matrix functions: $f(A) = Q f(T) Q^H$
-    \item Stability analysis via triangular structure
-    \item Pseudospectral computations
-\end{itemize}
-
-\begin{example}{}
-    For $A = \begin{bmatrix} 1 & 2 \\ -1 & 4 \end{bmatrix}$, eigenvalues $\lambda = \frac{5 \pm \sqrt{17}}{2}$. Schur form has these on diagonal with unitary $Q$.
-\end{example}
-
-\begin{remark}{Comparison of Jordan and Schur Forms}{jordan-vs-schur}
-    Jordan form reveals block structure but is numerically unstable due to sensitivity to perturbations. The
-    Schur form provides stable triangularization; Jordan blocks can be inferred from $T$ but with care.
-\end{remark}
+\paragraph{Perturbation insight.} Consider the homotopy $A(t)=D+tH$. At $t=0$, eigenvalues coincide with diagonal entries; as $t\to 1$, they move continuously within shrinking discs. This perspective explains why diagonal dominance stabilizes spectra under perturbations and why iterative methods (which implicitly reduce off-diagonal coupling) drive eigenvalues toward diagonal entries.
 
 \end{document}

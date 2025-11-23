@@ -1,0 +1,468 @@
+\documentclass[10pt,a4paper, landscape]{article}
+\input{preamble}
+% Multicolumn cheat sheet
+\usepackage{multicol}
+% Landscape
+\usepackage{lscape}
+
+% No fancy header/footer, margins, etc.
+\pagestyle{empty}
+\geometry{top=1cm, bottom=1cm, left=1cm, right=1cm}
+\setlength\columnsep{0.25cm}
+% Make section titles smaller
+\usepackage{sectsty}
+\sectionfont{\normalsize\bfseries}
+\subsectionfont{\small\bfseries}
+
+\begin{document}
+% Smaller font size
+\footnotesize
+\begin{multicols}{4}
+    \textbf{Eigenvalues \& eigenvectors.}
+    \[
+        A \mathbf{x} = \lambda \mathbf{x},\quad \mathbf{x} \ne 0,\ \lambda \in \C.
+    \]
+    Spectrum: $\sigma(A) = \{\lambda \in \C : \det(A - \lambda I) = 0\}$.
+
+    \textbf{Jordan form.}
+    $A$ is similar to a Jordan matrix $J$: $A = P J P^{-1}$ where
+    \[
+        J    = \operatorname{diag}(J_1,\dots,J_s),
+        ,\quad J_i  =
+        \begin{bmatrix}
+            \lambda_i & 1      &        & 0         \\
+                      & \ddots & \ddots &           \\
+                      &        & \ddots & 1         \\
+            0         &        &        & \lambda_i
+        \end{bmatrix}.
+    \]
+    \textbf{Normal, Hermitian, orthogonal, unitary, skew symmetric.}
+    \begin{itemize}[leftmargin=*]
+        \item Normal: $A^* A = A A^*$.
+        \item Hermitian: $A^* = A$ (real case: symmetric).
+        \item Skew symmetric: $A^T = -A$.
+        \item Orthogonal: $Q^T Q = I$ (real unitary).
+        \item Unitary: $U^* U = I$.
+    \end{itemize}
+
+    \textbf{Positive definite, diagonal dominance.}
+    \begin{itemize}[leftmargin=*]
+        \item Positive definite: $\mathbf{x}^* A \mathbf{x} > 0$ for all $x \ne 0$.
+        \item Strict diagonal dominance by rows:
+              \[
+                  |a_{ii}| > \sum_{j \ne i} |a_{ij}|
+                  \quad\forall i.
+              \]
+    \end{itemize}
+
+    \textbf{Vector norms, matrix \& operator norms.}
+    \begin{itemize}[leftmargin=*]
+        \item Vector norm: $\norm{\cdot}: \C^n \to \R$ s.t. positivity, homogeneity, triangle inequality.
+        \item Induced matrix norm:
+              \[
+                  \norm{A} = \max_{\mathbf{x} \ne 0} \frac{\norm{A\mathbf{x}}}{\norm{\mathbf{x}}}.
+              \]
+        \item Examples for $\mathbf{x} \in \C^n$:
+              \[
+                  \norm{\mathbf{x}}_1       = \sum_i |\mathbf{x}_i|,
+                  , \; \norm{\mathbf{x}}_2      = \sqrt{\sum_i |\mathbf{x}_i|^2},
+                  , \; \norm{\mathbf{x}}_\infty = \max_i |\mathbf{x}_i|.
+              \]
+    \end{itemize}
+
+    \textbf{Inner products \& inner product norms.}
+    \begin{itemize}[leftmargin=*]
+        \item Inner product: $\ip{\cdot}{\cdot}$ sesquilinear, Hermitian, positive definite.
+        \item Induced norm: $\norm{\mathbf{x}} = \sqrt{\ip{\mathbf{x}}{\mathbf{x}}}$.
+    \end{itemize}
+
+    \textbf{Rank, nullity, kernel, range.}
+    \begin{itemize}[leftmargin=*]
+        \item Kernel: $\kernel(A) = \{\mathbf{x} : A\mathbf{x} = 0\}$.
+        \item Range: $\range(A) = \{A\mathbf{x} : \mathbf{x} \in \C^n\}$.
+        \item Rank: $\operatorname{rank}(A) = \dim \range(A)$.
+        \item Rank nullity: $\operatorname{rank}(A) + \dim \kernel(A) = n$.
+    \end{itemize}
+
+    \textbf{Existence \& uniqueness for $A\mathbf{x} = \mathbf{b}$.}
+    \begin{itemize}[leftmargin=*]
+        \item Unique solution for all $\mathbf{b}$ iff $A$ is nonsingular $\iff \det(A) \ne 0 \iff \kernel(A) = \{0\}$.
+        \item Solution exists for given $\mathbf{b}$ iff $\mathbf{b} \in \range(A)$.
+    \end{itemize}
+
+    \textbf{Similarity transformations.}
+    $A,B$ similar if $\exists$ invertible $P$ such that $B = P^{-1} A P$.
+    Similar matrices have same eigenvalues and characteristic polynomial.
+
+    \textbf{Fixed point iterations for $A\mathbf{x} = \mathbf{b}$.}
+    Write $\mathbf{x} = M \mathbf{x} + \mathbf{c}$ with iteration
+    \[
+        \mathbf{x}_{k+1} = M \mathbf{x}_k + \mathbf{c}.
+    \]
+    Iteration matrix $M$. Convergence for every $\mathbf{x}_0$ iff $\rho(M) < 1$.
+
+    \textbf{Spectral radius.}
+    \[
+        \rho(A) = \max_{\lambda \in \sigma(A)} |\lambda|.
+    \]
+
+    \textbf{Gershgorin theorem.}
+    Row disks
+    \[
+        D_i = \left\{ z \in \C : |z - a_{ii}| \le \sum_{j \ne i} |a_{ij}| \right\}.
+    \]
+    Then $\sigma(A) \subset \bigcup_{i=1}^n D_i$.
+    If a connected component of $\bigcup_i D_i$ contains exactly $k$ disks, it contains exactly $k$ eigenvalues counting multiplicity.
+
+    \section*{Perturbation \& conditioning}
+
+    \textbf{Condition number of a nonsingular matrix.}
+    For an induced norm:
+    \[
+        \cond(A) = \norm{A}\,\norm{A^{-1}}.
+    \]
+
+    \textbf{Linear systems perturbation.}
+    $(A + \Delta A)(x + \Delta x) = b + \Delta b$.
+    For small perturbations:
+    \[
+        \frac{\norm{\Delta \mathbf{x}}}{\norm{\mathbf{x}}}
+        \lesssim
+        \cond(A)\left(
+        \frac{\norm{\Delta A}}{\norm{A}} + \frac{\norm{\Delta \mathbf{b}}}{\norm{\mathbf{b}}}
+        \right).
+    \]
+
+    \textbf{Eigenvalue perturbation.}
+    \begin{itemize}[leftmargin=*]
+        \item Normal or Hermitian $A$:
+              \[
+                  |\tilde\lambda_i - \lambda_i| \le \norm{E}_2
+                  \quad\text{for } A+E.
+              \]
+        \item Bauer Fike: if $A = V \Lambda V^{-1}$, $\mu$ eigenvalue of $A+E$ then
+              \[
+                  \exists i:|\mu - \lambda_i| \le \cond(V)\,\norm{E}.
+              \]
+    \end{itemize}
+
+    \section*{Projection methods \& optimality}
+
+    Linear system $Ax = b$. Choose trial space $\mathcal{V}_k$ and test space $\mathcal{W}_k$.
+
+    \textbf{Projection method.}
+    \[
+        \mathbf{x}_k \in \mathbf{x}_0 + \mathcal{V}_k,\qquad
+        \mathbf{r}_k = \mathbf{b} - A \mathbf{x}_k \perp \mathcal{W}_k.
+    \]
+
+    \textbf{Error vs residual projection.}
+    Let $\mathbf{e}_k = \mathbf{x} - \mathbf{x}_k$, $\mathbf{r}_k = A \mathbf{e}_k$.
+    \begin{itemize}[leftmargin=*]
+        \item Error projection: $\mathbf{e}_k \perp \mathcal{W}_k$.
+        \item Residual projection: $\mathbf{r}_k \perp \mathcal{W}_k$.
+    \end{itemize}
+
+    \textbf{Galerkin optimality, SPD case.}
+    Assume $A$ SPD and $\mathcal{W}_k = \mathcal{V}_k$.
+    Then $\mathbf{x}_k$ satisfies
+    \begin{align*}
+        \norm{\mathbf{x} - \mathbf{x}_k}_A
+                            & =
+        \min_{\mathbf{y} \in \mathbf{x}_0 + \mathcal{V}_k} \norm{\mathbf{x} - \mathbf{y}}_A, \\
+        \norm{\mathbf{v}}_A & := \sqrt{\mathbf{v}^T A \mathbf{v}}.
+    \end{align*}
+
+    \textbf{Residual minimization.}
+    If $\mathbf{x}_k$ satisfies
+    \[
+        \mathbf{x}_k = \arg\min_{\mathbf{y} \in \mathbf{x}_0 + \mathcal{V}_k} \norm{\mathbf{b} - A \mathbf{y}},
+    \]
+    then
+    \[
+        \norm{\mathbf{r}_k} = \min_{\mathbf{y} \in \mathbf{x}_0 + \mathcal{V}_k} \norm{\mathbf{b} - A \mathbf{y}}.
+    \]
+    GMRES is the key example.
+
+    \section*{Steepest Descent \& Min. Residual}
+
+    \textbf{Steepest Descent (SPD $A$).}
+    Solve $Ax = b$, equivalently minimize
+    \[
+        \varphi(\mathbf{x}) = \tfrac12 \mathbf{x}^\top A \mathbf{x} - \mathbf{b}^T \mathbf{x}.
+    \]
+    Gradient is $\mathbf{g}_k = \nabla \varphi(\mathbf{x}_k) = A \mathbf{x}_k - \mathbf{b} = -\mathbf{r}_k$.
+    Update
+    \begin{align*}
+        \mathbf{x}_{k+1} & = \mathbf{x}_k - \alpha_k \mathbf{g}_k,                                                                                                  \\
+        \alpha_k         & = \frac{\mathbf{g}_k^T \mathbf{g}_k}{\mathbf{g}_k^T A \mathbf{g}_k} = \frac{\mathbf{r}_k^T \mathbf{r}_k}{\mathbf{r}_k^T A \mathbf{r}_k}.
+    \end{align*}
+    \textbf{One step minimal residual.}
+    Choose $\mathbf{x}_{k+1} = \mathbf{x}_k + \alpha \mathbf{v}_k$ with direction $\mathbf{v}_k$ and $\alpha$ minimizing
+    $\norm{\mathbf{b} - A(\mathbf{x}_k + \alpha \mathbf{v}_k)}_2$:
+    \[
+        \alpha_k
+        =
+        \operatorname*{argmin}_{\alpha \in \R}
+        \norm{\mathbf{r}_k - \alpha A \mathbf{v}_k}_2.
+    \]
+
+    \section*{Krylov space methods}
+
+    \textbf{Krylov subspace.}
+    \[
+        \Kk_k(A,\mathbf{r}_0)
+        =
+        \operatorname{span}\{\mathbf{r}_0, A \mathbf{r}_0, \dots, A^{k-1} \mathbf{r}_0\}.
+    \]
+    Intuition: We build approximations from information gathered by multiplying with $A$.
+
+    \textbf{FOM.}
+    Full Orthogonalization Method:
+    \begin{align*}
+        \mathbf{x}_k & \in \mathbf{x}_0 + \Kk_k(A,\mathbf{r}_0), \\
+        \mathbf{r}_k & \perp \Kk_k(A,\mathbf{r}_0).
+    \end{align*}
+    Galerkin condition in the 2 inner product.
+
+    Intuition: We choose $\mathbf{x}_k$ so that the error is orthogonal to the Krylov space.
+
+    \textbf{GMRES.}
+    \begin{align*}
+        \mathbf{x}_k          & \in \mathbf{x}_0 + \Kk_k(A,\mathbf{r}_0),                                               \\
+        \norm{\mathbf{r}_k}_2 & = \min_{y \in \mathbf{x}_0 + \Kk_k(A,\mathbf{r}_0)} \norm{\mathbf{b} - A \mathbf{y}}_2.
+    \end{align*}
+    \textbf{Arnoldi process.}
+    Build orthonormal basis $\mathbf{v}_1,\dots,\mathbf{v}_k$ for $\Kk_k(A,\mathbf{r}_0)$:
+    \[
+        A V_k = V_{k+1} \bar H_k,
+    \]
+    where $V_k = [\mathbf{v}_1,\dots,\mathbf{v}_k]$ and $\bar H_k$ is $(k+1)\times k$ upper Hessenberg.
+
+    \textbf{Lanczos (symmetric $A$).}
+    Build orthonormal basis $q_1,\dots,\mathbf{q}_k$ for $\Kk_k(A,q_1)$ with a three term recurrence
+    \[
+        A Q_k = Q_k T_k + \beta_k \mathbf{q}_{k+1} \mathbf{e}_k^T,
+    \]
+    where $Q_k = [q_1,\dots,\mathbf{q}_k]$ and $T_k$ is tridiagonal symmetric.
+
+    \textbf{Conjugate Gradient (SPD $A$).}
+    CG is equivalent to Lanczos on SPD matrices plus Galerkin condition.
+    Properties:
+    \begin{itemize}[leftmargin=*]
+        \item $\mathbf{x}_k \in \mathbf{x}_0 + \Kk_k(A,\mathbf{r}_0)$.
+        \item $\mathbf{r}_k \perp \Kk_k(A,\mathbf{r}_0)$.
+        \item Errors $\mathbf{e}_k$ are $A$ orthogonal.
+    \end{itemize}
+
+    \section*{Convergence: GMRES \& CG}
+
+    \textbf{GMRES residual polynomial bound.}
+    \begin{align*}
+        \mathbf{r}_k & = p_k(A) \mathbf{r}_0,          \\
+        p_k          & \in \mathcal{P}_k,\ p_k(0) = 1.
+    \end{align*}
+    Hence
+    \begin{align*}
+        \norm{\mathbf{r}_k} =
+        \min_{\substack{p \in \mathcal{P}_k \\ p(0)=1}}
+        \norm{p(A) \mathbf{r}_0}  \le
+        \min_{\substack{p \in \mathcal{P}_k \\ p(0)=1}}
+        \max_{\lambda \in \sigma(A)} |p(\lambda)|\,\norm{\mathbf{r}_0}.
+    \end{align*}
+
+    \textbf{CG error bound, SPD case.}
+    Let $\kappa = \lambda_{\max}(A)/\lambda_{\min}(A)$.
+    Then
+    \[
+        \norm{\mathbf{x}_k - \mathbf{x}}_A
+        \le
+        2\left(\frac{\sqrt{\kappa}-1}{\sqrt{\kappa}+1}\right)^k
+        \norm{\mathbf{x}_0 - \mathbf{x}}_A.
+    \]
+
+    \section*{GMRES (least squares)}
+
+    Arnoldi process:
+    \[
+        A V_k = V_{k+1} \bar H_k,
+    \]
+    where $V_k$ has orthonormal columns spanning $\Kk_k(A,\mathbf{r}_0)$ and $\bar H_k$ is $(k+1)\times k$ upper Hessenberg.
+
+    Write $\mathbf{x}_k = \mathbf{x}_0 + V_k \mathbf{y}_k$, $\mathbf{r}_0 = \beta \mathbf{v}_1$.
+    Residual:
+    \[
+        \mathbf{r}_k = b - A \mathbf{x}_k = V_{k+1}\left(\beta \mathbf{e}_1 - \bar H_k \mathbf{y}_k\right).
+    \]
+    So
+    \[
+        \mathbf{y}_k = \arg\min_{y \in \R^k} \norm{\beta \mathbf{e}_1 - \bar H_k y}_2.
+    \]
+
+    \section*{Preconditioning}
+
+    Goal: transform $Ax = b$ into an equivalent system with better conditioning.
+
+    \textbf{Left preconditioning.}
+    Choose $M \approx A$, easy to invert:
+    \[
+        M^{-1} A \mathbf{x} = M^{-1} \mathbf{b}.
+    \]
+
+    \textbf{Right preconditioning.}
+    Solve $A M^{-1} y = \mathbf{b}$, then $\mathbf{x} = M^{-1} y$.
+    \textbf{Symmetric preconditioning.}
+    For SPD:
+    \[
+        M^{-1/2} A M^{-1/2} z = M^{-1/2} \mathbf{b},\quad \mathbf{x} = M^{-1/2} z.
+    \]
+
+    \section*{Multigrid}
+
+    \textbf{Spaces \& operators.}
+    Let $A_h \mathbf{x}_h = \mathbf{b}_h$ on fine grid, coarse grid $A_H \mathbf{x}_h = \mathbf{b}_H$.
+    \begin{itemize}[leftmargin=*]
+        \item Prolongation $P_H^h$: coarse to fine.
+        \item Restriction $\mathbf{r}_h^H$: fine to coarse.
+        \item Smoother $S$: iteration that damps high frequency error.
+    \end{itemize}
+
+    \textbf{Two grid correction.}
+    Given approximate $\mathbf{x}_h$ with residual $\mathbf{r}_h = \mathbf{b}_h - A_h \mathbf{x}_h$:
+    \begin{itemize}[leftmargin=*]
+        \item Pre smooth: $\mathbf{x}_h^{(1)} = S^{\nu_1}(\mathbf{x}_h)$.
+        \item Restrict residual: $\mathbf{r}_H = \mathbf{r}_h^H \mathbf{r}_h$.
+        \item Solve coarse problem: $A_H \mathbf{e}_H = \mathbf{r}_H$.
+        \item Prolongate and correct: $\mathbf{x}_h^{(2)} = \mathbf{x}_h^{(1)} + P_H^h \mathbf{e}_H$.
+        \item Post smooth: $\mathbf{x}_h^{\text{new}} = S^{\nu_2}(\mathbf{x}_h^{(2)})$.
+    \end{itemize}
+
+    \section*{Householder/Givens, QR \& Schur}
+
+    \textbf{Householder reflector.}
+    Given $\mathbf{x} \in \R^n$, choose $\mathbf{v} = \mathbf{x} \pm \norm{\mathbf{x}}_2 \mathbf{e}_1$,
+    \[
+        H = I - 2 \frac{\mathbf{v} \mathbf{v}^T}{\mathbf{v}^T \mathbf{v}}.
+    \]
+    Then $H$ is orthogonal and $H \mathbf{x} = \pm \norm{\mathbf{x}}_2 \mathbf{e}_1$. Used to zero entries below diagonal.
+
+    \textbf{Givens rotation.}
+    For indices $i,j$ define
+    \[
+        G =
+        \begin{bmatrix}
+            1 &    &   &   \\
+              & c  &   & s \\
+              &    & I &   \\
+              & -s &   & c
+        \end{bmatrix},
+        \quad
+        c^2 + s^2 = 1.
+    \]
+    Acts only on components $i,j$ to zero one of them.
+
+    \textbf{QR factorization.}
+    \begin{align*}
+        A  = Q R, \quad Q  \text{ orthogonal or unitary},\ R \text{ upper triangular}.
+    \end{align*}
+    Constructed via Gram Schmidt, Householder, or Givens.
+
+    \textbf{Schur factorization.}
+
+    For $A \in \C^{n\times n}$:
+    \begin{align*}
+        A & = Q T Q^\star, \quad Q \text{ unitary},\ T \text{ upper tri.},
+    \end{align*}
+    with eigenvalues of $A$ on the diagonal of $T$.
+
+    Real Schur: $A = Q T Q^T$ with $T$ real quasi upper triangular with $1\times1$ and $2\times2$ blocks.
+
+    \section*{Unsymmetric eigenvalue methods}
+
+    \textbf{Power method.}
+    \[
+        \mathbf{x}_{k+1} = \frac{A \mathbf{x}_k}{\norm{A \mathbf{x}_k}},
+    \]
+    converges to eigenvector of eigenvalue with largest modulus if simple and dominant.
+
+    \textbf{Inverse iteration.}
+    Given shift $\sigma$:
+    \[
+        (A - \sigma I) \mathbf{y}_k = \mathbf{x}_k,\quad
+        \mathbf{x}_{k+1} = \frac{\mathbf{y}_k}{\norm{\mathbf{y}_k}}.
+    \]
+    Converges to eigenvector of eigenvalue closest to $\sigma$.
+
+    \textbf{Shifted inverse iteration \& Rayleigh quotient iteration.}
+    Improve convergence by updating $\sigma$ using Rayleigh quotient.
+
+    \textbf{Orthogonal iteration.}
+    Apply power method to several vectors at once then orthonormalize, approximates invariant subspace.
+
+    \textbf{QR iteration.}
+    Given $A_0 = A$, repeat
+    \[
+        A_k = Q_k \mathbf{r}_k,\quad
+        A_{k+1} = \mathbf{r}_k Q_k.
+    \]
+    Then $A_k$ tends to Schur form, eigenvalues appear on diagonal.
+
+    \textbf{Single shift QR.}
+    Use shift $\mu_k$ (for instance Wilkinson shift) and perform QR on $A_k - \mu_k I$:
+    \[
+        A_k - \mu_k I = Q_k \mathbf{r}_k,\quad
+        A_{k+1} = \mathbf{r}_k Q_k + \mu_k I.
+    \]
+
+    \textbf{Implicit Q theorem (Hessenberg QR).}
+    If $A_0$ and $\tilde A_0$ are unreduced Hessenberg matrices with the same characteristic polynomial and the same first column of $Q$ in their QR factorizations, then the $k$th columns of $Q_k$ and $\tilde Q_k$ are the same up to a complex sign factor for all $k$.
+    \[
+        A_0 = Q_1 R_1,\quad \tilde A_0 = \tilde Q_1 \tilde R_1,\quad Q_1 e_1 = \tilde Q_1 e_1 \implies Q_k \mathbf{e}_k = \pm \tilde Q_k \mathbf{e}_k.
+    \]
+    \section*{SVD}
+
+    \textbf{SVD.}
+    For $A \in \R^{m\times n}$ there exist orthogonal $U \in \R^{m\times m}$, $V \in \R^{n\times n}$ and diagonal
+    \[
+        \Sigma = \operatorname{diag}(\sigma_1,\dots,\sigma_r,0,\dots)
+    \]
+    with $\sigma_1 \ge \dots \ge \sigma_r > 0$ such that
+    \[
+        A = U \Sigma V^T.
+    \]
+
+    \textbf{Reduced SVD.}
+    If $\operatorname{rank}(A) = r$,
+    \[
+        A = U_r \Sigma_r V_r^T,
+    \]
+    with $U_r \in \R^{m\times r}$, $V_r \in \R^{n\times r}$, $\Sigma_r \in \R^{r\times r}$.
+
+    \textbf{Best rank $k$ approximation.}
+    For $k < r$,
+    \[
+        A_k = U_k \Sigma_k V_k^T
+    \]
+    is the best rank $k$ approximation in both 2 norm and Frobenius norm:
+    \[
+        \norm{A - A_k}_2 = \sigma_{k+1},\quad
+        \norm{A - A_k}_F^2 = \sum_{i>k} \sigma_i^2.
+    \]
+
+    \textbf{Golub Kahan SVD algorithm.}
+    \begin{itemize}[leftmargin=*]
+        \item Bidiagonalization: reduce $A$ to bidiagonal $B$ using Householder reflectors
+              \[
+                  A = U_1 B V_1^T.
+              \]
+        \item Compute SVD of $B$ using specialized QR iteration
+              \[
+                  B = \tilde U \Sigma \tilde V^T.
+              \]
+        \item Combine:
+              \[
+                  A = (U_1 \tilde U)\,\Sigma\,(V_1 \tilde V)^T.
+              \]
+    \end{itemize}
+\end{multicols}
+\end{document}
