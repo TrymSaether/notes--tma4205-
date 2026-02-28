@@ -3,15 +3,15 @@
 These notes are a compact study compendium for **TMA4205 Numerical Linear Algebra**.  
 The goal is to connect theory, geometry, and algorithms so you can move from definitions to practical iterative solvers.
 
-## What You Will Learn
+## What These Notes Cover
 
-By working through the notes, you should be able to:
+The notes cover the following learning outcomes:
 
-- explain conditioning, stability, and why numerical methods can fail
-- use orthogonality and projections to formulate approximation problems
-- understand Krylov subspaces as the basis for modern iterative solvers
-- compare Steepest Descent, Conjugate Gradient, FOM, and GMRES
-- reason about convergence behavior and stopping criteria in practice
+- Explanation of conditioning, stability, and reasons for failure in numerical methods
+- Use of orthogonality and projections to formulate approximation problems
+- Understanding of Krylov subspaces as the basis for modern iterative solvers
+- Comparison of Steepest Descent, Conjugate Gradient, FOM, and GMRES
+- Reasoning about convergence behavior and stopping criteria in practice
 
 ## Content Roadmap
 
