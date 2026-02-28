@@ -1,6 +1,8 @@
 # Numerical Linear Algebra Notes (TMA4205)
 
-These notes are a compact study compendium for **TMA4205 Numerical Linear Algebra**.  
+Full notes for TMA4205 Numerical Linear Algebra, including theory, algorithms, and exercises, are available in [main.pdf](main.pdf).
+
+These notes are a compact study compendium for **TMA4205 Numerical Linear Algebra**.
 The goal is to connect theory, geometry, and algorithms so you can move from definitions to practical iterative solvers.
 
 ## What These Notes Cover
@@ -57,7 +59,7 @@ Method-focused chapters with intuition and derivations:
 
 ## Minimal Build Note
 
-The compiled compendium is `main.pdf`. If needed, build with:
+If needed, build with:
 
 ```bash
 latexmk -pdf main.tex
