@@ -5,3 +5,12 @@
 *.dvi
 *.out
 *.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.nav
+*.snm
+*.vrb
+*.synctex(busy)
