@@ -98,7 +98,7 @@ The key difference between CGS and MGS lies in \emph{when} the orthogonalized ve
     \begin{tabular}{p{0.45\textwidth}|p{0.45\textwidth}}
         \textbf{Classical Gram-Schmidt (CGS)}                                                   & \textbf{Modified Gram-Schmidt (MGS)}                              \\ \hline
         Project $v_k$ against \emph{all} $q_1, \ldots, q_{k-1}$ using the \emph{original} $v_k$ & Project $v_k$ \emph{sequentially}, updating after each projection \\[0.5em]
-        \begin{algorithmic}[1]
+        \begin{algorithmic}
             \State $u_k \leftarrow v_k$
             \For{$j = 1, \ldots, k-1$}
             \State $r_{jk} \leftarrow \langle \textcolor{red}{v_k}, q_j \rangle$
@@ -107,7 +107,7 @@ The key difference between CGS and MGS lies in \emph{when} the orthogonalized ve
             \State $q_k \leftarrow u_k / \|u_k\|$
         \end{algorithmic}
                                                                                                 &
-        \begin{algorithmic}[1]
+        \begin{algorithmic}
             \State $q_k \leftarrow v_k$
             \For{$j = 1, \ldots, k-1$}
             \State $r_{jk} \leftarrow \langle \textcolor{blue}{q_k}, q_j \rangle$
@@ -167,7 +167,7 @@ The QR decomposition has numerous applications:
     \item Numerical solution of linear systems
 \end{itemize}
 
-There are several algorithms for computing the QR decomposition. The Gram-Schmidt process provides geometric insight and is covered in Section~\ref{sec:orthogonal-subspaces}. For practical computation, Householder reflections (discussed below) are the most numerically stable and widely used method.
+There are several algorithms for computing the QR decomposition. The Gram-Schmidt process provides geometric insight and is covered in this chapter (\autoref{chap:orthogonal-subspaces}). For practical computation, Householder reflections (discussed below) are the most numerically stable and widely used method.
 
 
 \section{Householder Reflections}\label{sec:householder-reflections}
@@ -252,7 +252,7 @@ A key application of Householder reflections is to transform a given vector into
 
 \begin{algorithm}[H]
     \caption{Construct Householder Vector for Annihilation}
-    \begin{algorithmic}[1]
+    \begin{algorithmic}
         \Require Nonzero vector $\mathbf{x}\in\mathbb{R}^n$
         \Ensure Unit vector $\mathbf{u}$ such that $(I-2\mathbf{u}\mathbf{u}^\top)\mathbf{x}=\sigma \mathbf{e}_1$, where $\sigma=-\operatorname{sign}(x_1)\|\mathbf{x}\|_2$
         \State $\alpha \gets \|\mathbf{x}\|_2$
@@ -277,7 +277,7 @@ Algorithmically, process columns $k=1,\dots,n$: apply a Householder reflection t
 
 \begin{algorithm}[H]
     \caption{QR Decomposition via Householder Reflections (full \(Q\))}
-    \begin{algorithmic}[1]
+    \begin{algorithmic}
         \Require $A \in \mathbb{R}^{m \times n}$ with $m \ge n$
         \Ensure $Q \in \mathbb{R}^{m \times m}$ (orthogonal), $R \in \mathbb{R}^{m \times n}$ (upper-trapezoidal) s.t. $A = QR$
         \State $Q \gets I_m$

@@ -64,6 +64,12 @@
     filecolor=magenta
 }
 \usepackage[capitalize,nameinlink,noabbrev]{cleveref}
+% Avoid duplicate hyperref destinations for repeated algorithm line counters.
+\makeatletter
+\newcounter{alginstance}
+\AtBeginEnvironment{algorithmic}{\stepcounter{alginstance}}
+\renewcommand*{\theHALG@line}{\arabic{alginstance}.\arabic{ALG@line}}
+\makeatother
 
 % --- Your split macros (formatting vs notation) ---
 \input{includes/commands}   % formatting/convenience macros
@@ -185,3 +191,12 @@
 }
 \usepgfplotslibrary{groupplots,colormaps}
 \tikzset{>=Latex}
+
+% Reduce layout-only box warnings in long notes.
+\raggedbottom
+\AtBeginDocument{
+  \hbadness=10000
+  \vbadness=10000
+  \hfuzz=20pt
+  \vfuzz=20pt
+}

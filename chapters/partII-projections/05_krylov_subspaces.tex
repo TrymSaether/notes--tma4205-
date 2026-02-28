@@ -1,7 +1,7 @@
 \documentclass[../../main.tex]{subfiles}
 
 \begin{document}
-\chapter{Krylov Subspaces}\label{chap:krylov}
+\chapter{Krylov Subspaces and Arnoldi Iteration}\label{chap:krylov}
 
 Krylov subspaces capture the span of repeated applications of a matrix to a vector and are the foundation of projection methods driven by matrix--vector products.
 
@@ -34,9 +34,10 @@ Indeed, dividing any polynomial representative by the minimal polynomial gives $
   \dim\mathcal{K}_m(A,\mathbf{v}) \le m,\qquad \mathcal{K}_1\subseteq\mathcal{K}_2\subseteq\cdots\subseteq\mathcal{K}_\mu=\cdots.
 \]
 
-\paragraph{Projection viewpoint.} Given an initial guess $\mathbf{x}_0$ for $A\mathbf{x}=\mathbf{b}$ and residual $\mathbf{r}_0$, Krylov methods search in $\mathbf{x}_0+\mathcal{K}_m(A,\mathbf{r}_0)$ while enforcing a Petrov--Galerkin condition on the residual. Choices of the test space $\mathcal{L}$ produce FOM ($\mathcal{L}=\mathcal{K}_m$) and GMRES ($\mathcal{L}=A\mathcal{K}_m$); see Chapters~\ref{chap:arnoldi} and \ref{chap:projection-methods}.
+\paragraph{Projection viewpoint.} Given an initial guess $\mathbf{x}_0$ for $A\mathbf{x}=\mathbf{b}$ and residual $\mathbf{r}_0$, Krylov methods search in $\mathbf{x}_0+\mathcal{K}_m(A,\mathbf{r}_0)$ while enforcing a Petrov--Galerkin condition on the residual. Choices of the test space $\mathcal{L}$ produce FOM ($\mathcal{L}=\mathcal{K}_m$) and GMRES ($\mathcal{L}=A\mathcal{K}_m$); see \Cref{sec:arnoldi-iteration,ch:FOM,ch:gmres}.
 
 \section{Arnoldi Iteration}
+\label{chap:arnoldi}
 \label{sec:arnoldi-iteration}
 The \emph{Arnoldi iteration} is a \emph{Krylov subspace iterative method} that reduces $A$ to an \textbf{upper Hessenberg matrix} $H_m$.
 We can then use this simple representation of $A$ to approximate some \textbf{eigenvalues} of $A$.
@@ -136,10 +137,10 @@ The matrix $\overline{H}_m$ is \emph{upper Hessenberg} (zero below the first sub
 
 \subsection{Arnoldi Relation}
 The fundamental relationship is:
-\begin{align*}\label{eq:arnoldi-relation}
+\begin{align}\label{eq:arnoldi-relation}
   AV_m & = V_{m+1}\overline{H}_m = V_m H_m + h_{m+1,m}\mathbf{v}_{m+1}\mathbf{e}_m^T \\
   H_m  & = V_m^\top A V_m
-\end{align*}
+\end{align}
 
 This compact relation captures a profound fact: \emph{the action of the large matrix $A$ on the Krylov subspace is completely characterized by the small Hessenberg matrix $\overline{H}_m$}.
 Column by column, this says:
@@ -217,7 +218,7 @@ Both methods reduce the original $n \times n$ problem to an $m \times m$ problem
   This combination of numerical stability, dimensional reduction, and preserved spectral information makes Arnoldi iteration one of the most important algorithms in numerical linear algebra.
 \end{summary}
 
-The specific applications of this framework to solve linear systems and eigenvalue problems are developed in Chapter~\ref{chap:projection-methods}, where we'll see how the Arnoldi relation enables both exact solutions (via FOM) and optimal approximations (via GMRES).
+The specific applications of this framework to solve linear systems and eigenvalue problems are developed in \Cref{ch:FOM,ch:gmres}, where we'll see how the Arnoldi relation enables both exact solutions (via FOM) and optimal approximations (via GMRES).
 
 
 \section{Lanczos Iteration}
@@ -257,7 +258,7 @@ $H_m$ is then tridiagonal and symmetric, i.e., $H_m$ has the form:
 \begin{algorithm}[htbp]
   \caption{Lanczos Iteration (Arnoldi for symmetric $A=A^\top$)}
   \label{alg:lanczos}
-  \begin{algorithmic}[0]
+  \begin{algorithmic}
     \Require $A, \mathbf{b}, \mathbf{x}_0, m$
     \State $\beta_1 = 0$
     \State $\mathbf{v}_0 = 0$

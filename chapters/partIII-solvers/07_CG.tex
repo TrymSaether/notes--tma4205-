@@ -1,6 +1,6 @@
 \documentclass[../../main.tex]{subfiles}
 \begin{document}
-\chapter{Conjugate Gradient}\label{ch:CG}
+\chapter{Conjugate Gradient Method}\label{ch:CG}
 Let $A \in \mathbb{R}^{n \times n}$ be symmetric positive definite (SPD). We want to solve
 \[
     A \mathbf{x} = \mathbf{b}.
@@ -106,7 +106,7 @@ We know that:
 Then the CG algorithm is:
 \begin{algorithm}[H]
     \caption{Conjugate gradient (CG) method}
-    \begin{algorithmic}[0]
+    \begin{algorithmic}
         \Require $A, \mathbf{b}, \mathbf{x}_0, m$
         \State $\mathbf{r}_0 = \mathbf{b} - A\mathbf{x}_0$
         \State $\mathbf{p}_0 = \mathbf{r}_0$

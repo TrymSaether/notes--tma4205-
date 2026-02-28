@@ -618,7 +618,7 @@ The QR algorithm computes the Schur decomposition iteratively:
 \begin{algorithm}[ht]
     \caption{Basic QR Algorithm for Schur Decomposition}
     \label{alg:qr-schur}
-    \begin{algorithmic}[1]
+    \begin{algorithmic}
         \Require $A^{(0)} = A$, $Q^{(0)} = I$
         \For{$k = 1, 2, \ldots$}
         \State $A^{(k-1)} = Q_k R_k$ (QR decomposition)
@@ -672,7 +672,7 @@ Applied from the left, $G$ mixes rows $i$ and $j$. To zero an entry $b$ under a 
 Iterating over columns and eliminating entries below the diagonal yields an upper triangular $R$; accumulating the applied rotations gives $Q$ so that $A=QR$.
 \begin{algorithm}[H]
     \caption{QR via Givens Rotations (outline)}
-    \begin{algorithmic}[0]
+    \begin{algorithmic}
         \Require $A\in\mathbb{R}^{m\times n}$, $m\ge n$
         \State $Q\gets I_m$
         \For{$k=1,\dots,n$}
@@ -685,7 +685,7 @@ Iterating over columns and eliminating entries below the diagonal yields an uppe
         \State $R\gets A$, return $Q,R$ with $A=QR$
     \end{algorithmic}
 \end{algorithm}
-Givens is attractive for sparse and structured problems because each rotation affects only two rows, limiting fill-in, and for streaming least-squares where rotations can be applied incrementally. It is also the tool used to update the GMRES least-squares; see Section~\ref{chap:projection-methods}.
+Givens is attractive for sparse and structured problems because each rotation affects only two rows, limiting fill-in, and for streaming least-squares where rotations can be applied incrementally. It is also the tool used to update the GMRES least-squares; see \autoref{ch:gmres}.
 \begin{remark}{Householder vs Givens}{hh-vs-givens}
     \begin{itemize}
         \item Dense QR: Householder is typically faster (BLAS-3 friendly), more stable, and easier to block.

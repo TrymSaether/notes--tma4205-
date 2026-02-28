@@ -8,7 +8,7 @@ We first start with the assumption that $A$ is \emph{symmetric and positive defi
 
 \begin{algorithm}[H]
     \caption{Arnoldi iteration where $A$ is SPD}
-    \begin{algorithmic}[0]
+    \begin{algorithmic}
         \Require $A, \mathbf{b}, \mathbf{x}_0, m$
         \State $\mathbf{r}_0 = \mathbf{b} - A\mathbf{x}_0$
         \State $\beta = \|\mathbf{r}_0\|_2$
@@ -61,7 +61,7 @@ $H_m$ is then tridiagonal and symmetric, i.e., $H_m$ has the form:
 \subsection{Lanczos iteration}
 \begin{algorithm}[H]
     \caption{Lanczos: Arnoldi for symmetric $A=A^\top$}
-    \begin{algorithmic}[0]
+    \begin{algorithmic}
         \Require $A, \mathbf{b}, \mathbf{x}_0, m$
         \State $\beta_1 = 0$
         \State $\mathbf{v}_0 = 0$
@@ -248,7 +248,7 @@ We know that:
 Then the CG algorithm is:
 \begin{algorithm}[H]
     \caption{Conjugate gradient (CG) method}
-    \begin{algorithmic}[0]
+    \begin{algorithmic}
         \Require $A, \mathbf{b}, \mathbf{x}_0, m$
         \State $\mathbf{r}_0 = \mathbf{b} - A\mathbf{x}_0$
         \State $\mathbf{p}_0 = \mathbf{r}_0$

@@ -69,7 +69,7 @@ and $\mathbf{p}_{k+1}=\mathbf{r}_{k+1}+\beta_k\mathbf{p}_k$ with $\beta_k=\dfrac
 \begin{algorithm}[H]
   \caption{Conjugate Gradient (CG)}
   \label{alg:cg}
-  \begin{algorithmic}[0]
+  \begin{algorithmic}
     \Require $A=A^T\succ0$, $\mathbf{b}$, $\mathbf{x}_0$
     \State $\mathbf{r}_0=\mathbf{b}-A\mathbf{x}_0$
     \State $\mathbf{p}_0=\mathbf{r}_0$
@@ -115,7 +115,7 @@ and the update $\mathbf{x}_m=\mathbf{x}_0+V_m\mathbf{y}_m$. Using the Arnoldi re
 \begin{algorithm}[ht]
   \caption{FOM (incremental)}
   \label{alg:fom-lecture}
-  \begin{algorithmic}[0]
+  \begin{algorithmic}
     \Require $A\in\mathbb{R}^{n\times n}$, $\mathbf{b}$, $\mathbf{x}_0$, $m_{\max}$, tol
     \State $\mathbf{r}_0=\mathbf{b}-A\mathbf{x}_0$, $\beta=\norm{\mathbf{r}_0}_2$, $\mathbf{v}_1=\mathbf{r}_0/\beta$
     \For{$j=1,2,\dots,m_{\max}$}
@@ -141,7 +141,7 @@ Then $\mathbf{y}_m = R_m^{-1}\,\mathbf{g}_{1:m}$ and the residual norm update is
 
 \begin{algorithm}[H]
   \caption{GMRES (with Givens updates)}\label{alg:gmres}
-  \begin{algorithmic}[0]
+  \begin{algorithmic}
     \Require $A\in\mathbb{R}^{n\times n}$, $\mathbf{b}$, $\mathbf{x}_0$, $m_{\max}$, tol
     \State $\mathbf{r}_0=\mathbf{b}-A\mathbf{x}_0$, $\beta=\norm{\mathbf{r}_0}_2$, $\mathbf{v}_1=\mathbf{r}_0/\beta$, initialize empty Givens set
     \For{$j=1,2,\dots,m_{\max}$}
