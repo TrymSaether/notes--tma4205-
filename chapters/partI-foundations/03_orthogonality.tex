@@ -212,39 +212,53 @@ Geometrically, $H$ sends $\mathbf{u} \mapsto -\mathbf{u}$ and fixes every vector
     \end{enumerate}
 \end{proof}
 
-\section{Constructing a Householder reflector}
+\section{Vector Annihilation with Householder Reflections}\label{sec:householder-vector-annihilation}
 
-\begin{theorem}{Vector annihilation}{thm:householder-construct}
-    For any nonzero $\mathbf{x}\in\mathbb{R}^n$, there is a Householder matrix $H$ such that
+A key application of Householder reflections is to transform a given vector into a multiple of a standard basis vector, effectively zeroing out all but one component.
+
+\begin{theorem}{Vector annihilation via Householder reflection}{thm:householder-vector-annihilation}
+    For any nonzero $\mathbf{x}\in\mathbb{R}^n$, there exists a Householder matrix $H=I-2\mathbf{u}\mathbf{u}^\top$ such that
     \[
-        Hx = \sigma e_1,\qquad \sigma=\pm\|\mathbf{x}\|.
+        H\mathbf{x} = \sigma \mathbf{e}_1, \quad \text{where } \sigma = \pm \|\mathbf{x}\|_2.
     \]
-    A numerically stable choice is $\displaystyle \sigma = -\operatorname{sign}(x_1)\,\|\mathbf{x}\|$ (with $\operatorname{sign}(0)=1$).
-    Define $\mathbf{v}=\mathbf{x}-\sigma e_1$, $\mathbf{u}=\mathbf{v}/\|\mathbf{v}\|$, and set $H=I-2uu^\top$.
+    A numerically stable choice is $\sigma = -\operatorname{sign}(x_1)\,\|\mathbf{x}\|_2$ (with $\operatorname{sign}(0)=1$).
+    The unit vector $\mathbf{u}$ is constructed as
+    \[
+        \mathbf{v}=\mathbf{x}-\sigma \mathbf{e}_1, \qquad \mathbf{u}=\frac{\mathbf{v}}{\|\mathbf{v}\|_2}.
+    \]
 \end{theorem}
 
 \begin{proof}
-    Let $\mathbf{v}=\mathbf{x}-\sigma e_1$ and $\mathbf{u}=\frac{\mathbf{v}}{\|\mathbf{v}\|}$.
+    Let $\mathbf{v}=\mathbf{x}-\sigma \mathbf{e}_1$ and $\mathbf{u}=\mathbf{v}/\|\mathbf{v}\|_2$ with $\sigma=\pm\|\mathbf{x}\|_2$. Then
+    \[
+        H\mathbf{x}=\mathbf{x}-2\mathbf{u}(\mathbf{u}^\top \mathbf{x}) = \mathbf{x} - \frac{2\mathbf{v}(\mathbf{v}^\top \mathbf{x})}{\|\mathbf{v}\|_2^2}.
+    \]
+    Computing the inner product:
+    \[
+        \mathbf{v}^\top \mathbf{x} = (\mathbf{x}-\sigma \mathbf{e}_1)^\top \mathbf{x} = \|\mathbf{x}\|_2^2 - \sigma x_1.
+    \]
+    Computing the squared norm:
+    \[
+        \|\mathbf{v}\|_2^2 = (\mathbf{x}-\sigma \mathbf{e}_1)^\top(\mathbf{x}-\sigma \mathbf{e}_1)=\|\mathbf{x}\|_2^2 - 2\sigma x_1 + \sigma^2 = 2(\|\mathbf{x}\|_2^2-\sigma x_1),
+    \]
+    where the last equality uses $\sigma^2=\|\mathbf{x}\|_2^2$. Therefore
+    \[
+        \frac{2\mathbf{v}(\mathbf{v}^\top \mathbf{x})}{\|\mathbf{v}\|_2^2}=\frac{2\mathbf{v}(\|\mathbf{x}\|_2^2-\sigma x_1)}{2(\|\mathbf{x}\|_2^2-\sigma x_1)}=\mathbf{v},
+    \]
+    and thus $H\mathbf{x}=\mathbf{x}-\mathbf{v}=\sigma \mathbf{e}_1$.
 
-    Then $Hx=\mathbf{x}-2u(\mathbf{u}^\top \mathbf{x}) = \mathbf{x} - \frac{2v(\mathbf{v}^\top \mathbf{x})}{\|\mathbf{v}\|^2}$.
-
-    Now $\mathbf{v}^\top \mathbf{x} = \mathbf{x}^\top \mathbf{x} - \sigma x_1 = \|\mathbf{x}\|^2 - \sigma x_1$ and $\|\mathbf{v}\|^2 = (\mathbf{x}-\sigma e_1)^\top(\mathbf{x}-\sigma e_1)=2(\|\mathbf{x}\|^2-\sigma x_1)$.
-
-    Hence $\dfrac{2v(\mathbf{v}^\top \mathbf{x})}{\|\mathbf{v}\|^2}=\mathbf{v}$ and $Hx=\mathbf{x}-\mathbf{v}=\sigma e_1$.
-
-    The sign choice $\sigma=-\operatorname{sign}(x_1)\|\mathbf{x}\|$ maximizes $\|\mathbf{v}\|$ and avoids cancellation when $\mathbf{x}\approx \sigma e_1$.
+    The sign choice $\sigma=-\operatorname{sign}(x_1)\|\mathbf{x}\|_2$ maximizes $|\mathbf{v}|$ and avoids catastrophic cancellation when computing $\mathbf{v}=\mathbf{x}-\sigma \mathbf{e}_1$. If $x_1>0$, then $\sigma<0$, making $\mathbf{v}=\mathbf{x}+|\sigma|\mathbf{e}_1$ an addition rather than a subtraction.
 \end{proof}
 
-
 \begin{algorithm}[H]
-    \caption{Householder vector (stable sign)}
+    \caption{Construct Householder Vector for Annihilation}
     \begin{algorithmic}[1]
-        \Require $\mathbf{x}\in\mathbb{R}^n$, $\mathbf{x}\neq 0$
-        \Ensure $\mathbf{u}$ with $\|\mathbf{u}\|=1$ such that $(I-2uu^\top)\mathbf{x}=\sigma e_1$, where $\sigma=-\operatorname{sign}(x_1)\|\mathbf{x}\|$
-        \State $\alpha \gets \|\mathbf{x}\|$
-        \State $\sigma \gets -\operatorname{sign}(x_1)\,\alpha$ \Comment{take $\operatorname{sign}(0)=1$}
-        \State $\mathbf{v} \gets \mathbf{x}-\sigma e_1$
-        \State $\mathbf{u} \gets \mathbf{v}/\|\mathbf{v}\|$
+        \Require Nonzero vector $\mathbf{x}\in\mathbb{R}^n$
+        \Ensure Unit vector $\mathbf{u}$ such that $(I-2\mathbf{u}\mathbf{u}^\top)\mathbf{x}=\sigma \mathbf{e}_1$, where $\sigma=-\operatorname{sign}(x_1)\|\mathbf{x}\|_2$
+        \State $\alpha \gets \|\mathbf{x}\|_2$
+        \State $\sigma \gets -\operatorname{sign}(x_1)\,\alpha$ \Comment{$\operatorname{sign}(0)=1$ by convention}
+        \State $\mathbf{v} \gets \mathbf{x}-\sigma \mathbf{e}_1$
+        \State $\mathbf{u} \gets \mathbf{v}/\|\mathbf{v}\|_2$
         \State \Return $\mathbf{u}$
     \end{algorithmic}
 \end{algorithm}

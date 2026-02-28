@@ -1,0 +1,19 @@
+\documentclass{standalone}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\begin{document}
+\begin{tikzpicture}
+  \begin{semilogyaxis}[
+    xlabel=Iteration,
+    ylabel={$\|r_m\|_2$},
+    grid=major,
+    width=8cm,
+    height=5cm
+  ]
+    % Sample decay curve (replace with actual data if desired)
+    \addplot[smooth,mark=*,blue] coordinates {
+      (0,1) (1,0.35) (2,0.12) (3,0.045) (4,0.02) (5,0.009)
+    };
+  \end{semilogyaxis}
+\end{tikzpicture}
+\end{document}

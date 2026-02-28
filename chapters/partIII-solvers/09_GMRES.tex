@@ -1,356 +1,212 @@
 \chapter{Generalized Minimum Residual Method (GMRES)}
-Let $\mathcal{K} = \mathcal{K}_m(A, \mathbf{r}_0)$, and $\mathcal{L}_m = A\mathcal{K}$.
+Let $\mathcal{K} = \mathcal{K}_m(A, \mathbf{r}_0)$ and $\mathcal{L}_m = A\mathcal{K}_m$.
+This chapter describes the GMRES algorithm (Generalized Minimum Residual), an important Krylov-subspace method for solving nonsymmetric linear systems. We present the least-squares formulation, the practical QR/Givens implementation used in practice, a short worked example, and a visualisation of residual decay.
 \begin{align*}
     \mathbf{r}_m                     & = \mathbf{b} - A\mathbf{x}_m                                                                                                                                                                    \\
     \|\mathbf{b} - A\mathbf{x}_m\|_2 & = \min_{\mathbf{x} \in \mathbf{x}_0 + \mathcal{K}_m} \|\mathbf{b} - A\mathbf{x}\|_2                                                                                                             \\
-    \mathbf{x}                       & \in \mathbf{x}_0 + \mathcal{K}_m \quad \Rightarrow \quad \mathbf{x} = \mathbf{x}_0 + V_m \mathbf{y}_m, \quad \mathbf{y}_m \in \mathbb{R}^m                                                      \\
+    \mathbf{x}                       & \in \mathbf{x}_0 + \mathcal{K}_m \quad \Rightarrow \quad \mathbf{x} = \mathbf{x}_0 + V_m \mathbf{y}_m,\quad \mathbf{y}_m \in \mathbb{R}^m                                                      \\
     \mathbf{r}                       & = \mathbf{b} - A\mathbf{x} = \mathbf{b} - A(\mathbf{x}_0 + V_m \mathbf{y}_m) = \mathbf{r}_0 - AV_m \mathbf{y}_m                                                                                 \\
                                      & = \mathbf{r}_0 - V_{m+1} \overline{H}_m \mathbf{y}_m                                                                                                                                            \\
-                                     & = V_{m+1}(\beta \mathbf{e}_1 - \overline{H}_m \mathbf{y}_m)                                                                                                                                     \\
-    \|\mathbf{r}\|^2                 & = \|V_{m+1}(\beta \mathbf{e}_1 - \overline{H}_m \mathbf{y}_m)\|_2 = \|\beta \mathbf{e}_1 - \overline{H}_m \mathbf{y}_m\|_2, \quad \text{since } \|V_{m+1}\|_2 = 1 \text{ (orthonormal columns)} \\
+                                     & = V_{m+1}\big(\beta \mathbf{e}_1 - \overline{H}_m \mathbf{y}_m\big), \qquad \beta = \|\mathbf{r}_0\|_2                                                                                         \\
+    \|\mathbf{r}\|_2                 & = \|V_{m+1}(\beta \mathbf{e}_1 - \overline{H}_m \mathbf{y}_m)\|_2 = \|\beta \mathbf{e}_1 - \overline{H}_m \mathbf{y}_m\|_2
+    \quad\text{(columns of $V_{m+1}$ orthonormal)}                                                                          \\
     \mathbf{y}_m                     & = \arg\min_{\mathbf{y} \in \mathbb{R}^m} \|\beta \mathbf{e}_1 - \overline{H}_m \mathbf{y}\|_2                                                                                                   \\
     \mathbf{x}_m                     & = \mathbf{x}_0 + V_m \mathbf{y}_m
 \end{align*}
-Want to solve the overdetermined system ($m < n$):
+We therefore solve the overdetermined system ($m<n$)
 \[
     \overline{H}_m \mathbf{y} \approx \beta \mathbf{e}_1
 \]
-We solve this least squares problem using QR factorization of $\overline{H}_m$ with Givens rotations.
+via a least squares solve, efficiently obtained by QR factorization of the upper Hessenberg matrix $\overline{H}_m$ using Givens rotations.
 
-\section{QR Factorization Approach}
-Since $\overline{H}_m \in \mathbb{R}^{(m+1) \times m}$ is upper Hessenberg, we can efficiently compute its QR factorization using Givens rotations. Let
+\section{QR factorization approach}
+Since $\overline{H}_m\in\mathbb{R}^{(m+1)\times m}$ is upper Hessenberg, we compute a thin QR
 \[
-    \overline{H}_m = Q_{m+1} R_m
+    \overline{H}_m = Q_{m+1}\,\widetilde{R}_m,
 \]
-where $Q_{m+1} \in \mathbb{R}^{(m+1) \times (m+1)}$ is orthogonal and $R_m \in \mathbb{R}^{(m+1) \times m}$ has the structure:
+where $Q_{m+1}\in\mathbb{R}^{(m+1)\times(m+1)}$ is orthogonal and
 \[
-    \tilde{R}_m = \begin{bmatrix}
-        R_m \\
-        \mathbf{0}^\top
-    \end{bmatrix}
+    \widetilde{R}_m = \begin{bmatrix} R_m \\ \mathbf{0}^\top \end{bmatrix},\qquad
+    R_m\in\mathbb{R}^{m\times m}\ \text{upper triangular}.
 \]
-with $R_m \in \mathbb{R}^{m \times m}$ upper triangular.
+Set
+\[
+    \bar{\mathbf{g}}_m = Q_{m+1}^\top\beta\mathbf{e}_1 = [\gamma_1,\gamma_2,\dots,\gamma_{m+1}]^\top.
+\]
+Then the least squares problem becomes
+\begin{align*}
+    \beta\mathbf{e}_1 - \overline{H}_m\mathbf{y}
+    &=
+    Q_{m+1}\big(\bar{\mathbf{g}}_m - \widetilde{R}_m\mathbf{y}\big)
+    \quad\Rightarrow\quad
+    \|\beta\mathbf{e}_1 - \overline{H}_m\mathbf{y}\|_2
+    = \|\bar{\mathbf{g}}_m - \widetilde{R}_m\mathbf{y}\|_2 \\
+    &=
+    \big\| \begin{bmatrix}\mathbf{g}_{1:m} - R_m\mathbf{y}\\[4pt] g_{m+1}\end{bmatrix}\big\|_2
+    = \|\mathbf{g}_{1:m} - R_m\mathbf{y}\|_2^2 + |g_{m+1}|^2.
+\end{align*}
+Hence the minimizer is
+\[
+    \mathbf{y}_m = R_m^{-1}\mathbf{g}_{1:m},\qquad
+    \|\mathbf{r}_m\|_2 = |\gamma_{m+1}|.
+\]
+
+We obtain the QR factorization incrementally using Givens rotations that annihilate the subdiagonal entries of each new column of $\overline{H}_m$.
 
 Let
 \[
-    \bar\mathbf{g}_m = Q_{m+1}^\top \beta \mathbf{e}_1 = [\gamma_1, \gamma_2, \ldots, \gamma_{m+1}]^\top
+    h=\begin{bmatrix}h_1\\h_2\end{bmatrix},\quad
+    G=\begin{bmatrix} c & s\\ -s & c\end{bmatrix},\quad c^2+s^2=1,
 \]
-
-The least squares problem becomes:
-\begin{align*}
-    Q_m\left(\beta \mathbf{e}_1 - \overline{H}_m \mathbf{y}\right) & = \beta Q_m \mathbf{e}_1 - Q_m \overline{H}_m \mathbf{y}
-    = \overbrace{\beta Q_m \mathbf{e}_1}^{\bar{\mathbf{g}}_m}- \begin{bmatrix}R_m \\ \mathbf{0}^\top \end{bmatrix} \mathbf{y}_m                                                                     \\
-                                                                   & = \begin{bmatrix} \mathbf{g}_{1:m} \\g_{m+1} \end{bmatrix} - \begin{bmatrix} R_m \\ \mathbf{0}^\top \end{bmatrix} \mathbf{y}_m \\
-                                                                   & = \begin{bmatrix}\mathbf{g}_{1:m} - R_m \mathbf{y}_m \\ g_{m+1} \end{bmatrix}
-\end{align*}
-
-Then:
-\begin{align*}
-    \|\beta \mathbf{e}_1 - \overline{H}_m \mathbf{y}\|^2 & = \|\bar\mathbf{g}_m - \tilde{R}_m \mathbf{y}\|^2 = \|\mathbf{g}_{1:m} - R_m \mathbf{y}\|^2 + |g_{m+1}|^2 \\
-    \mathbf{y}_m                                         & = R_m^{-1} \mathbf{g}_{1:m}                                                                               \\
-    \|\mathbf{r}_m\|_2                                   & = |\gamma_{m+1}|
-\end{align*}
-Then we do QR factorization by Givens rotations:
-\begin{align*}
-    h                             & = \begin{bmatrix}
-                                          h_1 \\
-                                          h_2
-                                      \end{bmatrix}, \quad
-    \Omega = \begin{bmatrix}
-                 c  & s \\
-                 -s & c
-             \end{bmatrix}, \quad c^2 + s^2 = 1                                                              \\
-    \Omega h                      & = \begin{bmatrix}
-                                          \|h\| \\
-                                          0
-                                      \end{bmatrix}                                                         \\
-    \begin{bmatrix}
-        c  & s \\
-        -s & c
-    \end{bmatrix} \begin{bmatrix}
-                      h_1 \\
-                      h_2
-                  \end{bmatrix} & = \begin{bmatrix}
-                                        r \\
-                                        0
-                                    \end{bmatrix}                                                           \\
-    \Rightarrow \quad \|h\|       & = \sqrt{h_1^2 + h_2^2}, \quad c = \frac{h_1}{r}, \quad s = \frac{h_2}{r}
-\end{align*}
-In the Arnoldi process for $k=1$:
-\begin{align*}
-    H_1                & = \begin{bmatrix}
-                               h_{1,1} \\
-                               h_{2,1}
-                           \end{bmatrix} \xrightarrow{\Omega_1} \begin{bmatrix}
-                                                                    \tilde{h}_{1,1} \\
-                                                                    0
-                                                                \end{bmatrix} \\
-    \beta \mathbf{e}_1 & = \begin{bmatrix}
-                               \beta \\
-                               0
-                           \end{bmatrix} \xrightarrow{\Omega_1} \begin{bmatrix}
-                                                                    \gamma_1 \\
-                                                                    \gamma_2
-                                                                \end{bmatrix}
-\end{align*}
-For $k=2$:
-\begin{align*}
-    H_2             & = \begin{bmatrix}
-                            \tilde{h}_{1,1} & h_{1,2} \\
-                            0               & h_{2,2} \\
-                            0               & h_{3,2}
-                        \end{bmatrix} \xrightarrow{\Omega_2} \begin{bmatrix}
-                                                                 \tilde{h}_{1,1} & \tilde{h}_{1,2} \\
-                                                                 0               & \tilde{h}_{2,2} \\
-                                                                 0               & 0
-                                                             \end{bmatrix} \\
-    \begin{bmatrix}
-        \gamma_1 \\
-        \gamma_2 \\
-        \gamma_3
-    \end{bmatrix} & \xrightarrow{\Omega_2} \begin{bmatrix}
-                                               \gamma_1         \\
-                                               \tilde{\gamma}_2 \\
-                                               \tilde{\gamma}_3
-                                           \end{bmatrix}
-\end{align*}
-
-after $m$ iterations we have:
-\begin{align*}
-    \tilde{R}_m      & = \begin{bmatrix}
-                             \tilde{h}_{1,1} & \tilde{h}_{1,2} & \cdots & \tilde{h}_{1,m} \\
-                             0               & \tilde{h}_{2,2} & \cdots & \tilde{h}_{2,m} \\
-                             0               & 0               & \cdots & \tilde{h}_{3,m} \\
-                             \vdots          & \vdots          & \ddots & \vdots          \\
-                             0               & 0               & \cdots & 0
-                         \end{bmatrix} \\
-    \bar\mathbf{g}_m & = \begin{bmatrix}
-                             \gamma_1 \\
-                             \gamma_2 \\
-                             \vdots   \\
-                             \gamma_{m+1}
-                         \end{bmatrix}
-    =
-    \begin{bmatrix}
-        g_{1:m} \\
-        g_{m+1}
-    \end{bmatrix}
-\end{align*}
-
-Afer $k$ iterates:
-\begin{align*}
-    \begin{bmatrix}
-        h_{1,k} \\
-        h_{2,k} \\
-        \vdots  \\
-        h_{k,k} \\
-        h_{k+1,k}
-    \end{bmatrix}
-     & \xrightarrow{\Omega_k}
-    \begin{bmatrix}
-        \gamma_1 \\
-        \gamma_2 \\
-        \vdots   \\
-        \gamma_k \\
-        0
-    \end{bmatrix}
-\end{align*}
-before applying Givens rotations.
+then one chooses $c,s$ so that
 \[
-    \|r_{k-1}\| = |\gamma_k|
+    G\,h=\begin{bmatrix}\|h\|\\0\end{bmatrix},\qquad
+    r=\sqrt{h_1^2+h_2^2},\quad c=\frac{h_1}{r},\ s=\frac{h_2}{r}.
 \]
-Then Givens:
-\begin{align*}
-    \begin{bmatrix}
-        c_k  & s_k \\
-        -s_k & c_k
-    \end{bmatrix}
-    \begin{bmatrix}
-        \gamma_k \\
-        0
-    \end{bmatrix}
-            & =
-    \begin{bmatrix}
-        c_k \gamma_k \\
-        -s_k \gamma_k
-    \end{bmatrix}                                  \\
-    \|r_k\| & = |-s_k \gamma_k| = |s_k| \|r_{k-1}\|
-\end{align*}
 
-Then
-\begin{align*}
-    |s_k|            & \leq 1                                                                                                               \\
-    \text{If } |s_k| & < 1, \text{ then } \|r_k\| < \|r_{k-1}\|                                                                             \\
-    \text{If } |s_k| & = 1, \text{ then stagnation, but then } c_k = 0 \text{ which means } h_{k, k} = 0 \text{ or } A \text{ is singular.} \\
-    c_k              & = \frac{h_{k,k}}{\sqrt{h_{k,k}^2 + h_{k+1,k}^2}}, \qquad s_k = \frac{h_{k+1,k}}{\sqrt{h_{k,k}^2 + h_{k+1,k}^2}}
-\end{align*}
+In the Arnoldi process, as each column is produced we apply one new Givens rotation (and update previous ones) so that after $m$ steps we have
+\[
+    \widetilde{R}_m=\begin{bmatrix}
+        \tilde h_{1,1} & \tilde h_{1,2} & \cdots & \tilde h_{1,m}\\
+        0               & \tilde h_{2,2} & \cdots & \tilde h_{2,m}\\
+        0               & 0               & \ddots & \vdots\\
+        \vdots          & \vdots          &        & \tilde h_{m,m}\\
+        0               & 0               & \cdots & 0
+    \end{bmatrix},\qquad
+    \bar{\mathbf{g}}_m=\begin{bmatrix}\gamma_1\\\gamma_2\\\vdots\\\gamma_{m+1}\end{bmatrix}.
+\]
 
-\subsubsection{GMRES Algorithm}
+If after applying the $k$th rotation we have
+\[
+    \begin{bmatrix}\gamma_k\\0\end{bmatrix}\xrightarrow{G_k}
+    \begin{bmatrix}c_k\gamma_k\\-s_k\gamma_k\end{bmatrix},
+    \qquad \|r_k\|_2 = |-s_k\gamma_k| = |s_k|\,\|r_{k-1}\|_2.
+\]
+Thus $|s_k|\le1$, and if $|s_k|<1$ the residual norm strictly decreases. If $|s_k|=1$ then $c_k=0$, which typically indicates $h_{k,k}=0$ (possible breakdown) or singular behavior of $A$ in the Krylov subspace.
+
+Explicitly,
+\[
+    c_k=\frac{h_{k,k}}{\sqrt{h_{k,k}^2+h_{k+1,k}^2}},\qquad
+    s_k=\frac{h_{k+1,k}}{\sqrt{h_{k,k}^2+h_{k+1,k}^2}}.
+\]
+
+\subsection{Practical remarks}
+In practice one performs the Arnoldi process and applies the Givens rotation for the new column immediately, keeping only the vectors of $V_m$, the (small) Hessenberg matrix entries and the rotation coefficients $c_k,s_k$. This yields an $\mathcal{O}(m^2)$ storage and $\mathcal{O}(m^2n)$ cost for $m$ steps. For large problems GMRES is typically restarted (``GMRES(m)'') to limit storage: compute $m$ steps, update the solution, then restart with the new residual as initial vector.
+
+\subsubsection{GMRES algorithm}
 \begin{algorithm}[H]
-    \caption{GMRES Algorithm}
+    \caption{GMRES (Arnoldi + Givens)}
     \begin{algorithmic}
         \State $\mathbf{r}_0 = \mathbf{b} - A\mathbf{x}_0$
         \State $\beta = \|\mathbf{r}_0\|_2$
-        \State $\mathbf{v}_1 = \frac{\mathbf{r}_0}{\beta}$
-        \For{$j = 1, 2, \ldots, m$}
-        \State $\mathbf{w}_j = A\mathbf{v}_j$
-        \For{$i = 1, 2, \ldots, j$}
-        \State $h_{ij} = \langle \mathbf{w}_j, \mathbf{v}_i \rangle$
-        \State $\mathbf{w}_j = \mathbf{w}_j - h_{ij} \mathbf{v}_i$
+        \State $\mathbf{v}_1 = \mathbf{r}_0 / \beta$
+        \For{$j = 1,2,\dots,m$}
+            \State $\mathbf{w}_j = A\mathbf{v}_j$
+            \For{$i = 1,2,\dots,j$}
+                \State $h_{ij} = \langle \mathbf{w}_j,\mathbf{v}_i\rangle$
+                \State $\mathbf{w}_j \gets \mathbf{w}_j - h_{ij}\mathbf{v}_i$
+            \EndFor
+            \State $h_{j+1,j} = \|\mathbf{w}_j\|_2$
+            \If{$h_{j+1,j}=0$} \State \textbf{break} \EndIf
+            \State $\mathbf{v}_{j+1} = \mathbf{w}_j / h_{j+1,j}$
+            \State Update Givens rotations to introduce $\tilde h_{*,j}$
         \EndFor
-        \State $h_{j+1,j} = \|\mathbf{w}_j\|_2$
-        \If{$h_{j+1,j} = 0$} \textbf{Stop}
-        \EndIf
-        \State $\mathbf{v}_{j+1} = \frac{\mathbf{w}_j}{h_{j+1,j}}$
-        \EndFor
-        \State $V_m = [\mathbf{v}_1, \mathbf{v}_2, \ldots, \mathbf{v}_m] \in \mathbb{R}^{n \times m}$
-        \State $V_m^\top V_m = I$
-        \State $H_m \in \mathbb{R}^{m \times m}$
-        \State $\overline{H}_j \in \mathbb{R}^{(m+1) \times m}$ (upper Hessenberg matrix)
-        \State Compute minimizer $\mathbf{y}_m$ of $\|\beta \mathbf{e}_1 - \overline{H}_m \mathbf{y}\|_2$
-        \State $\mathbf{x}_m = \mathbf{x}_0 + V_m \mathbf{y}_m$ (Solution)
+        \State Form $R_m$ and $\mathbf{g}_{1:m}$ from accumulated rotations
+        \State Solve $R_m\mathbf{y}_m=\mathbf{g}_{1:m}$
+        \State $\mathbf{x}_m = \mathbf{x}_0 + V_m\mathbf{y}_m$
     \end{algorithmic}
 \end{algorithm}
 
+\begin{figure}[ht]
+    \centering
+    \input{figures/extra/gmres-residual.tex}
+    \caption{Residual norm vs iteration for a typical GMRES run (see the runnable demo in \texttt{examples/gmres\_demo.py}).}
+    \label{fig:gmres-residual}
+\end{figure}
+\begin{example}{GMRES example}{gmres-example}
+Consider the system
+\[
+    A = \begin{bmatrix}4 & 1 & 2\\0 & 3 & -1\\1 & -1 & 2\end{bmatrix},\quad
+    \mathbf{b} = \begin{bmatrix}1\\2\\0\end{bmatrix},\quad
+    \mathbf{x}_0 = \begin{bmatrix}0\\0\\0\end{bmatrix}.
+\]
+The initial residual is $\mathbf{r}_0 = \mathbf{b} - A\mathbf{x}_0 = \mathbf{b}$ with norm $\beta = \|\mathbf{r}_0\|_2 = \sqrt{5}$.
+The first Arnoldi vector is $\mathbf{v}_1 = \mathbf{r}_0 / \beta$. We perform the Arnoldi process to build the Krylov basis and Hessenberg matrix, applying Givens rotations to maintain the QR factorization. After $m$ steps, we solve the least-squares problem to find $\mathbf{y}_m$ and update the solution $\mathbf{x}_m = \mathbf{x}_0 + V_m \mathbf{y}_m$.
+\end{example}
+
 \section{Convergence of GMRES}
-We want to estimate the convergence of GMRES. We have:
-\begin{itemize}
-    \item $\mathbf{x}_\star$ exact solution of $A\mathbf{x} = \mathbf{b}$.
-    \item $\mathbf{x}_m$ numerical solution after $m$ iterations with some \emph{krylov-space method}.
-          \begin{align*}
-              \mathbf{r}_m                    & = \mathbf{b} - A\mathbf{x}_m \tag{residual error} \\
-              \mathbf{x}_\star - \mathbf{x}_m & = p_m(A)(\mathbf{x}_\star - \mathbf{x}_0)
-              \quad
-              \begin{cases}
-                  p_m \in \mathbb{P}_m \\
-                  p_m(0) = 1
-              \end{cases}                                                                \\
-              \mathbf{b} - A\mathbf{x}_m      & = p_m(A)(\mathbf{b} - A\mathbf{x}_0)              \\
-              \mathbf{r}_m                    & = p_m(A)\mathbf{r}_0
-          \end{align*}
-\end{itemize}
-
-Let $\mathcal{L}_m = A\mathcal{K}_m$.
-
-\begin{align*}
-    \|\mathbf{r}_m\|_2 & = \min_{\mathbf{x} \in \mathbf{x}_0 + \mathcal{K}_m} \|\mathbf{b} - A\mathbf{x}\|_2 \\
-    \|\mathbf{r}_m\|_2 & \leq \|\mathbf{r}_{m-1}\|_2 \leq \ldots \leq \|\mathbf{r}_0\|_2
-\end{align*}
-For each $\|\mathbf{r}_0\|_2$ it is possible to find an $A$ s.t.
+We give a standard polynomial-based bound. Let $\mathbf{x}_\star$ be the exact solution of $A\mathbf{x}=\mathbf{b}$ and let $\mathbf{x}_m$ be the iterate after $m$ steps of a Krylov method. Then there exists a polynomial $p_m\in\mathbb{P}_m$ with $p_m(0)=1$ such that
 \[
-    \|\mathbf{r}_m\|_2 = \|\mathbf{r}_{m-1}\|_2 = \ldots = \|\mathbf{r}_0\|_2
+    \mathbf{r}_m = \mathbf{b}-A\mathbf{x}_m = p_m(A)\mathbf{r}_0.
 \]
-Here $A$ may not be diagonalizable, but we assume it is, s.t.
+If $A$ is diagonalizable, $A=X\Lambda X^{-1}$, then
 \[
-    A = X\Lambda X^{-1}
+    \|\mathbf{r}_m\|_2 \le \|X\|_2\|X^{-1}\|_2 \max_{1\le i\le n} |p_m(\lambda_i)|\,\|\mathbf{r}_0\|_2
+    = \kappa_2(X)\max_{\lambda\in\sigma(A)}|p_m(\lambda)|\,\|\mathbf{r}_0\|_2,
 \]
-but where $X$ is not orthogonal anymore.
-\begin{align*}
-    p(A)               & = Xp(\Lambda)X^{-1}                                                                                                                 \\
-    \mathbf{r}_m       & = p_m(A)\mathbf{r}_0 = Xp_m(\Lambda)X^{-1}\mathbf{r}_0                                                                              \\
-    \|\mathbf{r}_m\|_2 & \leq \|X\|_2 \|X^{-1}\|_2 \max_{1 \leq i \leq n} |p_m(\lambda_i)| \|\mathbf{r}_0\|_2                                                \\
-                       & = \sqrt{\lambda_{\max}(A^H A) \cdot \lambda_{\min}((A^H A)^{-1})} \max_{1 \leq i \leq n} |p_m(\lambda_i)| \|\mathbf{r}_0\|_2        \\
-                       & = \kappa_2(X) \max_{1 \leq i \leq n} |p_m(\lambda_i)| \|\mathbf{r}_0\|_2                                                            \\
-    \kappa_2(X)        & = \|X\|_2 \|X^{-1}\|_2 = \sqrt{\lambda_{\max}(A^H A)\cdot \lambda_{\min}((A^H A)^{-1})} = \frac{\sigma_{\max}(X)}{\sigma_{\min}(X)}
-\end{align*}
-\begin{tikzpicture}[font=\small]
-    % Im, Re axes
-    \draw[->] (-2, 0) -- (2, 0) node[right] {$\Re$};
-    \draw[->] (0, -2) -- (0, 2) node[above] {$\Im$};
-    % circle
-    \draw[thick, fill=blue!20, opacity=0.5] (0, 0) circle (1);
-    % w_g just outside the circle
-    \filldraw[red] (1.1, 1.1) circle (1pt) node[below right] {$w_\gamma$};
-\end{tikzpicture}
-\begin{tikzpicture}[font=\small]
-    % Im, Re axes
-    \draw[->] (-0.5, 0) -- (4, 0) node[right] {$\Re$};
-    \draw[->] (0, -2) -- (0, 2) node[above] {$\Im$};
-    % Ellipse
-    \draw[thick, fill=blue!20, opacity=0.5] (2, 0) ellipse (1.8 and 1);
-    % -1, 1 ticks
-    \draw (-1, 0.1) -- (-1, -0.1) node[below] {$-1$};
-    \draw (1, 0.1) -- (1, -0.1) node[below] {$1$};
-    % gamma just outside the ellipse
-    \filldraw[red] (3, 1.5) circle (1pt) node[below right] {$\gamma$};
-\end{tikzpicture}
-\begin{tikzpicture}[font=\small]
-    % Im, Re axes
-    \draw[->] (-1.5, 0) -- (4, 0) node[right] {$\Re$};
-    \draw[->] (0, -2) -- (0, 2) node[above] {$\Im$};
+where $\kappa_2(X)=\|X\|_2\|X^{-1}\|_2$.
 
-    % Circle at (2,0) with radius 1
-    \draw[thick, fill=blue!20, opacity=0.5] (2, 0) circle (1);
-
-    % Eigenvalues
-    \filldraw[red] (2, 0) circle (1pt) node[below right] {$\lambda_1$};
-    \filldraw[red] (2, 1) circle (1pt) node[above right] {$\lambda_2$};
-    \filldraw[red] (2, -1) circle (1pt) node[below right] {$\lambda_3$};
-    \filldraw[red] (1.5, 0.5) circle (1pt) node[above left] {$\lambda_4$};
-    \filldraw[red] (1.5, -0.5) circle (1pt) node[below left] {$\lambda_5$};
-    \filldraw[red] (2.5, 0.5) circle (1pt) node[above right] {$\lambda_6$};
-\end{tikzpicture}
-
-Let $\lambda_i \in \mathrm{E}$ for $i = 1, \ldots, n$, where $\mathrm{E}$ is a closed ellipse, and $D_\rho := \{w \in \mathbb{C} : |w| = \rho\}$.
-We search for some $p^\star$ solving the min-max problem:
+Thus to bound GMRES one seeks
 \[
-    \min_{\substack{p \in \mathbb{P}_m \\ p(0) = 1}} \max_{\lambda_i \in \mathrm{E}} |p(\lambda)|
+    \min_{\substack{p\in\mathbb{P}_m\\ p(0)=1}}\max_{\lambda\in\mathrm{E}} |p(\lambda)|,
 \]
+where $\mathrm{E}$ is a compact region (often an ellipse) that contains the spectrum of $A$.
 
-\subsubsection{Chebyshev polynomials in $\mathbb{C}$}
+\subsubsection{Chebyshev polynomials (complex extension)}
+For $z\in\mathbb{C}$ with $|z|>1$ one may use the analytic continuation of Chebyshev polynomials. With $\rho=\operatorname{arccosh}(z)$ and $w=e^\rho$,
+\[
+    C_m(z)=\cosh(m\rho)=\tfrac{1}{2}(w^m+w^{-m}),\quad z=\tfrac12(w+w^{-1}),
+\]
+and the three-term recurrence $C_{m+1}(z)=2zC_m(z)-C_{m-1}(z)$ holds.
 
-let $z \in \mathbb{C}$:
-\begin{align*}
-    C_m(z)     & = \cosh(m \cdot \rho), \quad \rho = \cosh^{-1}(z)                 \\
-    w          & = e^{\rho}                                                        \\
-    C_m(z)     & = \frac{1}{2}(e^{m\rho} + e^{-m\rho}) = \frac{1}{2}(w^m + w^{-m}) \\
-    C_{m+1}(z) & = 2zC_m(z) - C_{m-1}(z), \quad C_0(z) = 1, \, C_1(z) = z          \\
-    z          & = \frac{1}{2}(w + w^{-1})
-\end{align*}
-
-\begin{lemma}{Zarantonello}{}
-    Let $\gamma \in \mathbb{C}$, $|\gamma| > \rho$, then:
+\begin{lemma}{Zarantello}{zarantello}
+    Let $\gamma\in\mathbb{C}$ with $|\gamma|>\rho$. Then
     \[
-        \min_{\substack{p \in \mathbb{P}_m \\ p(\gamma) = 1}} \max_{w \in D_\rho} = \left(\frac{\rho}{|\gamma|}\right)^m
+        \min_{\substack{p\in\mathbb{P}_m\\ p(\gamma)=1}}\max_{w\in D_\rho}|p(w)|=\left(\frac{\rho}{|\gamma|}\right)^m,
     \]
-    Minimal polynomial is given by:
-    \[
-        p(z) = \left(\frac{z}{\gamma}\right)^m
-    \]
-    Max is obtained when $z = \rho$.
+    and the minimizer is $p(z)=\big(\tfrac{z}{\gamma}\big)^m$ (maximum attained at $|z|=\rho$).
 \end{lemma}
 
-\subsubsection{Joukowsky mapping}
-\begin{align*}
-    J(w)      & = \frac{1}{2}(w + w^{-1}), \quad w \in \mathbb{C}, \, w \neq 0 \\
-    J(D_\rho) & = \mathrm{E}(0,1, \frac12(\rho + \rho^{-1}))
-\end{align*}
-\begin{theorem}{Elman}{}
-    Let $J(D_\rho) = \mathrm{E}_\rho$ and choose $\gamma$ outside $\mathrm{E}_\rho$, and let  $ w_\gamma = J^{-1}(\gamma)$ (the biggest), then:
-    \begin{align*}
-        \frac{\rho^m}{|w_\gamma|^m} & \leq \min_{\substack{p \in \mathbb{P}_m \\ p(\gamma) = 1}} \max_{z \in \mathrm{E}_\rho} |p(z)| \leq \frac{\rho^m + \rho^{-m}}{|w_\gamma^m + w_\gamma^{-m}|}
-    \end{align*}
-    Then the optimal polynomial $p^\star$ is given by:
+\subsubsection{Joukowsky map and ellipse bounds}
+The Joukowsky map
+\[
+    J(w)=\tfrac12(w+w^{-1}),\quad w\in\mathbb{C}\setminus\{0\},
+\]
+maps the circle $D_\rho=\{w:|w|=\rho\}$ to an ellipse
+\[
+    J(D_\rho)=\mathrm{E}\big(0,1,\tfrac12(\rho+\rho^{-1})\big).
+\]
+
+\begin{theorem}{Elman}{elman}
+    Let $J(D_\rho)=\mathrm{E}_\rho$ and choose $\gamma\not\in\mathrm{E}_\rho$. Let $w_\gamma$ be the preimage of $\gamma$ under $J$ with maximal modulus. Then
     \[
-        p^\star(w) = \frac{w^m + w^{-m}}{w_\gamma^m + w_\gamma^{-m}}, \quad w \in \mathbb{C}
+        \frac{\rho^m}{|w_\gamma|^m}
+        \le
+        \min_{\substack{p\in\mathbb{P}_m\\ p(\gamma)=1}}\max_{z\in\mathrm{E}_\rho}|p(z)|
+        \le
+        \frac{\rho^m+\rho^{-m}}{|w_\gamma^m+w_\gamma^{-m}|}.
     \]
-    is close to our optimal polynomial when $m$ is large.
+    The near-optimal polynomial is
+    \[
+        p^\star(w)=\frac{w^m+w^{-m}}{w_\gamma^m+w_\gamma^{-m}},\qquad w\in\mathbb{C}.
+    \]
 \end{theorem}
 
-\begin{align*}
-    C_m(z)                                        & = \frac{1}{2}(w^m + w^{-m}), \quad z = \frac{1}{2}(w + w^{-1})                                                                    \\
-    p^\star(z)                                    & = \frac{C_m(w)}{C_m(w_\gamma)}                                                                                                    \\
-    \hat{C}_m(z)                                  & = \frac{C_m(\frac{z - c}{d})}{C_m(-\frac{c}{d})},
-    \begin{cases}
-        \mathrm{E}(c,d,a), \\
-        \hat{C}_m(0) = 1
-    \end{cases}                                                                                                                                                                \\
-    \max_{z \in \mathrm{E}(c,d,a)} |\hat{C}_m(z)| & = \frac{C_m(\frac{a}{d})}{|C_m(-\frac{c}{d})|}                                                                                    \\
-    \mathbf{r}_m                                  & \leq \kappa_2(X) \varepsilon^{m} \|\mathbf{r}_0\|_2 = \kappa_2(X) \frac{C_m(\frac{a}{d})}{|C_m(-\frac{c}{d})|} \|\mathbf{r}_0\|_2 \\
-    C_m(z)                                        & = \frac{1}{2}\left[\left(z + \sqrt{z^2 - 1}\right)^m + \left(z - \sqrt{z^2 - 1}\right)^m\right]                                   \\
-    \varepsilon^m                                 & = \frac{C_m(\frac{a}{d})}{|C_m(-\frac{c}{d})|} \approx \left(\frac{a + \sqrt{a^2 - d^2}}{c + \sqrt{c^2 - d^2}}\right)^m
-\end{align*}
+For a general ellipse $\mathrm{E}(c,d,a)$ containing the spectrum, one can scale and shift the Chebyshev polynomial:
+\[
+    \widehat{C}_m(z)=\frac{C_m\big(\tfrac{z-c}{d}\big)}{C_m\big(-\tfrac{c}{d}\big)},\qquad \widehat{C}_m(0)=1,
+\]
+and obtain
+\[
+    \max_{z\in\mathrm{E}(c,d,a)}|\widehat{C}_m(z)|=\frac{C_m(\tfrac{a}{d})}{\big|C_m(-\tfrac{c}{d})\big|}.
+\]
+Therefore a practical bound for GMRES is
+\[
+    \|\mathbf{r}_m\|_2 \le \kappa_2(X)\,\varepsilon^m\,\|\mathbf{r}_0\|_2,
+    \qquad
+    \varepsilon^m=\frac{C_m(\tfrac{a}{d})}{\big|C_m(-\tfrac{c}{d})\big|}
+    \approx \left(\frac{a+\sqrt{a^2-d^2}}{c+\sqrt{c^2-d^2}}\right)^m
+\]
+for large $m$.
 
-The ellipse enclosing the eigenvalues can not include $0$, because then $p(0) = 1$ can not be satisfied.
-If $a < c$, then we have convergene for sure.
-
+Note: the ellipse enclosing the eigenvalues must not include $0$ (because $p(0)=1$ is required). If the ellipse is separated from the origin (e.g. $a<c$ in a standard parametrization) one obtains guaranteed geometric decay of the bound above.

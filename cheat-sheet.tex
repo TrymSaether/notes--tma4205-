@@ -15,9 +15,7 @@
 \subsectionfont{\small\bfseries}
 
 \begin{document}
-% Smaller font size
-\footnotesize
-\begin{multicols}{4}
+\begin{multicols}{3}
     \textbf{Eigenvalues \& eigenvectors.}
     \[
         A \mathbf{x} = \lambda \mathbf{x},\quad \mathbf{x} \ne 0,\ \lambda \in \C.
@@ -197,6 +195,15 @@
         \mathbf{x}_{k+1} & = \mathbf{x}_k - \alpha_k \mathbf{g}_k,                                                                                                  \\
         \alpha_k         & = \frac{\mathbf{g}_k^T \mathbf{g}_k}{\mathbf{g}_k^T A \mathbf{g}_k} = \frac{\mathbf{r}_k^T \mathbf{r}_k}{\mathbf{r}_k^T A \mathbf{r}_k}.
     \end{align*}
+    \textbf{Convergence:}
+    \[
+        \norm{\mathbf{x}_{k} - \mathbf{x}}_A
+        \le
+        \left(\frac{\kappa - 1}{\kappa + 1}\right)^k
+        \norm{\mathbf{x}_0 - \mathbf{x}}_A,
+    \]
+    where $\kappa = \lambda_{\max}(A)/\lambda_{\min}(A)$.
+
     \textbf{One step minimal residual.}
     Choose $\mathbf{x}_{k+1} = \mathbf{x}_k + \alpha \mathbf{v}_k$ with direction $\mathbf{v}_k$ and $\alpha$ minimizing
     $\norm{\mathbf{b} - A(\mathbf{x}_k + \alpha \mathbf{v}_k)}_2$:
@@ -206,6 +213,14 @@
         \operatorname*{argmin}_{\alpha \in \R}
         \norm{\mathbf{r}_k - \alpha A \mathbf{v}_k}_2.
     \]
+    \textbf{Convergence:}
+    \[
+        \norm{\mathbf{r}_{k+1}}_2
+        \le
+        \sqrt{1 - \frac{\lambda_{\min}(A)^2}{\norm{F}^2}}
+        \norm{\mathbf{r}_k}_2,
+    \]
+    where $F$ satisfies $F^T F = A^T A$ and $\norm{F} = \sigma_{\max}(A)$.
 
     \section*{Krylov space methods}
 
