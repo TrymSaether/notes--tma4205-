@@ -1,65 +1,102 @@
-# Numerical Linear Algebra Notes (TMA4205)
+# TMA4205 Numerical Linear Algebra Notes
 
-Full notes for TMA4205 Numerical Linear Algebra, including theory, algorithms, and exercises, are available in [main.pdf](main.pdf).
+Notes for **TMA4205 Numerical Linear Algebra (NTNU)**.
+The whole point is to connect linear algebra theory with the iterative methods that actually get used in practice.
 
-These notes are a compact study compendium for **TMA4205 Numerical Linear Algebra**.
-The goal is to connect theory, geometry, and algorithms so you can move from definitions to practical iterative solvers.
+- Main reading file: [`main.pdf`](main.pdf)
 
-## What These Notes Cover
+## What This Covers
 
-The notes cover the following learning outcomes:
+Main themes in the notes:
 
-- Explanation of conditioning, stability, and reasons for failure in numerical methods
-- Use of orthogonality and projections to formulate approximation problems
-- Understanding of Krylov subspaces as the basis for modern iterative solvers
-- Comparison of Steepest Descent, Conjugate Gradient, FOM, and GMRES
-- Reasoning about convergence behavior and stopping criteria in practice
+- conditioning, stability, and common numerical failure modes
+- orthogonality and projections as approximation tools
+- Krylov subspaces as the core idea behind modern iterative methods
+- how SD, CG, FOM, and GMRES are built and how they differ
+- convergence behavior and stopping criteria
 
-## Content Roadmap
+## Roadmap
 
-### Part I: Foundations
+The material is split into three parts.
 
-Core linear algebra and numerical analysis tools used throughout:
+### Part I: Linear Algebra Foundations
 
-- preliminaries and notation
+Files:
+
+- `chapters/partI-foundations/00_introduction.tex`
+- `chapters/partI-foundations/01_preliminaries.tex`
+- `chapters/partI-foundations/02_linear_systems.tex`
+- `chapters/partI-foundations/03_orthogonality.tex`
+
+Focus:
+
+- notation and baseline definitions
 - linear systems and conditioning
-- orthogonality and related geometric insight
+- geometry through orthogonality
 
-### Part II: Projections and Krylov Ideas
+### Part II: Projection and Krylov Foundations
 
-Conceptual bridge from theory to algorithms:
+Files:
 
-- projection theory (orthogonal/oblique viewpoints)
-- Krylov subspaces
-- projection-based derivation of iterative methods
+- `chapters/partII-projections/04_projection_theory.tex`
+- `chapters/partII-projections/05_krylov_subspaces.tex`
 
-### Part III: Iterative Solvers
+Focus:
 
-Method-focused chapters with intuition and derivations:
+- orthogonal vs oblique projection viewpoints
+- subspace methods as the bridge from theory to algorithms
 
-- Steepest Descent (SD)
-- Conjugate Gradient (CG)
-- Full Orthogonalization Method (FOM)
-- GMRES
+### Part III: Iterative Krylov Solvers
 
-## How To Study These Notes
+Files:
 
-- Start with Part I unless you are already confident on conditioning and orthogonality.
-- For each method, track three things: search space, orthogonality condition, and update rule.
-- Reproduce key derivations by hand before reading the final formulas.
-- Use the exercises to test conceptual understanding, not just symbolic manipulation.
-- Use the lecture and exam material in `backmatter/` for revision and exam prep.
+- `chapters/partIII-solvers/06_SD.tex`
+- `chapters/partIII-solvers/07_CG.tex`
+- `chapters/partIII-solvers/08_FOM.tex`
+- `chapters/partIII-solvers/09_GMRES.tex`
 
-## Companion Material
+Focus:
 
-- `backmatter/exercises`: additional problems
-- `backmatter/exams`: exam-related material and cheat sheets
-- `backmatter/lectures`: lecture-specific note files
-- `examples/gmres_demo.py`: small computational demo connected to GMRES ideas
+- where each algorithm comes from
+- assumptions, tradeoffs, and cost
+- what drives convergence in practice
 
-## Minimal Build Note
+## Study Flow
 
-If needed, build with:
+Simple chapter loop:
+
+1. Read definitions and theorems.
+2. Re-do key derivations from scratch.
+3. Pin down the geometric idea (projection, orthogonality, subspace).
+4. Write a short convergence summary.
+5. Do related exercises.
+
+For solver chapters, keep track of:
+
+- search space
+- orthogonality/constraint condition
+- update rule
+- stopping criterion
+
+## Extra Material
+
+Supplementary content lives in `backmatter/`:
+
+- `backmatter/exercises/`: practice problems
+- `backmatter/lectures/`: lecture-aligned notes
+- `backmatter/exams/`: exam material and cheat sheets
+- `backmatter/appendix/`: extra reference material
+
+Suggested exam prep order:
+
+1. quick pass over Part I fundamentals
+2. side-by-side comparison of SD/CG/FOM/GMRES
+3. exercises to find weak spots
+4. timed work with exam files
+
+## Build PDF
+
+For editing/maintenance:
 
 ```bash
 latexmk -pdf main.tex
